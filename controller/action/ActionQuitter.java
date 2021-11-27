@@ -1,4 +1,4 @@
-package projetIG.actions;
+package projetIG.controller.action;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
@@ -16,11 +16,12 @@ public class ActionQuitter extends AbstractAction {
         this.frameParent = frameParent;
         
         this.putValue(Action.NAME, "Quitter");
-        this.putValue(Action.SMALL_ICON, new ImageIcon("icons/new.png"));
-        this.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_Q);
-        this.putValue(Action.SHORT_DESCRIPTION, "Quitter le jeu (Ctrl + Q)");
+        this.putValue(Action.SMALL_ICON, new ImageIcon(
+                "src/main/java/projetIG/view/image/icone/exit.png"));
+        this.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_W);
+        this.putValue(Action.SHORT_DESCRIPTION, "Quitter le jeu (Ctrl + W)");
         this.putValue(Action.ACCELERATOR_KEY, 
-                KeyStroke.getKeyStroke(KeyEvent.VK_Q, KeyEvent.CTRL_DOWN_MASK));
+                KeyStroke.getKeyStroke(KeyEvent.VK_W, KeyEvent.CTRL_DOWN_MASK));
     }
 
     @Override

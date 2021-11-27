@@ -1,18 +1,15 @@
 package projetIG;
 
-import projetIG.menus.MyMenuBar;
+import projetIG.view.PlateauJeu;
+import projetIG.view.menu.MyMenuBar;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.FlowLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
-import javax.swing.ImageIcon;
-import javax.swing.JButton;
 import javax.swing.JFrame;
 import javax.swing.JPanel;
-import javax.swing.JPopupMenu;
 import javax.swing.SwingUtilities;
-import projetIG.menus.MyPopupMenu;
+import projetIG.view.menu.MyPopupMenu;
 
 public class Plumber extends JPanel {
     private JFrame frameParent;
@@ -44,13 +41,5 @@ public class Plumber extends JPanel {
                 }
             }
         });
-        
-        
-        //debug pour voir si arrive à afficher une icone
-        JButton button1 = new JButton("Bouton 1");
-        button1.setIcon(new ImageIcon("new.png"));
-        button1.setPreferredSize(new Dimension(150, 50));
-        //button1.setIcon(new ImageIcon("images/new.png"));
-        this.add(button1, BorderLayout.SOUTH);
     }
 }

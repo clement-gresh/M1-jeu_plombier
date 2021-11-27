@@ -1,8 +1,8 @@
-package projetIG.menus;
+package projetIG.view.menu;
 
 import javax.swing.JFrame;
 import javax.swing.JPopupMenu;
-import projetIG.actions.ActionQuitter;
+import projetIG.controller.action.ActionQuitter;
 
 public class MyPopupMenu extends JPopupMenu {
     private JFrame frameParent;

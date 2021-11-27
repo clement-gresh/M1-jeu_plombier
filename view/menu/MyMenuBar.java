@@ -1,9 +1,9 @@
-package projetIG.menus;
+package projetIG.view.menu;
 
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
-import projetIG.actions.ActionQuitter;
+import projetIG.controller.action.ActionQuitter;
 
 public class MyMenuBar extends JMenuBar {
     private JFrame frameParent;

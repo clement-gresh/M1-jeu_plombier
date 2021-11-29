@@ -2,9 +2,9 @@ package projetIG.view;
 
 import java.awt.Color;
 import java.awt.Graphics;
-import javax.swing.ImageIcon;
+import java.util.ArrayList;
 import javax.swing.JComponent;
-import javax.swing.JLabel;
+import projetIG.model.level.Niveau;
 
 public class PlateauJeu extends JComponent {
 
@@ -15,7 +15,11 @@ public class PlateauJeu extends JComponent {
         graphics.setColor(Color.BLACK);
         graphics.fillRect(0, 0, this.getWidth(), this.getHeight());
         
+        Niveau niveau = new Niveau();   //debug
+        
+        /*
         ImageIcon pipes = new ImageIcon("src/main/java/projetIG/view/image/pipes.png");
         this.add(new JLabel(pipes));
+        */
     }
 }

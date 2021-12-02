@@ -8,31 +8,28 @@ import java.util.Scanner;
 public class Niveau {
     protected int hauteurPlateau;
     protected int largeurPlateau;
-    protected ArrayList<ArrayList<String>> plateauGagnant = new ArrayList<ArrayList<String>>();
-    protected ArrayList<ArrayList<String>> plateauCourant = new ArrayList<ArrayList<String>>();
-    protected ArrayList<Tuyau> tuyauxDisponibles = new ArrayList<Tuyau>(Arrays.asList(
-            new Tuyau("C", 0),
-            new Tuyau("O", 0),
-            new Tuyau("L0", 0),
-            new Tuyau("L1", 0),
-            new Tuyau("T0", 0),
-            new Tuyau("T1", 0),
-            new Tuyau("T2", 0),
-            new Tuyau("T3", 0),
-            new Tuyau("F0", 0),
-            new Tuyau("F1", 0),
-            new Tuyau("F2", 0),
-            new Tuyau("F3", 0)));
+    protected ArrayList<ArrayList<String>> plateauGagnant = new ArrayList<>();
+    protected ArrayList<ArrayList<String>> plateauCourant = new ArrayList<>();
+    protected ArrayList<Tuyau> tuyauxDisponibles = new ArrayList<>(Arrays.asList(
+            new Tuyau("C", 0), new Tuyau("O", 0),
+            new Tuyau("L0", 0), new Tuyau("L1", 0),
+            new Tuyau("T1", 0), new Tuyau("T2", 0), new Tuyau("T0", 0), new Tuyau("T3", 0),
+            new Tuyau("F0", 0), new Tuyau("F1", 0), new Tuyau("F3", 0), new Tuyau("F2", 0)));
 
+    
     public Niveau() {
-        this.importerNiveau("src/main/java/projetIG/model/level/banque1/level1.p");
-                
-        this.initialiserNiveau();
+        // Enregistre la hauteur, la largeur et la configuration gagnante du plateau
+        // a partir du fichier de niveau
+        this.importerNiveauGagnant("src/main/java/projetIG/model/level/banque1/level1.p");
+        
+        
+        // Cree la configuration initiale du plateau courant
+        // et determine le nombre de tuyaux disponibles dans la reserve
+        this.initialiserNiveauCourant();
     }
     
-    // Enregistre la hauteur, la largeur et la configuration gagnante du plateau
-    // a partir du fichier de niveau
-    private void importerNiveau(String file){
+    
+    private void importerNiveauGagnant(String file){
         File niveau = new File(file);
         
         try {
@@ -44,13 +41,13 @@ public class Niveau {
             //Variables locales pour compter les colonnes et remplir les lignes du plateau
             int colonne = 0;
             int ligne = 0;
-            this.plateauGagnant.add(new ArrayList<String>());
+            this.plateauGagnant.add(new ArrayList<>());
             
             while(scanner.hasNext()){
                 // Si on arrive au bout de la ligne, on cree une nouvelle ligne
                 // et on revient a la premiere colonne
                 if(colonne == largeurPlateau) {
-                    this.plateauGagnant.add(new ArrayList<String>());
+                    this.plateauGagnant.add(new ArrayList<>());
                     ligne = ligne + 1;
                     colonne = 0;
                 }
@@ -71,14 +68,14 @@ public class Niveau {
     }
     
     
-    private void initialiserNiveau() {
+    private void initialiserNiveauCourant() {
         // Variables locales representant la ligne et la colonne du plateau courant
         int lignePC = 0;
         int colonnePC = 0;
         
         for(ArrayList<String> ligne: this.plateauGagnant){
             //On cree une nouvelle ligne dans le plateau courant
-            this.plateauCourant.add(new ArrayList<String>());
+            this.plateauCourant.add(new ArrayList<>());
             
             for(String casePlateau : ligne) {
                 // Si on est sur la bordure du plateau gagnant,
@@ -123,4 +120,27 @@ public class Niveau {
         System.out.println(""); //debug
         System.out.println(""); //debug
     }
+    
+    //Getters
+    public int getHauteurPlateau() {
+        return hauteurPlateau;
+    }
+
+    public int getLargeurPlateau() {
+        return largeurPlateau;
+    }
+
+    public ArrayList<ArrayList<String>> getPlateauGagnant() {
+        return plateauGagnant;
+    }
+
+    public ArrayList<ArrayList<String>> getPlateauCourant() {
+        return plateauCourant;
+    }
+
+    public ArrayList<Tuyau> getTuyauxDisponibles() {
+        return tuyauxDisponibles;
+    }
+    
+    
 }

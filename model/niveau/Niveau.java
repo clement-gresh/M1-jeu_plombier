@@ -1,4 +1,4 @@
-package projetIG.model.level;
+package projetIG.model.niveau;
 
 import java.io.File;
 import java.util.ArrayList;
@@ -11,16 +11,16 @@ public class Niveau {
     protected ArrayList<ArrayList<String>> plateauGagnant = new ArrayList<>();
     protected ArrayList<ArrayList<String>> plateauCourant = new ArrayList<>();
     protected ArrayList<Tuyau> tuyauxDisponibles = new ArrayList<>(Arrays.asList(
-            new Tuyau("C", 0), new Tuyau("O", 0),
-            new Tuyau("L0", 0), new Tuyau("L1", 0),
-            new Tuyau("T1", 0), new Tuyau("T2", 0), new Tuyau("T0", 0), new Tuyau("T3", 0),
-            new Tuyau("F0", 0), new Tuyau("F1", 0), new Tuyau("F3", 0), new Tuyau("F2", 0)));
+            new Tuyau("C0", 0, 0, 5), new Tuyau("O0", 0, 0, 2),
+            new Tuyau("L0", 0, 0, 1), new Tuyau("L1", 1, 0, 1),
+            new Tuyau("T1", 1, 0, 3), new Tuyau("T2", 2, 0, 3), new Tuyau("T0", 0, 0, 3), new Tuyau("T3", 3, 0, 3),
+            new Tuyau("F0", 0, 0, 4), new Tuyau("F1", 1, 0, 4), new Tuyau("F3", 3, 0, 4), new Tuyau("F2", 2, 0, 4)));
 
     
     public Niveau() {
         // Enregistre la hauteur, la largeur et la configuration gagnante du plateau
         // a partir du fichier de niveau
-        this.importerNiveauGagnant("src/main/java/projetIG/model/level/banque1/level1.p");
+        this.importerNiveauGagnant("src/main/java/projetIG/model/niveau/banque1/level3.p");
         
         
         // Cree la configuration initiale du plateau courant
@@ -37,6 +37,8 @@ public class Niveau {
             
             this.hauteurPlateau = scanner.nextInt();
             this.largeurPlateau = scanner.nextInt();
+            
+            System.out.println("Hauteur : " + this.hauteurPlateau + " et Largeur : " + this.largeurPlateau); // debug
             
             //Variables locales pour compter les colonnes et remplir les lignes du plateau
             int colonne = 0;
@@ -116,7 +118,6 @@ public class Niveau {
             System.out.print(" [" + tuyau.getNom() + " ; " + tuyau.getNombre() + "] ");
         }
         
-        System.out.println(""); //debug
         System.out.println(""); //debug
         System.out.println(""); //debug
     }

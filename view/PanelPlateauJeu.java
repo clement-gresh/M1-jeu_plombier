@@ -2,7 +2,7 @@ package projetIG.view;
 
 import java.awt.BorderLayout;
 import javax.swing.JPanel;
-import projetIG.model.level.Niveau;
+import projetIG.model.niveau.Niveau;
 
 public class PanelPlateauJeu extends JPanel {
     protected Niveau niveauCourant;

@@ -12,17 +12,24 @@ import java.io.IOException;
 import java.util.ArrayList;
 import javax.imageio.ImageIO;
 import javax.swing.JComponent;
-import projetIG.model.level.Tuyau;
+import projetIG.model.niveau.Tuyau;
 
 public class PlateauJeu extends JComponent {
     // Ligne du tuyau dans pipes.gif en fonction de sa couleur
     public static final int TUYAU_BLANC = 0;
     public static final int TUYAU_NOIR = 5;
     
+    // Colonne de l'image dans pipes.gif
+    public static final int CASE = 0;
+    public static final int COIN = 3;
+    public static final int BORDURE = 4;
+    
+    // Attributs
     protected PanelPlateauJeu panelParent;
     protected BufferedImage pipes = new BufferedImage(820, 960, BufferedImage.TYPE_INT_ARGB);
     protected BufferedImage imagePlateau = new BufferedImage(820, 960, BufferedImage.TYPE_INT_ARGB);
 
+    // Constructeur
     public PlateauJeu(PanelPlateauJeu panelParent) {
         this.panelParent = panelParent;
         
@@ -41,7 +48,7 @@ public class PlateauJeu extends JComponent {
         graphics2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
                                     RenderingHints.VALUE_ANTIALIAS_ON);
         
-        graphics2D.setColor(Color.BLUE);
+        graphics2D.setColor(Color.BLACK);
         graphics2D.fillRect(0, 0, this.getWidth(), this.getHeight());
         
         
@@ -65,16 +72,19 @@ public class PlateauJeu extends JComponent {
 
         
         // Construction de la reserve
-        ArrayList<Tuyau> tuyauxDisplonibles = this.panelParent.getNiveauCourant().getTuyauxDisponibles();
+        ArrayList<Tuyau> tuyauxDisponibles = this.panelParent.getNiveauCourant().getTuyauxDisponibles();
         
         int colonneReserve = 0;
         int ligneReserve = 0;
                 
-        for(Tuyau tuyau : tuyauxDisplonibles) {
-            // On determine le nom du tuyau et le nombre disponible (et donc s'il doit être noir ou blanc)
-            String nom = tuyau.getNom();
+        for(Tuyau tuyau : tuyauxDisponibles) {
+            // Nombre de rotation du tuyau (en quarts de tour)
+            int rotation = tuyau.getRotation();
+            // Nombre de tuyaux correspondant disponibles dans la reserve
             int nombreDisponible = tuyau.getNombre();
-            
+            // Type du tuyau (i.e. la colonne correspondant dans pipes.gif)
+            int typeTuyau = tuyau.getColonne();
+            // Couleur du tuyau (noir ou blanc) en fonction de sa disponibilite
             int COULEUR = (nombreDisponible == 0) ? TUYAU_NOIR : TUYAU_BLANC;
             
             
@@ -87,45 +97,27 @@ public class PlateauJeu extends JComponent {
                         largeurCase, hauteurCase, this);
             
             
-            // On affiche le nombre de tuyaux disponibles dans la reserve
+            // On affiche en bas a gauche de chaque case le nombre de tuyaux correspondant disponibles
             Font font = new Font("Arial", Font.BOLD, 15);
             graphics2D.setFont(font);
             graphics2D.setColor(Color.WHITE);
             
-            graphics2D.drawString(String.format("%d",nombreDisponible),
+            graphics2D.drawString(String.valueOf(nombreDisponible),
                         abscisseReserve + largeurCase * colonneReserve + 5,
                         hauteurCase * (ligneReserve + 1) - 5);
             
             
-            
-            // On ajoute les images des tuyaux à la reserve (en blanc ou en noir)
-            if(nom.equals("C")){
-                imgTemp = this.pipes.getSubimage(5 * (120 + 20), COULEUR * (120 + 20), 120, 120);
-            }
-            
-            else if(tuyau.getNom().equals("O")){
+            // On ajoute les images des tuyaux à la reserve
+            if(tuyau.getNom().startsWith("O")){
                 BufferedImage imgTemp1 = this.pipes.getSubimage(1 * (120 + 20), COULEUR * (120 + 20), 120, 120);
                 BufferedImage imgTemp2 = this.pipes.getSubimage(2 * (120 + 20), COULEUR * (120 + 20), 120, 120);
                 
                 imgTemp = combiner(imgTemp1, imgTemp2);
             }
             
-            else if(nom.startsWith("L")){
-                int rotation = Integer.parseInt(nom.substring( Math.max(0, nom.length() - 1) ));
-                imgTemp = this.pipes.getSubimage(1 * (120 + 20), COULEUR * (120 + 20), 120, 120);
-                imgTemp = pivoter(imgTemp, rotation);
-            }
-            
-            else if(nom.startsWith("T")){
-                int rotation = Integer.parseInt(nom.substring( Math.max(0, nom.length() - 1) ));
-                imgTemp = this.pipes.getSubimage(3 * (120 + 20), COULEUR * (120 + 20), 120, 120);
-                imgTemp = pivoter(imgTemp, rotation);
-            }
-            
-            else if(nom.startsWith("F")){
-                int rotation = Integer.parseInt(nom.substring( Math.max(0, nom.length() - 1) ));
-                imgTemp = this.pipes.getSubimage(4 * (120 + 20), COULEUR * (120 + 20), 120, 120);
-                imgTemp = pivoter(imgTemp, rotation);
+            else{
+                imgTemp = this.pipes.getSubimage(typeTuyau * (120 + 20), COULEUR * (120 + 20), 120, 120);
+                if(rotation != 0) imgTemp = pivoter(imgTemp, rotation);
             }
             
             graphics2D.drawImage(imgTemp,
@@ -144,28 +136,80 @@ public class PlateauJeu extends JComponent {
         
         
         // Construction du plateau de jeu
-        ArrayList<ArrayList<String>> plateauGagnant = this.panelParent.getNiveauCourant().getPlateauGagnant();
+        ArrayList<ArrayList<String>> plateauCourant = this.panelParent.getNiveauCourant().getPlateauCourant();
         
-        int colonne = 0;
-        int ligne = 0;
+        int colonnePlateau = 0;
+        int lignePlateau = 0;
         
-        for(ArrayList<String> lignePlateau : plateauGagnant){
-            for(String casePlateau : lignePlateau) {
-                BufferedImage imgTemp = this.pipes.getSubimage(280, 140, 120, 120);
+        for(ArrayList<String> ligneP : plateauCourant){
+            for(String casePlateau : ligneP) {
+                
+                BufferedImage imgTemp = this.pipes.getSubimage(
+                        typeCase(lignePlateau, colonnePlateau) * (120 + 20),
+                        6 * (120 + 20),
+                        120, 120);
+                
+                if(nombreRotations(lignePlateau, colonnePlateau) != 0) 
+                    imgTemp = pivoter(imgTemp, nombreRotations(lignePlateau, colonnePlateau));
+                
                 graphics2D.drawImage(imgTemp,
-                        largeurCase * colonne, hauteurCase * ligne,
+                        largeurCase * colonnePlateau, hauteurCase * lignePlateau,
                         largeurCase, hauteurCase, this);
                 
-                colonne = colonne + 1;
+                
+                if(!casePlateau.equals("X")){
+                    
+                }
+                
+                colonnePlateau = colonnePlateau + 1;
             }
             
-            ligne = ligne + 1;
-            colonne = 0;
+            // On passe a la ligne suivante et on revient à la colonne 0
+            lignePlateau = lignePlateau + 1;
+            colonnePlateau = 0;
         }
+        System.out.println(""); //debug
+        System.out.println(""); //debug
     }
     
     
+    public int typeCase(int ligne, int colonne){
+        int nbrCasesLargeur = this.panelParent.getNiveauCourant().getLargeurPlateau();
+        int nbrCasesHauteur = this.panelParent.getNiveauCourant().getHauteurPlateau();
+        
+        if((ligne == 0 || ligne == nbrCasesHauteur - 1) 
+            && (colonne==0 || colonne == nbrCasesLargeur - 1)){
+            return COIN;
+        }
+
+        else if((ligne == 0 || ligne == nbrCasesHauteur - 1) 
+            || (colonne==0 || colonne == nbrCasesLargeur - 1)){
+            return BORDURE;
+        }
+
+        else return CASE;
+    }
     
+    
+    public int nombreRotations(int ligne, int colonne){
+        int nbrCasesLargeur = this.panelParent.getNiveauCourant().getLargeurPlateau();
+        int nbrCasesHauteur = this.panelParent.getNiveauCourant().getHauteurPlateau();
+        
+        // Pour les coins du plateau
+        if(ligne == 0 && colonne == 0) return 0;
+        else if(ligne == 0 && colonne == nbrCasesLargeur - 1) return 1;
+        else if(ligne == nbrCasesHauteur - 1 && colonne == 0) return 3;
+        else if(ligne == nbrCasesHauteur - 1 && colonne == nbrCasesLargeur - 1) return 2;
+        
+        // Pour les bords du plateau
+        else if(ligne == 0) return 0;
+        else if(ligne == nbrCasesHauteur - 1) return 2;
+        else if(colonne == 0) return 3;
+        else if(colonne == nbrCasesLargeur - 1) return 1;
+        
+        //Pour les autres cases du plateau
+        else return 0;
+    }
     
     public static BufferedImage pivoter(BufferedImage imgAPivoter, int quartsDeCercle) {
         int largeur = imgAPivoter.getWidth();

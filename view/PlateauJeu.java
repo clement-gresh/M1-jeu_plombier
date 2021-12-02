@@ -1,6 +1,7 @@
 package projetIG.view;
 
 import java.awt.Color;
+import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
@@ -68,9 +69,16 @@ public class PlateauJeu extends JComponent {
         
         int colonneReserve = 0;
         int ligneReserve = 0;
-        
+                
         for(Tuyau tuyau : tuyauxDisplonibles) {
-            // On met la couleur de fond de la case à marron fonce
+            // On determine le nom du tuyau et le nombre disponible (et donc s'il doit être noir ou blanc)
+            String nom = tuyau.getNom();
+            int nombreDisponible = tuyau.getNombre();
+            
+            int COULEUR = (nombreDisponible == 0) ? TUYAU_NOIR : TUYAU_BLANC;
+            
+            
+            // On ajoute le background de la case dans la reserve (i.e. un carre marron fonce)
             BufferedImage imgTemp = this.pipes.getSubimage(0, 6 * (120 + 20), 120, 120);
             
             graphics2D.drawImage(imgTemp,
@@ -79,13 +87,18 @@ public class PlateauJeu extends JComponent {
                         largeurCase, hauteurCase, this);
             
             
-            // On determine le nom du tuyau et le nombre disponible
-            String nom = tuyau.getNom();
-            int nombreDisponible = tuyau.getNombre();
+            // On affiche le nombre de tuyaux disponibles dans la reserve
+            Font font = new Font("Arial", Font.BOLD, 15);
+            graphics2D.setFont(font);
+            graphics2D.setColor(Color.WHITE);
             
-            int COULEUR = (nombreDisponible == 0) ? TUYAU_NOIR : TUYAU_BLANC;
+            graphics2D.drawString(String.format("%d",nombreDisponible),
+                        abscisseReserve + largeurCase * colonneReserve + 5,
+                        hauteurCase * (ligneReserve + 1) - 5);
             
-            // On ajoute les tuyaux à la reserve
+            
+            
+            // On ajoute les images des tuyaux à la reserve (en blanc ou en noir)
             if(nom.equals("C")){
                 imgTemp = this.pipes.getSubimage(5 * (120 + 20), COULEUR * (120 + 20), 120, 120);
             }
@@ -150,6 +163,9 @@ public class PlateauJeu extends JComponent {
             colonne = 0;
         }
     }
+    
+    
+    
     
     public static BufferedImage pivoter(BufferedImage imgAPivoter, int quartsDeCercle) {
         int largeur = imgAPivoter.getWidth();

@@ -10,7 +10,6 @@ import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import projetIG.view.Accueil1;
 import projetIG.view.PanelPlateauJeu;
-import projetIG.view.PlateauJeu;
 import projetIG.view.menu.MyPopupMenu;
 
 public class Plumber extends JPanel {

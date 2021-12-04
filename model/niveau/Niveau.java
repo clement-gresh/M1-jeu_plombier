@@ -20,12 +20,32 @@ public class Niveau {
     public Niveau() {
         // Enregistre la hauteur, la largeur et la configuration gagnante du plateau
         // a partir du fichier de niveau
-        this.importerNiveauGagnant("src/main/java/projetIG/model/niveau/banque1/level3.p");
+        this.importerNiveauGagnant("src/main/java/projetIG/model/niveau/banque1/level5.p");
         
         
         // Cree la configuration initiale du plateau courant
         // et determine le nombre de tuyaux disponibles dans la reserve
         this.initialiserNiveauCourant();
+        
+        // Determine la couleur de chaque tuyau du plateau
+        
+    }
+    
+    private void couleurTuyaux(){
+        ArrayList<ArrayList<Integer>> plateauCouleursTuyaux = new ArrayList<>();
+        
+        // Variables locales representant la ligne et la colonne du plateau de couleurs
+        int lignePC = 0;
+        int colonnePC = 0;
+        
+        for(ArrayList<String> ligne: this.plateauGagnant){
+            //On cree une nouvelle ligne dans le plateau courant
+            this.plateauCourant.add(new ArrayList<>());
+            
+            for(String casePlateau : ligne) {
+                
+            }
+        }
     }
     
     

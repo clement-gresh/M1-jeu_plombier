@@ -14,6 +14,7 @@ import javax.imageio.ImageIO;
 import javax.swing.JComponent;
 import projetIG.model.CouleurTuyau;
 import projetIG.model.TypeCase;
+import projetIG.model.TypeTuyau;
 import projetIG.model.niveau.Tuyau;
 
 public class PlateauJeu extends JComponent {    
@@ -134,7 +135,7 @@ public class PlateauJeu extends JComponent {
     
     // CONSTRUCTION DU PLATEAU DE JEU
     private void construirePlateau(Graphics2D graphics2D, int largeurCase, int hauteurCase){
-        ArrayList<ArrayList<String>> plateauCourant = this.panelParent.getNiveauCourant().getPlateauCourant();
+        ArrayList<ArrayList<String>> plateauCourant = this.panelParent.getNiveauCourant().getPlateauGagnant();
         
         int colonnePlateau = 0;
         int lignePlateau = 0;
@@ -155,7 +156,22 @@ public class PlateauJeu extends JComponent {
                 graphics2D.drawImage(imgTemp,
                         largeurCase * colonnePlateau, hauteurCase * lignePlateau,
                         largeurCase, hauteurCase, this);
-
+                
+                
+                // On affiche les cases inamovibles
+                if(casePlateau.startsWith("*")){
+                    // On recupere l'image correspondant au tuyau
+                    imgTemp = this.pipes.getSubimage(
+                                    5 * (120 + 20),
+                                    6 * (120 + 20), //debug : probleme : COULEUR A CHANGER
+                                    120, 120);
+                    
+                    // On affiche l'image sur le graphique a l'endroit et la taille voulue
+                    graphics2D.drawImage(imgTemp,
+                        largeurCase * colonnePlateau, hauteurCase * lignePlateau,
+                        largeurCase, hauteurCase, this);
+                }
+                
                 
                 // On affiche les sources
                 if(estUneSource(casePlateau) != 0){
@@ -170,18 +186,53 @@ public class PlateauJeu extends JComponent {
                     if(nombreRotation != 0) 
                         imgTemp = pivoter(imgTemp, nombreRotation);
 
+                    // On affiche l'image sur le graphique a l'endroit et la taille voulue
                     graphics2D.drawImage(imgTemp,
                         largeurCase * colonnePlateau, hauteurCase * lignePlateau,
                         largeurCase, hauteurCase, this);
                 }
                 
-                // On affiche les cases inamovibles
-                else if(casePlateau.startsWith("*")){
+                // On affiche les cases "over"
+                else if(casePlateau.startsWith("O") || casePlateau.startsWith("*O")){
+                    //debug : probleme : COULEUR A CHANGER (dans les 2 images)
+                    BufferedImage imgTemp1 = this.pipes.getSubimage(1 * (120 + 20), 0 * (120 + 20), 120, 120);
+                    BufferedImage imgTemp2 = this.pipes.getSubimage(2 * (120 + 20), 0 * (120 + 20), 120, 120);
+
+                    imgTemp = combiner(imgTemp1, imgTemp2);
                     
+                    graphics2D.drawImage(imgTemp,
+                        largeurCase * colonnePlateau, hauteurCase * lignePlateau,
+                        largeurCase, hauteurCase, this);
                 }
                 
+                // On affiche les tuyaux (autres que les sources et les overs)
                 else if(!casePlateau.equals("X") && !casePlateau.equals(".")){
+                    int typeTuyau;
                     
+                    //Traitement different entre les tuyaux inamovibles (* au debut du nom) et les autres
+                    if(casePlateau.startsWith("*")){
+                        typeTuyau = TypeTuyau.appartient(casePlateau.substring(1, 2));
+                        nombreRotation = Integer.parseInt(casePlateau.substring(2));
+                    }
+                    else{
+                        typeTuyau = TypeTuyau.appartient(casePlateau.substring(0, 1));
+                        nombreRotation = Integer.parseInt(casePlateau.substring(1));
+                    }
+                    
+                    // On recupere l'image correspondant au tuyau
+                    imgTemp = this.pipes.getSubimage(
+                                    typeTuyau * (120 + 20),
+                                    0 * (120 + 20), //debug : probleme : COULEUR A CHANGER
+                                    120, 120);
+
+                    // On pivote l'image si necessaire
+                    if(nombreRotation != 0) 
+                        imgTemp = pivoter(imgTemp, nombreRotation);
+
+                    // On affiche l'image sur le graphique a l'endroit et la taille voulue
+                    graphics2D.drawImage(imgTemp,
+                        largeurCase * colonnePlateau, hauteurCase * lignePlateau,
+                        largeurCase, hauteurCase, this);
                 }
                 
                 colonnePlateau = colonnePlateau + 1;

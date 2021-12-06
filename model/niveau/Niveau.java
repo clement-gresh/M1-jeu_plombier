@@ -6,8 +6,8 @@ import java.util.Arrays;
 import java.util.Scanner;
 
 public class Niveau {
-    protected int hauteurPlateau;
-    protected int largeurPlateau;
+    protected int nbrCasesPlateauHauteur;
+    protected int nbrCasesPlateauLargeur;
     protected ArrayList<ArrayList<String>> plateauGagnant = new ArrayList<>();
     protected ArrayList<ArrayList<String>> plateauCourant = new ArrayList<>();
     protected ArrayList<Tuyau> tuyauxDisponibles = new ArrayList<>(Arrays.asList(
@@ -20,7 +20,7 @@ public class Niveau {
     public Niveau() {
         // Enregistre la hauteur, la largeur et la configuration gagnante du plateau
         // a partir du fichier de niveau
-        this.importerNiveauGagnant("src/main/java/projetIG/model/niveau/banque1/level5.p");
+        this.importerNiveauGagnant("src/main/java/projetIG/model/niveau/banque1/level3.p");
         
         
         // Cree la configuration initiale du plateau courant
@@ -28,9 +28,10 @@ public class Niveau {
         this.initialiserNiveauCourant();
         
         // Determine la couleur de chaque tuyau du plateau
-        
+        this.couleurTuyaux();
     }
     
+    //TO DO
     private void couleurTuyaux(){
         ArrayList<ArrayList<Integer>> plateauCouleursTuyaux = new ArrayList<>();
         
@@ -55,10 +56,10 @@ public class Niveau {
         try {
             Scanner scanner = new Scanner(niveau);
             
-            this.hauteurPlateau = scanner.nextInt();
-            this.largeurPlateau = scanner.nextInt();
+            this.nbrCasesPlateauHauteur = scanner.nextInt();
+            this.nbrCasesPlateauLargeur = scanner.nextInt();
             
-            System.out.println("Hauteur : " + this.hauteurPlateau + " et Largeur : " + this.largeurPlateau); // debug
+            System.out.println("Hauteur : " + this.nbrCasesPlateauHauteur + " et Largeur : " + this.nbrCasesPlateauLargeur); // debug
             
             //Variables locales pour compter les colonnes et remplir les lignes du plateau
             int colonne = 0;
@@ -68,7 +69,7 @@ public class Niveau {
             while(scanner.hasNext()){
                 // Si on arrive au bout de la ligne, on cree une nouvelle ligne
                 // et on revient a la premiere colonne
-                if(colonne == largeurPlateau) {
+                if(colonne == nbrCasesPlateauLargeur) {
                     this.plateauGagnant.add(new ArrayList<>());
                     ligne = ligne + 1;
                     colonne = 0;
@@ -105,9 +106,9 @@ public class Niveau {
                 // ou sur un tuyau inamovible,
                 // on recopie la case dans le plateau courant
                 if(lignePC == 0
-                        || lignePC == this.hauteurPlateau - 1
+                        || lignePC == this.nbrCasesPlateauHauteur - 1
                         || colonnePC == 0
-                        || colonnePC == this.largeurPlateau - 1
+                        || colonnePC == this.nbrCasesPlateauLargeur - 1
                         || casePlateau.equals(".")
                         || casePlateau.startsWith("*")) {
                     
@@ -143,12 +144,12 @@ public class Niveau {
     }
     
     //Getters
-    public int getHauteurPlateau() {
-        return hauteurPlateau;
+    public int getNbrCasesPlateauHauteur() {
+        return nbrCasesPlateauHauteur;
     }
 
-    public int getLargeurPlateau() {
-        return largeurPlateau;
+    public int getNbrCasesPlateauLargeur() {
+        return nbrCasesPlateauLargeur;
     }
 
     public ArrayList<ArrayList<String>> getPlateauGagnant() {

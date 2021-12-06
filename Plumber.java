@@ -9,7 +9,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import projetIG.view.Accueil1;
-import projetIG.view.PanelPlateauJeu;
+import projetIG.view.PanelFenetreJeu;
 import projetIG.view.menu.MyPopupMenu;
 
 public class Plumber extends JPanel {
@@ -27,7 +27,7 @@ public class Plumber extends JPanel {
         
         
         //Ajout du plateau de jeu dans un panel
-        PanelPlateauJeu panelPlateau = new PanelPlateauJeu();
+        PanelFenetreJeu panelPlateau = new PanelFenetreJeu();
         this.add(panelPlateau, BorderLayout.CENTER);
         
         

@@ -11,26 +11,36 @@ import java.io.File;
 import java.io.IOException;
 import java.util.ArrayList;
 import javax.imageio.ImageIO;
+import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import projetIG.model.CouleurTuyau;
 import projetIG.model.TypeCase;
 import projetIG.model.TypeTuyau;
 import projetIG.model.niveau.Tuyau;
 
-public class PlateauJeu extends JComponent {    
+public class FenetreJeu extends JComponent {    
     // Attributs
-    protected PanelPlateauJeu panelParent;
+    protected PanelFenetreJeu panelParent;
     protected BufferedImage pipes = new BufferedImage(820, 960, BufferedImage.TYPE_INT_ARGB);
     protected BufferedImage imagePlateau = new BufferedImage(820, 960, BufferedImage.TYPE_INT_ARGB);
+    protected int nbrCasesTotalLargeur;
+    protected int nbrCasesTotalHauteur;
+    protected int largeurCase;
+    protected int hauteurCase;
+    protected int xImageDD = 0;
+    protected int yImageDD = 0;
+    protected ImageIcon imageDD = new ImageIcon();
 
     // Constructeur
-    public PlateauJeu(PanelPlateauJeu panelParent) {
+    public FenetreJeu(PanelFenetreJeu panelParent) {
         this.panelParent = panelParent;
         
         try {
             this.pipes = ImageIO.read(new File("src/main/java/projetIG/view/image/pipes.gif"));
         }
         catch (IOException e) {}
+        
+        tailleCase();
     }
     
     
@@ -45,31 +55,41 @@ public class PlateauJeu extends JComponent {
         graphics2D.setColor(Color.BLACK);
         graphics2D.fillRect(0, 0, this.getWidth(), this.getHeight());
         
+        tailleCase(); //debug : probleme : devrait pouvoir l'appeler seulement dans ctor et pas avoir besoin ici
         
-        // On determine le nombre de cases en hauteur et en largeur
-        int casesPlateauLargeur = this.panelParent.getNiveauCourant().getLargeurPlateau();
-        int casesPlateauHauteur = this.panelParent.getNiveauCourant().getHauteurPlateau();
+        construireReserve(graphics2D);
         
-        int casesReserveLargeur = 2;
-        int casesReserveHauteur = 6; 
+        construirePlateau(graphics2D);
         
-        int casesTotaleLargeur = casesPlateauLargeur + casesReserveLargeur;
-        int casesTotaleHauteur = Integer.max(casesPlateauHauteur, casesReserveHauteur);
         
-        // On determine la taille d'une case en pixel
-        int largeurCase = (int)  (this.panelParent.getWidth() / casesTotaleLargeur);
-        int hauteurCase = (int)  (this.panelParent.getHeight() / casesTotaleHauteur);
         
-        construireReserve(graphics2D, largeurCase, hauteurCase);
-        
-        construirePlateau(graphics2D, largeurCase, hauteurCase);
-        
+        System.out.println("fenetre jeu : x " + this.xImageDD + " y " + this.yImageDD); // debug
+        this.imageDD.paintIcon(this, graphics2D, this.xImageDD, this.yImageDD);
     }
     
+    
+    // On determine le nombre de cases en hauteur et en largeur
+    private void tailleCase(){
+        int nbrCasesPlateauLargeur = this.panelParent.getNiveauCourant().getNbrCasesPlateauLargeur();
+        int nbrCasesPlateauHauteur = this.panelParent.getNiveauCourant().getNbrCasesPlateauHauteur();
+        
+        //Nombre de lignes et colonnes de la reserve (quel que soit le niveau)
+        int nbrCasesReserveLargeur = 2;
+        int nbrCasesReserveHauteur = 6; 
+        
+        this.nbrCasesTotalLargeur = nbrCasesPlateauLargeur + nbrCasesReserveLargeur;
+        this.nbrCasesTotalHauteur = Integer.max(nbrCasesPlateauHauteur, nbrCasesReserveHauteur);
+        
+        // On determine la taille d'une case en pixel
+        this.largeurCase = (int)  (this.panelParent.getWidth() / this.nbrCasesTotalLargeur);
+        this.hauteurCase = (int)  (this.panelParent.getHeight() / this.nbrCasesTotalHauteur);
+    }
+    
+    
     // CONSTRUCTION DE LA RESERVE
-    private void construireReserve(Graphics2D graphics2D, int largeurCase, int hauteurCase){
+    private void construireReserve(Graphics2D graphics2D){
         // Abscisse de la ligne verticale separant le plateau de la reserve
-        int abscisseReserve = this.panelParent.getWidth() - 2 * largeurCase;
+        int abscisseReserve = this.panelParent.getWidth() - 2 * this.largeurCase;
         
         ArrayList<Tuyau> tuyauxDisponibles = this.panelParent.getNiveauCourant().getTuyauxDisponibles();
         
@@ -91,9 +111,9 @@ public class PlateauJeu extends JComponent {
             BufferedImage imgTemp = this.pipes.getSubimage(0, 6 * (120 + 20), 120, 120);
             
             graphics2D.drawImage(imgTemp,
-                        abscisseReserve + largeurCase * colonneReserve,
-                        hauteurCase * ligneReserve,
-                        largeurCase, hauteurCase, this);
+                        abscisseReserve + this.largeurCase * colonneReserve,
+                        this.hauteurCase * ligneReserve,
+                        this.largeurCase, this.hauteurCase, this);
             
             
             // On affiche en bas a gauche de chaque case le nombre de tuyaux correspondant disponibles
@@ -102,8 +122,8 @@ public class PlateauJeu extends JComponent {
             graphics2D.setColor(Color.WHITE);
             
             graphics2D.drawString(String.valueOf(nombreDisponible),
-                        abscisseReserve + largeurCase * colonneReserve + 5,
-                        hauteurCase * (ligneReserve + 1) - 5);
+                        abscisseReserve + this.largeurCase * colonneReserve + 5,
+                        this.hauteurCase * (ligneReserve + 1) - 5);
             
             
             // On ajoute les images des tuyaux à la reserve
@@ -120,9 +140,9 @@ public class PlateauJeu extends JComponent {
             }
             
             graphics2D.drawImage(imgTemp,
-                        abscisseReserve + largeurCase * colonneReserve,
-                        hauteurCase * ligneReserve,
-                        largeurCase, hauteurCase, this);
+                        abscisseReserve + this.largeurCase * colonneReserve,
+                        this.hauteurCase * ligneReserve,
+                        this.largeurCase, this.hauteurCase, this);
             
             // On alterne entre les colonnes 0 et 1 de la reserve
             colonneReserve = (colonneReserve + 1) % 2;
@@ -134,7 +154,7 @@ public class PlateauJeu extends JComponent {
     
     
     // CONSTRUCTION DU PLATEAU DE JEU
-    private void construirePlateau(Graphics2D graphics2D, int largeurCase, int hauteurCase){
+    private void construirePlateau(Graphics2D graphics2D){
         ArrayList<ArrayList<String>> plateauCourant = this.panelParent.getNiveauCourant().getPlateauGagnant();
         
         int colonnePlateau = 0;
@@ -154,8 +174,8 @@ public class PlateauJeu extends JComponent {
                     imgTemp = pivoter(imgTemp, nombreRotation);
                 
                 graphics2D.drawImage(imgTemp,
-                        largeurCase * colonnePlateau, hauteurCase * lignePlateau,
-                        largeurCase, hauteurCase, this);
+                        this.largeurCase * colonnePlateau, this.hauteurCase * lignePlateau,
+                        this.largeurCase, this.hauteurCase, this);
                 
                 
                 // On affiche les cases inamovibles
@@ -168,8 +188,8 @@ public class PlateauJeu extends JComponent {
                     
                     // On affiche l'image sur le graphique a l'endroit et la taille voulue
                     graphics2D.drawImage(imgTemp,
-                        largeurCase * colonnePlateau, hauteurCase * lignePlateau,
-                        largeurCase, hauteurCase, this);
+                        this.largeurCase * colonnePlateau, this.hauteurCase * lignePlateau,
+                        this.largeurCase, this.hauteurCase, this);
                 }
                 
                 
@@ -188,8 +208,8 @@ public class PlateauJeu extends JComponent {
 
                     // On affiche l'image sur le graphique a l'endroit et la taille voulue
                     graphics2D.drawImage(imgTemp,
-                        largeurCase * colonnePlateau, hauteurCase * lignePlateau,
-                        largeurCase, hauteurCase, this);
+                        this.largeurCase * colonnePlateau, this.hauteurCase * lignePlateau,
+                        this.largeurCase, this.hauteurCase, this);
                 }
                 
                 // On affiche les cases "over"
@@ -201,8 +221,8 @@ public class PlateauJeu extends JComponent {
                     imgTemp = combiner(imgTemp1, imgTemp2);
                     
                     graphics2D.drawImage(imgTemp,
-                        largeurCase * colonnePlateau, hauteurCase * lignePlateau,
-                        largeurCase, hauteurCase, this);
+                        this.largeurCase * colonnePlateau, this.hauteurCase * lignePlateau,
+                        this.largeurCase, this.hauteurCase, this);
                 }
                 
                 // On affiche les tuyaux (autres que les sources et les overs)
@@ -231,8 +251,8 @@ public class PlateauJeu extends JComponent {
 
                     // On affiche l'image sur le graphique a l'endroit et la taille voulue
                     graphics2D.drawImage(imgTemp,
-                        largeurCase * colonnePlateau, hauteurCase * lignePlateau,
-                        largeurCase, hauteurCase, this);
+                        this.largeurCase * colonnePlateau, this.hauteurCase * lignePlateau,
+                        this.largeurCase, this.hauteurCase, this);
                 }
                 
                 colonnePlateau = colonnePlateau + 1;
@@ -247,8 +267,8 @@ public class PlateauJeu extends JComponent {
     
     // Determine si une case du plateau est un COIN, une BORDURE ou une CASE quelconque
     public int typeCase(int ligne, int colonne){
-        int nbrCasesLargeur = this.panelParent.getNiveauCourant().getLargeurPlateau();
-        int nbrCasesHauteur = this.panelParent.getNiveauCourant().getHauteurPlateau();
+        int nbrCasesLargeur = this.panelParent.getNiveauCourant().getNbrCasesPlateauLargeur();
+        int nbrCasesHauteur = this.panelParent.getNiveauCourant().getNbrCasesPlateauHauteur();
         
         if((ligne == 0 || ligne == nbrCasesHauteur - 1) 
             && (colonne==0 || colonne == nbrCasesLargeur - 1)){
@@ -266,8 +286,8 @@ public class PlateauJeu extends JComponent {
     
     // Determine le nombre de rotations necessaires de l'image pour un COIN, une BORDURE ou une CASE quelconque
     public int nombreRotations(int ligne, int colonne){
-        int nbrCasesLargeur = this.panelParent.getNiveauCourant().getLargeurPlateau();
-        int nbrCasesHauteur = this.panelParent.getNiveauCourant().getHauteurPlateau();
+        int nbrCasesLargeur = this.panelParent.getNiveauCourant().getNbrCasesPlateauLargeur();
+        int nbrCasesHauteur = this.panelParent.getNiveauCourant().getNbrCasesPlateauHauteur();
         
         // Pour les coins du plateau
         if(ligne == 0 && colonne == 0) return 0;
@@ -324,4 +344,49 @@ public class PlateauJeu extends JComponent {
         
         return imgCombinee;
     }
+    
+    
+    // GETTERS
+    public PanelFenetreJeu getPanelParent() {
+        return panelParent;
+    }
+
+    public BufferedImage getPipes() {
+        return pipes;
+    }
+
+    public BufferedImage getImagePlateau() {
+        return imagePlateau;
+    }
+    
+    public int getNbrCasesTotalLargeur() {
+        return nbrCasesTotalLargeur;
+    }
+
+    public int getNbrCasesTotalHauteur() {
+        return nbrCasesTotalHauteur;
+    }
+
+    public int getLargeurCase() {
+        return largeurCase;
+    }
+
+    public int getHauteurCase() {
+        return hauteurCase;
+    }
+
+    
+    // SETTERS
+    public void setXImageDD(int xImageDD) {
+        this.xImageDD = xImageDD;
+    }
+
+    public void setYImageDD(int yImageDD) {
+        this.yImageDD = yImageDD;
+    }
+
+    public void setImageDD(ImageIcon imageDD) {
+        this.imageDD = imageDD;
+    }
+    
 }

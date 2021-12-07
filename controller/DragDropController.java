@@ -52,11 +52,18 @@ public class DragDropController extends MouseAdapter {
                                             .get(ligne * 2 + (this.nbrCasesTotalLargeur - colonne) % 2);
                     System.out.println("Tuyau : " + tuyauReserve.getNom()); // debug
                     
-                    // On recupere l'image du tuyau avec la rotation correspondant
-                    buffTuyauDD = this.fenetreJeu.getPipes().getSubimage(
-                            tuyauReserve.getColonne() * (120 + 20),
-                            CouleurTuyau.BLANC.ordinal() * (120 + 20),
-                            120, 120);
+                    if(tuyauReserve.getNombre() > 0) {
+                        // On recupere l'image du tuyau avec la rotation correspondant
+                        buffTuyauDD = this.fenetreJeu.getPipes().getSubimage(
+                                tuyauReserve.getColonne() * (120 + 20),
+                                CouleurTuyau.BLANC.ordinal() * (120 + 20),
+                                120, 120);
+
+                        if(tuyauReserve.getRotation() != 0)
+                            buffTuyauDD = FenetreJeu.pivoter(buffTuyauDD, tuyauReserve.getRotation());
+
+                        tuyauReserve.setNombre(tuyauReserve.getNombre() - 1);
+                    }
                 }
                 
             }
@@ -74,7 +81,7 @@ public class DragDropController extends MouseAdapter {
             
             
             
-            // On met à jour l'image de jeu avec l'image Drag&Drop et ses coordonnees (apres avoir mis la bonne taille)
+            // On l'image Drag&Drop au plateau de jeu (apres lui avoir donne la bonne taille)
             buffTuyauDD = FenetreJeu.modifierTaille(buffTuyauDD, this.largeurCase, this.hauteurCase);
             this.fenetreJeu.setImageDD(new ImageIcon(buffTuyauDD));
             this.fenetreJeu.setXImageDD(event.getX() - (int) (0.5 * this.largeurCase));

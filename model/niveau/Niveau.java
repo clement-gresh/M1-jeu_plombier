@@ -115,12 +115,13 @@ public class Niveau {
                     this.plateauCourant.get(lignePC).add(casePlateau);
                 }
                 
+                // Sinon, on ajoute le tuyau a la reserve
                 else {
                     for(Tuyau tuyau : this.tuyauxDisponibles) {
                         if(tuyau.getNom().equals(casePlateau)) {
                             this.plateauCourant.get(lignePC).add(".");
                             tuyau.setNombre(tuyau.getNombre() + 1);
-                            break;
+                            break; // debug : le break fait il sortir du if ou du for ?
                         }
                     }
                 }

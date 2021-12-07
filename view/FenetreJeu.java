@@ -4,6 +4,7 @@ import java.awt.Color;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
+import java.awt.Image;
 import java.awt.RenderingHints;
 import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
@@ -61,9 +62,7 @@ public class FenetreJeu extends JComponent {
         
         construirePlateau(graphics2D);
         
-        
-        
-        System.out.println("fenetre jeu : x " + this.xImageDD + " y " + this.yImageDD); // debug
+        // On ajoute l'image en Drag&Drop
         this.imageDD.paintIcon(this, graphics2D, this.xImageDD, this.yImageDD);
     }
     
@@ -343,6 +342,17 @@ public class FenetreJeu extends JComponent {
         g.dispose();
         
         return imgCombinee;
+    }
+    
+    public static BufferedImage modifierTaille(BufferedImage img, int nvlLargeur, int nvlHauteur) { 
+        Image tmp = img.getScaledInstance(nvlLargeur, nvlHauteur, Image.SCALE_SMOOTH);
+        BufferedImage dimg = new BufferedImage(nvlLargeur, nvlHauteur, BufferedImage.TYPE_INT_ARGB);
+
+        Graphics2D g2d = dimg.createGraphics();
+        g2d.drawImage(tmp, 0, 0, null);
+        g2d.dispose();
+
+        return dimg;
     }
     
     

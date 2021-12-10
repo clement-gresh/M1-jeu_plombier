@@ -18,7 +18,7 @@ public class Plumber extends JPanel {
     public Plumber(JFrame frameParent) {
         this.frameParent = frameParent;
         
-        this.setPreferredSize(new Dimension(900, 600)); // largeur, hauteur
+        this.setPreferredSize(new Dimension(750, 700)); // largeur, hauteur
         this.setLayout(new BorderLayout());
         
         

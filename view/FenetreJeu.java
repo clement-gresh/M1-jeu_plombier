@@ -154,7 +154,7 @@ public class FenetreJeu extends JComponent {
     
     // CONSTRUCTION DU PLATEAU DE JEU
     private void construirePlateau(Graphics2D graphics2D){
-        ArrayList<ArrayList<String>> plateauCourant = this.panelParent.getNiveauCourant().getPlateauGagnant();
+        ArrayList<ArrayList<String>> plateauCourant = this.panelParent.getNiveauCourant().getPlateauCourant();
         
         int colonnePlateau = 0;
         int lignePlateau = 0;

@@ -4,6 +4,7 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
+import projetIG.model.grapheCouleurs.GrapheCouleurs;
 
 public class Niveau {
     protected int nbrCasesPlateauHauteur;
@@ -15,7 +16,7 @@ public class Niveau {
             new Tuyau("L0", 0, 0, 1), new Tuyau("L1", 1, 0, 1),
             new Tuyau("T1", 1, 0, 3), new Tuyau("T2", 2, 0, 3), new Tuyau("T0", 0, 0, 3), new Tuyau("T3", 3, 0, 3),
             new Tuyau("F0", 0, 0, 4), new Tuyau("F1", 1, 0, 4), new Tuyau("F3", 3, 0, 4), new Tuyau("F2", 2, 0, 4)));
-
+    protected GrapheCouleurs grapheCouleurs;
     
     public Niveau() {
         // Enregistre la hauteur, la largeur et la configuration gagnante du plateau
@@ -28,26 +29,25 @@ public class Niveau {
         this.initialiserNiveauCourant();
         
         // Determine la couleur de chaque tuyau du plateau
-        this.couleurTuyaux();
+        //this.couleurTuyaux();
     }
-    
+    /*
     //TO DO
     private void couleurTuyaux(){
         ArrayList<ArrayList<Integer>> plateauCouleursTuyaux = new ArrayList<>();
+        ArrayList<ArrayList<Integer>> sommetsGraphe = new ArrayList<>();
+        ArrayList<ArrayList<Integer>> arcsGraphe = new ArrayList<>();
         
         // Variables locales representant la ligne et la colonne du plateau de couleurs
         int lignePC = 0;
         int colonnePC = 0;
         
-        for(ArrayList<String> ligne: this.plateauGagnant){
-            //On cree une nouvelle ligne dans le plateau courant
-            this.plateauCourant.add(new ArrayList<>());
-            
+        for(ArrayList<String> ligne: this.plateauCourant){            
             for(String casePlateau : ligne) {
                 
             }
         }
-    }
+    }*/
     
     
     private void importerNiveauGagnant(String file){

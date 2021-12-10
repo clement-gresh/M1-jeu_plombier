@@ -7,7 +7,7 @@ import javax.swing.ImageIcon;
 import javax.swing.SwingUtilities;
 import projetIG.model.CouleurTuyau;
 import projetIG.model.TypeTuyau;
-import projetIG.model.niveau.Tuyau;
+import projetIG.model.niveau.TuyauReserve;
 import projetIG.view.FenetreJeu;
 
 public class DragDropController extends MouseAdapter {
@@ -50,7 +50,7 @@ public class DragDropController extends MouseAdapter {
                 
                 // On verifie que ligne est inferieure à 6 (nombre de lignes dans la reserve)
                 if(ligne < 6) {
-                    Tuyau tuyauReserve = this.fenetreJeu.getPanelParent().getNiveauCourant()
+                    TuyauReserve tuyauReserve = this.fenetreJeu.getPanelParent().getNiveauCourant()
                                             .getTuyauxDisponibles()
                                             .get(ligne * 2 + (this.nbrCasesTotalLargeur - colonne) % 2);
                     System.out.println("Tuyau : " + tuyauReserve.getNom()); // debug
@@ -170,7 +170,7 @@ public class DragDropController extends MouseAdapter {
     
     // Renvoie le tuyauDeplace dans la reserve
     private void renvoyerDansReserve(){
-        for(Tuyau tuyauReserve : this.fenetreJeu.getPanelParent().getNiveauCourant().getTuyauxDisponibles()){
+        for(TuyauReserve tuyauReserve : this.fenetreJeu.getPanelParent().getNiveauCourant().getTuyauxDisponibles()){
             if(tuyauReserve.getNom().equals(this.tuyauDeplace)){
                 tuyauReserve.setNombre(tuyauReserve.getNombre() + 1);
                 break;

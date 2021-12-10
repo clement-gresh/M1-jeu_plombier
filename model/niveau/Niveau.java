@@ -11,11 +11,11 @@ public class Niveau {
     protected int nbrCasesPlateauLargeur;
     protected ArrayList<ArrayList<String>> plateauGagnant = new ArrayList<>();
     protected ArrayList<ArrayList<String>> plateauCourant = new ArrayList<>();
-    protected ArrayList<Tuyau> tuyauxDisponibles = new ArrayList<>(Arrays.asList(
-            new Tuyau("C0", 0, 0, 5), new Tuyau("O0", 0, 0, 2),
-            new Tuyau("L0", 0, 0, 1), new Tuyau("L1", 1, 0, 1),
-            new Tuyau("T1", 1, 0, 3), new Tuyau("T2", 2, 0, 3), new Tuyau("T0", 0, 0, 3), new Tuyau("T3", 3, 0, 3),
-            new Tuyau("F0", 0, 0, 4), new Tuyau("F1", 1, 0, 4), new Tuyau("F3", 3, 0, 4), new Tuyau("F2", 2, 0, 4)));
+    protected ArrayList<TuyauReserve> tuyauxDisponibles = new ArrayList<>(Arrays.asList(
+            new TuyauReserve("C0", 0, 0, 5), new TuyauReserve("O0", 0, 0, 2),
+            new TuyauReserve("L0", 0, 0, 1), new TuyauReserve("L1", 1, 0, 1),
+            new TuyauReserve("T1", 1, 0, 3), new TuyauReserve("T2", 2, 0, 3), new TuyauReserve("T0", 0, 0, 3), new TuyauReserve("T3", 3, 0, 3),
+            new TuyauReserve("F0", 0, 0, 4), new TuyauReserve("F1", 1, 0, 4), new TuyauReserve("F3", 3, 0, 4), new TuyauReserve("F2", 2, 0, 4)));
     protected GrapheCouleurs grapheCouleurs;
     
     public Niveau() {
@@ -117,7 +117,7 @@ public class Niveau {
                 
                 // Sinon, on ajoute le tuyau a la reserve
                 else {
-                    for(Tuyau tuyau : this.tuyauxDisponibles) {
+                    for(TuyauReserve tuyau : this.tuyauxDisponibles) {
                         if(tuyau.getNom().equals(casePlateau)) {
                             this.plateauCourant.get(lignePC).add(".");
                             tuyau.setNombre(tuyau.getNombre() + 1);
@@ -136,7 +136,7 @@ public class Niveau {
         
         System.out.println(this.plateauCourant); //debug
         
-        for(Tuyau tuyau : this.tuyauxDisponibles) { //debug
+        for(TuyauReserve tuyau : this.tuyauxDisponibles) { //debug
             System.out.print(" [" + tuyau.getNom() + " ; " + tuyau.getNombre() + "] ");
         }
         
@@ -161,7 +161,7 @@ public class Niveau {
         return plateauCourant;
     }
 
-    public ArrayList<Tuyau> getTuyauxDisponibles() {
+    public ArrayList<TuyauReserve> getTuyauxDisponibles() {
         return tuyauxDisponibles;
     }
     

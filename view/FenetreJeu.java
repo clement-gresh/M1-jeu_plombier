@@ -17,7 +17,7 @@ import javax.swing.JComponent;
 import projetIG.model.CouleurTuyau;
 import projetIG.model.TypeCase;
 import projetIG.model.TypeTuyau;
-import projetIG.model.niveau.Tuyau;
+import projetIG.model.niveau.TuyauReserve;
 
 public class FenetreJeu extends JComponent {    
     // Attributs
@@ -90,12 +90,12 @@ public class FenetreJeu extends JComponent {
         // Abscisse de la ligne verticale separant le plateau de la reserve
         int abscisseReserve = this.panelParent.getWidth() - 2 * this.largeurCase;
         
-        ArrayList<Tuyau> tuyauxDisponibles = this.panelParent.getNiveauCourant().getTuyauxDisponibles();
+        ArrayList<TuyauReserve> tuyauxDisponibles = this.panelParent.getNiveauCourant().getTuyauxDisponibles();
         
         int colonneReserve = 0;
         int ligneReserve = 0;
                 
-        for(Tuyau tuyau : tuyauxDisponibles) {
+        for(TuyauReserve tuyau : tuyauxDisponibles) {
             // Nombre de rotation du tuyau (en quarts de tour)
             int rotation = tuyau.getRotation();
             // Nombre de tuyaux correspondant disponibles dans la reserve

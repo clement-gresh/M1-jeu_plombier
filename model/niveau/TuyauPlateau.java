@@ -1,7 +1,9 @@
 package projetIG.model.niveau;
 
 import java.util.ArrayList;
+import projetIG.model.CouleurTuyau;
 import projetIG.model.Orientation;
+import projetIG.model.TypeTuyau;
 
 public class TuyauPlateau extends Tuyau {
     protected int ligne;
@@ -18,6 +20,13 @@ public class TuyauPlateau extends Tuyau {
         if(tuyau.startsWith("*")){ this.inamovible = true; }
         
         this.orientations = Orientation.orientations(this.nom);
+        
+        if(this.nom == TypeTuyau.SOURCE) {
+            this.inamovible = true;
+            this.couleur = CouleurTuyau.appartient( tuyau.substring(0, 1) );
+        }
+        
+        else{this.couleur = CouleurTuyau.BLANC;}
     }
 
     public int getLigne() {

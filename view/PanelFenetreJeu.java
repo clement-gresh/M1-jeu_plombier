@@ -11,7 +11,7 @@ public class PanelFenetreJeu extends JPanel {
     public PanelFenetreJeu() {
         this.setLayout(new BorderLayout(10, 10));
         
-        /*
+        
         //Ajout de la fenetre de jeu
         FenetreJeu fenetreJeu = new FenetreJeu(this, new Niveau());
         this.add(fenetreJeu, BorderLayout.CENTER);
@@ -20,7 +20,6 @@ public class PanelFenetreJeu extends JPanel {
         DragDropController dragDrop = new DragDropController(fenetreJeu);
         this.addMouseListener(dragDrop);
         this.addMouseMotionListener(dragDrop);
-        */
     }
 
     public Niveau getNiveauCourant() {

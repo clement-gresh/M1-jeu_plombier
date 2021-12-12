@@ -21,11 +21,11 @@ public class Niveau {
     //protected GrapheCouleurs grapheCouleurs;
     
     public Niveau() {
-        this.initialiserNiveau("src/main/java/projetIG/model/niveau/banque1/level3.p");
+        this.initialiserNiveau("src/main/java/projetIG/model/niveau/banque1/level5.p");
     }
     
     
-    // Enregistre la hauteur, la largeur du plateau,
+    // Enregistre la hauteur et la largeur du plateau,
     // initialise le plateau avec les sources et tuyaux inamovibles
     // et remplit la reserve
     private void initialiserNiveau(String file){
@@ -44,25 +44,31 @@ public class Niveau {
             int ligne = 0;
             
             while(scanner.hasNext()){
-                // Si on arrive au bout de la ligne, on cree une nouvelle ligne
+                // Si on arrive au bout de la ligne, on passe a une nouvelle
                 // et on revient a la premiere colonne
                 if(colonne == nbrCasesPlateauLargeur) {
                     ligne = ligne + 1;
                     colonne = 0;
                 }
                 
-                // On remplit la case suivante de la ligne courante
+                
                 String casePlateau = scanner.next();
                 
                 
                 // Construction du plateau courant avec les sources et les tuyaux inamovibles
-                if(TypeTuyau.appartient(casePlateau.substring(0, 1)) == TypeTuyau.SOURCE){
-                    this.plateauCourant.add(new TuyauSource(casePlateau, ligne, colonne));
-                }
-                
-                else if(casePlateau.startsWith("*")) {
+                if(TypeTuyau.appartient(casePlateau.substring(0, 1)) == TypeTuyau.SOURCE
+                        || casePlateau.startsWith("*")){
                     this.plateauCourant.add(new TuyauPlateau(casePlateau, ligne, colonne));
                 }
+                
+                /*
+                //debug : affiche tous les tuyaux sur le plateau (remplace le blog precedent en le commentant)
+                if(TypeTuyau.appartient(casePlateau.substring(0, 1)) == TypeTuyau.SOURCE
+                        || (!casePlateau.startsWith(".") && !casePlateau.startsWith("X"))){
+                    this.plateauCourant.add(new TuyauPlateau(casePlateau, ligne, colonne));
+                }
+                //fin debug
+                */
                 
                 // CONSTRUCTION DE LA RESERVE
                 // Tuyaux sans rotation
@@ -99,18 +105,18 @@ public class Niveau {
             //debug
             System.out.println(plateauCourant);  
             for(TuyauPlateau tuyau : this.plateauCourant) {
-                System.out.println("nom: " + tuyau.getNom() + ", inamovible : " + tuyau.isInamovible());
+                System.out.print("nom: " + tuyau.getNom() + ", inamovible : " + tuyau.isInamovible() + ", ");
             }
+            System.out.println("");
             
             for(TuyauReserve tuyau : this.tuyauxReserve) {
-                System.out.println("nom: " + tuyau.getNom() + ", nombre : " + tuyau.getNombre());
+                System.out.print("nom: " + tuyau.getNom() + ", nombre : " + tuyau.getNombre() + ", ");
             }
+            System.out.println("");
             //fin debug
         }
         
-        catch (Exception exception) {
-            System.err.println("Exception scanner sur le niveau (Niveau.java) " + exception.getMessage());
-        }
+        catch (Exception exception) { System.err.println("Exception scanner sur le niveau (Niveau.java) " + exception.getMessage()); }
     }
     
     //Getters

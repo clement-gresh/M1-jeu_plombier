@@ -1,11 +1,13 @@
 package projetIG.model.niveau;
 
+import projetIG.model.CouleurTuyau;
 import projetIG.model.Rotation;
 import projetIG.model.TypeTuyau;
 
 public class Tuyau {
     protected TypeTuyau nom;
     protected Rotation rotation = Rotation.PAS_DE_ROTATION;
+    protected CouleurTuyau couleur = CouleurTuyau.NOIR;
 
     public Tuyau(String tuyau) {
         if(tuyau.startsWith("*")){ tuyau = tuyau.substring(1); }
@@ -24,5 +26,9 @@ public class Tuyau {
 
     public Rotation getRotation() {
         return rotation;
+    }
+    
+    public CouleurTuyau getCouleur() {
+        return couleur;
     }
 }

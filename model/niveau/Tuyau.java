@@ -1,37 +1,28 @@
 package projetIG.model.niveau;
 
-public class Tuyau {
-    protected String nom;
-    protected int rotation; // Rotation en quarts de tours en sens horaire
-    protected int colonne; // Colonne du tuyau dans pipes.gif (de 0 à 6)
+import projetIG.model.Rotation;
+import projetIG.model.TypeTuyau;
 
-    public Tuyau(String nom, int rotation, int colonne) {
-        this.nom = nom;
-        this.rotation = rotation;
-        this.colonne = colonne;
+public class Tuyau {
+    protected TypeTuyau nom;
+    protected Rotation rotation = Rotation.PAS_DE_ROTATION;
+
+    public Tuyau(String tuyau) {
+        if(tuyau.startsWith("*")){ tuyau = tuyau.substring(1); }
+        
+        this.nom = TypeTuyau.appartient( tuyau.substring(0, 1) );
+        
+        if(!(this.nom == TypeTuyau.CROSS || this.nom == TypeTuyau.OVER)){
+            int nbrRotations = Integer.parseInt(tuyau.substring(1));
+            this.rotation = Rotation.values()[nbrRotations];
+        }
     }
 
-    public String getNom() {
+    public TypeTuyau getNom() {
         return nom;
     }
 
-    public void setNom(String nom) {
-        this.nom = nom;
-    }
-
-    public int getRotation() {
+    public Rotation getRotation() {
         return rotation;
-    }
-
-    public void setRotation(int rotation) {
-        this.rotation = rotation;
-    }
-
-    public int getColonne() {
-        return colonne;
-    }
-
-    public void setColonne(int colonne) {
-        this.colonne = colonne;
     }
 }

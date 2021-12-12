@@ -22,7 +22,7 @@ public class DragDropController extends MouseAdapter {
     public DragDropController(FenetreJeu fenetreJeu) {
         this.fenetreJeu = fenetreJeu;
     }
-    
+    /*
     @Override
     public void mousePressed(MouseEvent event) {
         if(SwingUtilities.isLeftMouseButton(event)){
@@ -177,4 +177,5 @@ public class DragDropController extends MouseAdapter {
             }
         }
     }
+*/
 }

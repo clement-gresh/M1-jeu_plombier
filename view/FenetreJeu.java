@@ -1,50 +1,42 @@
 package projetIG.view;
 
-import java.awt.Color;
-import java.awt.Font;
-import java.awt.Graphics;
-import java.awt.Graphics2D;
-import java.awt.Image;
-import java.awt.RenderingHints;
-import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import javax.imageio.ImageIO;
-import javax.swing.ImageIcon;
 import javax.swing.JComponent;
-import projetIG.model.CouleurTuyau;
-import projetIG.model.TypeCase;
-import projetIG.model.TypeTuyau;
-import projetIG.model.niveau.TuyauReserve;
+import projetIG.model.niveau.Niveau;
 
-public class FenetreJeu extends JComponent {    
+public class FenetreJeu extends JComponent {   
+    
     // Attributs
     protected PanelFenetreJeu panelParent;
+    protected Niveau niveau;
     protected BufferedImage pipes = new BufferedImage(820, 960, BufferedImage.TYPE_INT_ARGB);
     protected BufferedImage imagePlateau = new BufferedImage(820, 960, BufferedImage.TYPE_INT_ARGB);
     protected int nbrCasesTotalLargeur;
     protected int nbrCasesTotalHauteur;
     protected int largeurCase;
     protected int hauteurCase;
-    protected int xImageDD = 0;
-    protected int yImageDD = 0;
-    protected ImageIcon imageDD = new ImageIcon();
+    //protected int xImageDD = 0;
+    //protected int yImageDD = 0;
+    //protected ImageIcon imageDD = new ImageIcon();
 
+    
     // Constructeur
-    public FenetreJeu(PanelFenetreJeu panelParent) {
+    public FenetreJeu(PanelFenetreJeu panelParent, Niveau niveau) {
         this.panelParent = panelParent;
+        this.niveau = niveau;
         
         try {
             this.pipes = ImageIO.read(new File("src/main/java/projetIG/view/image/pipes.gif"));
         }
-        catch (IOException e) {}
+        catch (IOException e) { System.err.println("Erreur importation pipes.gif : " + e.getMessage());}
         
-        tailleCase();
+        //tailleCase();
     }
     
-    
+    /*
     @Override
     protected void paintComponent(Graphics graphics) {
         super.paintComponent(graphics);
@@ -398,5 +390,5 @@ public class FenetreJeu extends JComponent {
     public void setImageDD(ImageIcon imageDD) {
         this.imageDD = imageDD;
     }
-    
+    */
 }

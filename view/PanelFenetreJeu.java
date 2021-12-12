@@ -7,21 +7,20 @@ import projetIG.model.niveau.Niveau;
 
 public class PanelFenetreJeu extends JPanel {
     protected Niveau niveauCourant;
-
+    
     public PanelFenetreJeu() {
         this.setLayout(new BorderLayout(10, 10));
         
-        //Creation du niveau
-        this.niveauCourant = new Niveau();
-        
+        /*
         //Ajout de la fenetre de jeu
-        FenetreJeu fenetreJeu = new FenetreJeu(this);
+        FenetreJeu fenetreJeu = new FenetreJeu(this, new Niveau());
         this.add(fenetreJeu, BorderLayout.CENTER);
         
         //Ajout du controller Drag&Drop sur la fenetre de jeu
         DragDropController dragDrop = new DragDropController(fenetreJeu);
         this.addMouseListener(dragDrop);
         this.addMouseMotionListener(dragDrop);
+        */
     }
 
     public Niveau getNiveauCourant() {

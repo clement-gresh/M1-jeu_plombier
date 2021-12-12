@@ -6,35 +6,43 @@ public enum TypeTuyau {
     OVER,
     TURN,
     FORK,
-    CROSS;
+    CROSS,
+    NOT_A_PIPE;
     
-    static public int appartient(String s){
+    static public TypeTuyau appartient(String s){
         switch (s){
                 case "SOURCE":
-                        return 0;
-                case "S":
-                        return 0;
+                        return SOURCE;
+                case "R":
+                        return SOURCE;
+                case "G":
+                        return SOURCE;
+                case "B":
+                        return SOURCE;
+                case "Y":
+                        return SOURCE;
                 case "LINE":
-                        return 1;
+                        return LINE;
                 case "L":
-                        return 1;
+                        return LINE;
                 case "OVER":
-                        return 2;
+                        return OVER;
                 case "O":
-                        return 2;
+                        return OVER;
                 case "TURN":
-                        return 3;
+                        return TURN;
                 case "T":
-                        return 3;
+                        return TURN;
                 case "FORK":
-                        return 4;
+                        return FORK;
                 case "F":
-                        return 4;
+                        return FORK;
                 case "CROSS":
-                        return 5;
+                        return CROSS;
                 case "C":
-                        return 5;
+                        return CROSS;
+                default:
+                        return NOT_A_PIPE;
         }
-        return -1;
     }
 }

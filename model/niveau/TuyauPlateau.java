@@ -28,6 +28,16 @@ public class TuyauPlateau extends Tuyau {
         
         else{this.couleur = CouleurTuyau.BLANC;}
     }
+    
+    
+    public TuyauPlateau(Tuyau tuyau, int ligne, int colonne) {
+        super(tuyau);
+        
+        this.ligne = ligne;
+        this.colonne = colonne;
+        
+        this.orientations = Orientation.orientations(this.nom);
+    }
 
     public int getLigne() {
         return ligne;

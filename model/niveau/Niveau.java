@@ -55,7 +55,7 @@ public class Niveau {
                 String casePlateau = scanner.next();
                 
                 
-                // Construction du plateau courant avec les sources et les tuyaux inamovibles
+                // Construction du plateau initial (sources et tuyaux inamovibles)
                 if(TypeTuyau.appartient(casePlateau.substring(0, 1)) == TypeTuyau.SOURCE
                         || casePlateau.startsWith("*")){
                     this.plateauCourant.add(new TuyauPlateau(casePlateau, ligne, colonne));

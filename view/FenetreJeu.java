@@ -69,7 +69,7 @@ public class FenetreJeu extends JComponent {
         afficherTuyaux(graphics2D);
         
         // On ajoute l'image en Drag&Drop
-        //this.imageDD.paintIcon(this, graphics2D, this.xImageDD, this.yImageDD);
+        this.imageDD.paintIcon(this, graphics2D, this.xImageDD, this.yImageDD);
     }
     
     
@@ -134,7 +134,7 @@ public class FenetreJeu extends JComponent {
                         (tuyauReserve.getNom().ordinal() - 1) * (120 + 20),
                         tuyauReserve.getCouleur().ordinal() * (120 + 20), 120, 120);
                 
-                imgTemp = combiner(imgTemp1, imgTemp2);
+                imgTemp = combiner(imgTemp2, imgTemp1);
             }
             
             else{
@@ -315,6 +315,10 @@ public class FenetreJeu extends JComponent {
     // GETTERS
     public PanelFenetreJeu getPanelParent() {
         return panelParent;
+    }
+
+    public Niveau getNiveauCourant() {
+        return niveauCourant;
     }
 
     public BufferedImage getPipes() {

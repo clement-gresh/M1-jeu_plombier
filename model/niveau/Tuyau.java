@@ -19,6 +19,12 @@ public class Tuyau {
             this.rotation = Rotation.values()[nbrRotations];
         }
     }
+    
+    public Tuyau(Tuyau tuyau) {
+        this.nom = tuyau.getNom();
+        this.rotation = tuyau.getRotation();
+        this.couleur = tuyau.getCouleur();
+    }
 
     public TypeTuyau getNom() {
         return nom;

@@ -6,9 +6,13 @@ import java.awt.image.BufferedImage;
 import javax.swing.ImageIcon;
 import javax.swing.SwingUtilities;
 import projetIG.model.CouleurTuyau;
+import projetIG.model.Rotation;
 import projetIG.model.TypeTuyau;
+import projetIG.model.niveau.Tuyau;
+import projetIG.model.niveau.TuyauPlateau;
 import projetIG.model.niveau.TuyauReserve;
 import projetIG.view.FenetreJeu;
+import static projetIG.view.FenetreJeu.combiner;
 
 public class DragDropController extends MouseAdapter {
     protected FenetreJeu fenetreJeu;
@@ -17,7 +21,7 @@ public class DragDropController extends MouseAdapter {
     protected int nbrCasesTotalHauteur;
     protected int nbrCasesTotalLargeur;
     protected boolean deplacementTuyau = false;
-    protected String tuyauDeplace;
+    protected Tuyau tuyauDeplace;
 
     public DragDropController(FenetreJeu fenetreJeu) {
         this.fenetreJeu = fenetreJeu;
@@ -26,7 +30,7 @@ public class DragDropController extends MouseAdapter {
     @Override
     public void mousePressed(MouseEvent event) {
         if(SwingUtilities.isLeftMouseButton(event)){
-            /*
+            
             this.hauteurCase = this.fenetreJeu.getHauteurCase();
             this.largeurCase = this.fenetreJeu.getLargeurCase();
             
@@ -43,68 +47,69 @@ public class DragDropController extends MouseAdapter {
                                                           BufferedImage.TYPE_INT_ARGB);
             
             // Si le clic a eu lieu dans la reserve
-            if(colonne > this.nbrCasesTotalLargeur - 3) {
+            if(colonne > this.nbrCasesTotalLargeur - 3 && ligne < 6) {
                 // On verifie que colonne ne depasse pas le nombre maximal (peut arriver a cause de 
                 // l'imprecision sur le nombre de pixels lie au cast en int). On lui assigne le max sinon.
-                if(colonne > this.nbrCasesTotalLargeur - 1)
-                    colonne = this.nbrCasesTotalLargeur - 1;
+                if(colonne > this.nbrCasesTotalLargeur - 1) colonne = this.nbrCasesTotalLargeur - 1;
                 
-                // On verifie que ligne est inferieure à 6 (nombre de lignes dans la reserve)
-                if(ligne < 6) {
-                    TuyauReserve tuyauReserve = this.fenetreJeu.getPanelParent().getNiveauCourant()
-                                            .getTuyauxDisponibles()
-                                            .get(ligne * 2 + (this.nbrCasesTotalLargeur - colonne) % 2);
-                    System.out.println("Tuyau : " + tuyauReserve.getNom()); // debug
-                    
-                    if(tuyauReserve.getNombre() > 0) {
-                        // On recupere l'image du tuyau avec la rotation correspondant
-                        buffTuyauDD = this.fenetreJeu.getPipes().getSubimage(
-                                tuyauReserve.getColonne() * (120 + 20),
-                                CouleurTuyau.BLANC.ordinal() * (120 + 20),
-                                120, 120);
+                TuyauReserve tuyauReserve = this.fenetreJeu.getNiveauCourant().getTuyauxReserve()
+                                        .get(ligne * 2 + (this.nbrCasesTotalLargeur - colonne) % 2);
 
-                        if(tuyauReserve.getRotation() != 0)
-                            buffTuyauDD = FenetreJeu.pivoter(buffTuyauDD, tuyauReserve.getRotation());
+                if(tuyauReserve.getNombre() > 0) {
+                    tuyauReserve.diminuerNombre();
 
-                        tuyauReserve.setNombre(tuyauReserve.getNombre() - 1);
-                        
-                        this.deplacementTuyau = true;
-                        this.tuyauDeplace = tuyauReserve.getNom();
-                    }
+                    this.deplacementTuyau = true;
+                    this.tuyauDeplace = tuyauReserve;
                 }
-                
             }
             
             // Sinon, si le clic a lieu sur le plateau de jeu
             else if (ligne < this.nbrCasesTotalHauteur) {
-                String tuyauPlateau = this.fenetreJeu.getPanelParent().getNiveauCourant()
-                                                .getPlateauCourant().get(ligne).get(colonne);
                 
-                int typeTuyau = TypeTuyau.appartient(tuyauPlateau.substring(0, 1));
+                // On verifie qu'il s'agit d'un tuyau et qu'il est deplacable
+                int size = this.fenetreJeu.getNiveauCourant().getPlateauCourant().size();
                 
-                
-                System.out.println("DD plateau de Jeu : tuyau " + tuyauPlateau); //debug
-                
-                // S'il s'agit d'un tuyau deplacable, on recupere l'image et on enleve le tuyau du plateau
-                if(typeTuyau > -1) {
-                    System.out.println("DD plateau de Jeu, bon type de tuyau : " + typeTuyau); //debug
-                    
-                    buffTuyauDD = this.fenetreJeu.getPipes().getSubimage(
-                            typeTuyau * (120 + 20),
-                            CouleurTuyau.BLANC.ordinal() * (120 + 20),
-                            120, 120);
-                    
-                    int rotation = Integer.parseInt(tuyauPlateau.substring(1, 2));
-                    if(rotation != 0) buffTuyauDD = FenetreJeu.pivoter(buffTuyauDD, rotation);
-                    
-                    this.fenetreJeu.getPanelParent().getNiveauCourant().getPlateauCourant().get(ligne).set(colonne, ".");
-                    
-                    this.deplacementTuyau = true;
-                    this.tuyauDeplace = tuyauPlateau;
+                for(int i = 0; i < size; i++){
+                    TuyauPlateau tuyauPlateau = this.fenetreJeu.getNiveauCourant().getPlateauCourant().get(i);
+                                        
+                    if(ligne == tuyauPlateau.getLigne()
+                            && colonne == tuyauPlateau.getColonne()
+                            && !tuyauPlateau.isInamovible()
+                            ){
+                        
+                        this.deplacementTuyau = true;
+                        this.tuyauDeplace = tuyauPlateau;
+                                                
+                        // On enleve le tuyau du plateau
+                        this.fenetreJeu.getNiveauCourant().getPlateauCourant().remove(i);
+                        i--;
+                        size--;
+                        break;
+                    }
                 }
             }
             
             
+
+            if(this.deplacementTuyau){
+                // On recupere l'image du tuyau avec la rotation correspondant
+                buffTuyauDD = this.fenetreJeu.getPipes().getSubimage(
+                        this.tuyauDeplace.getNom().ordinal() * (120 + 20),
+                        CouleurTuyau.BLANC.ordinal() * (120 + 20),
+                        120, 120);
+                
+                if(this.tuyauDeplace.getRotation() != Rotation.PAS_DE_ROTATION){
+                    buffTuyauDD = FenetreJeu.pivoter(buffTuyauDD, tuyauDeplace.getRotation().ordinal());
+                }
+                
+                else if(this.tuyauDeplace.getNom().equals(TypeTuyau.OVER)){
+                    BufferedImage imgTemp2 = this.fenetreJeu.getPipes().getSubimage(
+                        (this.tuyauDeplace.getNom().ordinal() - 1) * (120 + 20),
+                        CouleurTuyau.BLANC.ordinal() * (120 + 20), 120, 120);
+                
+                    buffTuyauDD = combiner(imgTemp2, buffTuyauDD);
+                }
+            }
             
             
             // On ajoute l'image Drag&Drop au plateau de jeu (apres lui avoir donne la bonne taille)
@@ -113,10 +118,9 @@ public class DragDropController extends MouseAdapter {
             this.fenetreJeu.setXImageDD(event.getX() - (int) (0.5 * this.largeurCase));
             this.fenetreJeu.setYImageDD(event.getY() - (int) (0.5 * this.hauteurCase));
             this.fenetreJeu.repaint();
-            */
         }
     }
-    /*
+    
     @Override
     public void mouseDragged(MouseEvent event) {
         if(SwingUtilities.isLeftMouseButton(event)){
@@ -145,15 +149,23 @@ public class DragDropController extends MouseAdapter {
                         && (ligne < this.nbrCasesTotalHauteur - 1)
                         ) {
                     
-                    if(this.fenetreJeu.getPanelParent().getNiveauCourant().getPlateauCourant().get(ligne).get(colonne).equals("."))
-                    {
-                        this.fenetreJeu.getPanelParent().getNiveauCourant().getPlateauCourant().get(ligne).set(colonne, tuyauDeplace);
+                    boolean caseOccupee = false;
+                    
+                    for(TuyauPlateau tuyauPlateau : this.fenetreJeu.getNiveauCourant().getPlateauCourant()){
+                        if(tuyauPlateau.getColonne() == colonne && tuyauPlateau.getLigne() == ligne){
+                            renvoyerDansReserve();
+                            caseOccupee = true;
+                            break;
+                        }
                     }
+                    
+                    if(!caseOccupee)
+                        this.fenetreJeu.getNiveauCourant().getPlateauCourant().add(
+                                new TuyauPlateau(this.tuyauDeplace, ligne, colonne));
                     
                     else{
                         renvoyerDansReserve();
                     }
-                    
                 }
 
                 else {
@@ -172,12 +184,15 @@ public class DragDropController extends MouseAdapter {
     
     // Renvoie le tuyauDeplace dans la reserve
     private void renvoyerDansReserve(){
-        for(TuyauReserve tuyauReserve : this.fenetreJeu.getPanelParent().getNiveauCourant().getTuyauxDisponibles()){
-            if(tuyauReserve.getNom().equals(this.tuyauDeplace)){
-                tuyauReserve.setNombre(tuyauReserve.getNombre() + 1);
+        for(TuyauReserve tuyauReserve : this.fenetreJeu.getNiveauCourant().getTuyauxReserve()){
+            
+            if(tuyauReserve.getNom() == this.tuyauDeplace.getNom() 
+                    && tuyauReserve.getRotation() == this.tuyauDeplace.getRotation()){
+                
+                tuyauReserve.augmenterNombre();                
                 break;
             }
         }
     }
-*/
+
 }

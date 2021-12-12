@@ -22,10 +22,11 @@ public class DragDropController extends MouseAdapter {
     public DragDropController(FenetreJeu fenetreJeu) {
         this.fenetreJeu = fenetreJeu;
     }
-    /*
+    
     @Override
     public void mousePressed(MouseEvent event) {
         if(SwingUtilities.isLeftMouseButton(event)){
+            /*
             this.hauteurCase = this.fenetreJeu.getHauteurCase();
             this.largeurCase = this.fenetreJeu.getLargeurCase();
             
@@ -112,9 +113,10 @@ public class DragDropController extends MouseAdapter {
             this.fenetreJeu.setXImageDD(event.getX() - (int) (0.5 * this.largeurCase));
             this.fenetreJeu.setYImageDD(event.getY() - (int) (0.5 * this.hauteurCase));
             this.fenetreJeu.repaint();
+            */
         }
     }
-    
+    /*
     @Override
     public void mouseDragged(MouseEvent event) {
         if(SwingUtilities.isLeftMouseButton(event)){

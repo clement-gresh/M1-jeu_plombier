@@ -69,7 +69,7 @@ public class FenetreJeu extends JComponent {
         afficherTuyaux(graphics2D);
         
         // On ajoute l'image en Drag&Drop
-        this.imageDD.paintIcon(this, graphics2D, this.xImageDD, this.yImageDD);
+        //this.imageDD.paintIcon(this, graphics2D, this.xImageDD, this.yImageDD);
     }
     
     
@@ -103,8 +103,8 @@ public class FenetreJeu extends JComponent {
         for(TuyauReserve tuyauReserve : this.niveauCourant.getTuyauxReserve()) {
              // On ajoute le background de la case dans la reserve (i.e. un carre marron fonce)
             BufferedImage imgTemp = this.pipes.getSubimage(
-                    TypeTuyau.NOT_A_PIPE.ordinal() * (120 + 20),
-                    TypeCase.MARRON_FONCE.ordinal() * (120 + 20), 120, 120);
+                     TypeCase.MARRON_FONCE.ordinal() * (120 + 20),
+                     TypeTuyau.NOT_A_PIPE.ordinal() * (120 + 20), 120, 120);
             
             graphics2D.drawImage(imgTemp,
                         abscisseReserve + this.largeurCase * colonneReserve,

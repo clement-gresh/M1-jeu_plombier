@@ -15,7 +15,7 @@ public class Tuyau {
         this.nom = TypeTuyau.appartient( tuyau.substring(0, 1) );
         
         if(!(this.nom == TypeTuyau.CROSS || this.nom == TypeTuyau.OVER)){
-            int nbrRotations = Integer.parseInt(tuyau.substring(1));
+            int nbrRotations = Integer.parseInt(tuyau.substring(1, 2));
             this.rotation = Rotation.values()[nbrRotations];
         }
     }
@@ -23,7 +23,7 @@ public class Tuyau {
     public Tuyau(Tuyau tuyau) {
         this.nom = tuyau.getNom();
         this.rotation = tuyau.getRotation();
-        this.couleur = tuyau.getCouleur();
+        this.couleur = CouleurTuyau.BLANC;
     }
 
     public TypeTuyau getNom() {
@@ -36,5 +36,9 @@ public class Tuyau {
     
     public CouleurTuyau getCouleur() {
         return couleur;
+    }
+
+    public void setCouleur(CouleurTuyau couleur) {
+        this.couleur = couleur;
     }
 }

@@ -9,7 +9,7 @@ public class TuyauPlateau extends Tuyau {
     protected int ligne;
     protected int colonne;
     protected boolean inamovible = false;
-    protected ArrayList<Orientation> orientations;
+    protected ArrayList<ArrayList<Orientation>> orientations;
     
     public TuyauPlateau(String tuyau, int ligne, int colonne) {
         super(tuyau);
@@ -19,7 +19,7 @@ public class TuyauPlateau extends Tuyau {
         
         if(tuyau.startsWith("*")){ this.inamovible = true; }
         
-        this.orientations = Orientation.orientations(this.nom);
+        this.orientations = Orientation.orientations(this.nom, this.rotation);
         
         if(this.nom == TypeTuyau.SOURCE) {
             this.inamovible = true;
@@ -36,8 +36,38 @@ public class TuyauPlateau extends Tuyau {
         this.ligne = ligne;
         this.colonne = colonne;
         
-        this.orientations = Orientation.orientations(this.nom);
+        this.orientations = Orientation.orientations(this.nom, this.rotation);
     }
+    
+    
+    // Renvoie vrai si l'orientation est trouvée parmi les orientations du tuyau
+    public boolean aUneOuverture(Orientation orientation){
+        for(ArrayList<Orientation> tableauOrientations : orientations){
+            if(tableauOrientations.contains(orientation)) return true;
+        }
+        return false;
+    }
+    
+    
+    // Renvoie la liste des ouvertures (i.e. orientations) connectees, sans l'ouverture d'entree
+    public ArrayList<Orientation> ouverturesConnectees(Orientation orientation){
+        ArrayList<Orientation> ouverturesConnectees = new ArrayList<>();
+        
+        for(ArrayList<Orientation> tableauOrientations : orientations){
+            if(tableauOrientations.contains(orientation)) {
+                
+                for(Orientation orientationSortie : tableauOrientations){
+                    if(orientationSortie != orientation){
+                        ouverturesConnectees.add(orientationSortie);
+                    }
+                }
+                break;
+            }
+        }
+        
+        return ouverturesConnectees;
+    }
+    
 
     public int getLigne() {
         return ligne;
@@ -51,7 +81,7 @@ public class TuyauPlateau extends Tuyau {
         return inamovible;
     }
     
-    public ArrayList<Orientation> getOrientations() {
+    public ArrayList<ArrayList<Orientation>> getOrientations() {
         return orientations;
     }
 }

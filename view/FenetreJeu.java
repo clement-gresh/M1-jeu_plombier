@@ -27,7 +27,6 @@ public class FenetreJeu extends JComponent {
     protected PanelFenetreJeu panelParent;
     protected Niveau niveauCourant;
     protected BufferedImage pipes = new BufferedImage(820, 960, BufferedImage.TYPE_INT_ARGB);
-    protected BufferedImage imagePlateau = new BufferedImage(820, 960, BufferedImage.TYPE_INT_ARGB);
     protected int nbrCasesTotalLargeur;
     protected int nbrCasesTotalHauteur;
     protected int largeurCase;
@@ -325,10 +324,6 @@ public class FenetreJeu extends JComponent {
         return pipes;
     }
 
-    public BufferedImage getImagePlateau() {
-        return imagePlateau;
-    }
-    
     public int getNbrCasesTotalLargeur() {
         return nbrCasesTotalLargeur;
     }

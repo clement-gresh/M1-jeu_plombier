@@ -41,8 +41,6 @@ public class DragDropController extends MouseAdapter {
             int colonne = (int) Math.ceil( event.getX() / this.largeurCase ) ;
             int ligne = (int) Math.ceil( event.getY() / this.hauteurCase ) ;
             
-            System.out.println("Colonne " + colonne + " ligne " + ligne); // debug
-            
             BufferedImage buffTuyauDD = new BufferedImage(this.largeurCase, this.largeurCase,
                                                           BufferedImage.TYPE_INT_ARGB);
             
@@ -139,9 +137,6 @@ public class DragDropController extends MouseAdapter {
                 int colonne = (int) Math.ceil( event.getX() / this.largeurCase ) ;
                 int ligne = (int) Math.ceil( event.getY() / this.hauteurCase ) ;
 
-                System.out.println("Colonne relaché " + colonne + " ligne relaché " + ligne); // debug
-
-
                 // On verifie qu'on se trouve a l'interieur du plateau de jeu (sans les bordures)
                 if( (colonne > 0)
                         && (colonne < this.nbrCasesTotalLargeur - 3)
@@ -162,10 +157,6 @@ public class DragDropController extends MouseAdapter {
                     if(!caseOccupee)
                         this.fenetreJeu.getNiveauCourant().getPlateauCourant().add(
                                 new TuyauPlateau(this.tuyauDeplace, ligne, colonne));
-                    
-                    else{
-                        renvoyerDansReserve();
-                    }
                 }
 
                 else {
@@ -173,11 +164,10 @@ public class DragDropController extends MouseAdapter {
                 }
             
             
-                // On remet l'image Drag&Drop dans la fenetre de jeu à vide
+                // On remet l'image Drag&Drop a vide dans la fenetre de jeu 
                 this.fenetreJeu.setImageDD(new ImageIcon());
-                this.fenetreJeu.repaint();
-
                 this.deplacementTuyau = false;
+                this.fenetreJeu.repaint();
             }
         }
     }

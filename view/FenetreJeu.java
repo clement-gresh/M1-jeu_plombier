@@ -127,11 +127,11 @@ public class FenetreJeu extends JComponent {
                 
                 BufferedImage imgTemp1 = this.pipes.getSubimage(
                         tuyauReserve.getNom().ordinal() * (120 + 20),
-                        tuyauReserve.getCouleur().ordinal() * (120 + 20), 120, 120);
+                        tuyauReserve.getCouleur().get(0).ordinal() * (120 + 20), 120, 120);
                 
                 BufferedImage imgTemp2 = this.pipes.getSubimage(
                         (tuyauReserve.getNom().ordinal() - 1) * (120 + 20),
-                        tuyauReserve.getCouleur().ordinal() * (120 + 20), 120, 120);
+                        tuyauReserve.getCouleur().get(0).ordinal() * (120 + 20), 120, 120);
                 
                 imgTemp = combiner(imgTemp2, imgTemp1);
             }
@@ -139,7 +139,7 @@ public class FenetreJeu extends JComponent {
             else{
                 imgTemp = this.pipes.getSubimage(
                         tuyauReserve.getNom().ordinal() * (120 + 20),
-                        tuyauReserve.getCouleur().ordinal() * (120 + 20), 120, 120);
+                        tuyauReserve.getCouleur().get(0).ordinal() * (120 + 20), 120, 120);
                 if(tuyauReserve.getRotation() != Rotation.PAS_DE_ROTATION)
                     imgTemp = pivoter(imgTemp, tuyauReserve.getRotation().ordinal());
             }
@@ -203,14 +203,14 @@ public class FenetreJeu extends JComponent {
             // On recupere l'image correspondant au tuyau
             imgTemp = this.pipes.getSubimage(
                             tuyauPlateau.getNom().ordinal() * (120 + 20),
-                            tuyauPlateau.getCouleur().ordinal() * (120 + 20),
+                            tuyauPlateau.getCouleur().get(0).ordinal() * (120 + 20),
                             120, 120);
 
             
             if(tuyauPlateau.getNom() == TypeTuyau.OVER){
                 BufferedImage imgTemp2 = this.pipes.getSubimage(
                         TypeTuyau.LINE.ordinal() * (120 + 20),
-                        tuyauPlateau.getCouleur().ordinal() * (120 + 20),
+                        tuyauPlateau.getCouleur().get(1).ordinal() * (120 + 20),
                         120, 120);
 
                 imgTemp = combiner(imgTemp2, imgTemp);

@@ -23,10 +23,8 @@ public class TuyauPlateau extends Tuyau {
         
         if(this.nom == TypeTuyau.SOURCE) {
             this.inamovible = true;
-            this.couleur = CouleurTuyau.appartient( tuyau.substring(0, 1) );
+            this.couleur.set(0, CouleurTuyau.appartient( tuyau.substring(0, 1) ));
         }
-        
-        else{this.couleur = CouleurTuyau.BLANC;}
     }
     
     

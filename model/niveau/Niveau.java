@@ -62,7 +62,7 @@ public class Niveau {
                 }
                 
                 /*
-                //debug : affiche tous les tuyaux sur le plateau (remplace le blog precedent en le commentant)
+                //debug : affiche tous les tuyaux sur le plateau (remplace le bloc precedent en le commentant)
                 if(TypeTuyau.appartient(casePlateau.substring(0, 1)) == TypeTuyau.SOURCE
                         || (!casePlateau.startsWith(".") && !casePlateau.startsWith("X"))){
                     this.plateauCourant.add(new TuyauPlateau(casePlateau, ligne, colonne));

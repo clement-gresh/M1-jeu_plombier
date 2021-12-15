@@ -15,11 +15,19 @@ public class TuyauReserve extends Tuyau {
 
     public void augmenterNombre() {
         this.nombre = this.nombre + 1;
-        this.couleur = CouleurTuyau.BLANC;
+        
+        for(int i = 0; i < this.couleur.size(); i++){
+            this.couleur.set(i, CouleurTuyau.BLANC);
+        }
     }
     
     public void diminuerNombre() {
         this.nombre = this.nombre - 1;
-        if(this.nombre < 1) { this.couleur = CouleurTuyau.NOIR; }
+        
+        if(this.nombre < 1) {
+            for(int i = 0; i < this.couleur.size(); i++){
+                this.couleur.set(i, CouleurTuyau.NOIR);
+            }
+        }
     }
 }

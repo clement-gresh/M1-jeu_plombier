@@ -21,7 +21,7 @@ public class Niveau {
     //protected GrapheCouleurs grapheCouleurs;
     
     public Niveau() {
-        this.initialiserNiveau("src/main/java/projetIG/model/niveau/banque1/level5.p");
+        this.initialiserNiveau("src/main/java/projetIG/model/niveau/banque1/level3.p");
     }
     
     

@@ -10,6 +10,7 @@ public class TuyauPlateau extends Tuyau {
     protected int colonne;
     protected boolean inamovible = false;
     protected ArrayList<ArrayList<Orientation>> orientations;
+    protected ArrayList<Boolean> dejaVisite = new ArrayList<>();
     
     public TuyauPlateau(String tuyau, int ligne, int colonne) {
         super(tuyau);
@@ -25,6 +26,9 @@ public class TuyauPlateau extends Tuyau {
             this.inamovible = true;
             this.couleur.set(0, CouleurTuyau.appartient( tuyau.substring(0, 1) ));
         }
+        
+        this.dejaVisite.add(Boolean.FALSE);
+        if(this.nom == TypeTuyau.OVER) this.dejaVisite.add(Boolean.FALSE);
     }
     
     
@@ -35,6 +39,9 @@ public class TuyauPlateau extends Tuyau {
         this.colonne = colonne;
         
         this.orientations = Orientation.orientations(this.nom, this.rotation);
+        
+        this.dejaVisite.add(false);
+        if(this.nom == TypeTuyau.OVER) this.dejaVisite.add(false);
     }
     
     
@@ -81,5 +88,13 @@ public class TuyauPlateau extends Tuyau {
     
     public ArrayList<ArrayList<Orientation>> getOrientations() {
         return orientations;
+    }
+
+    public ArrayList<Boolean> getDejaVisite() {
+        return dejaVisite;
+    }
+
+    public void setDejaVisite(int index, Boolean dejaVisite) {
+        this.dejaVisite.set(index, dejaVisite);
     }
 }

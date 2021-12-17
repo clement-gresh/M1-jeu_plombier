@@ -1,15 +1,15 @@
 package projetIG.model.niveau;
 
 import java.util.ArrayList;
-import projetIG.model.CouleurTuyau;
-import projetIG.model.Orientation;
-import projetIG.model.TypeTuyau;
+import projetIG.model.enumeration.CouleurTuyau;
+import projetIG.model.enumeration.Ouverture;
+import projetIG.model.enumeration.TypeTuyau;
 
 public class TuyauPlateau extends Tuyau {
     protected int ligne;
     protected int colonne;
     protected boolean inamovible = false;
-    protected ArrayList<ArrayList<Orientation>> orientations;
+    protected ArrayList<ArrayList<Ouverture>> ouvertures;
     protected ArrayList<Boolean> dejaVisite = new ArrayList<>();
     
     public TuyauPlateau(String tuyau, int ligne, int colonne) {
@@ -20,7 +20,7 @@ public class TuyauPlateau extends Tuyau {
         
         if(tuyau.startsWith("*")){ this.inamovible = true; }
         
-        this.orientations = Orientation.orientations(this.nom, this.rotation);
+        this.ouvertures = Ouverture.ouvertures(this.nom, this.rotation);
         
         if(this.nom == TypeTuyau.SOURCE) {
             this.inamovible = true;
@@ -38,7 +38,7 @@ public class TuyauPlateau extends Tuyau {
         this.ligne = ligne;
         this.colonne = colonne;
         
-        this.orientations = Orientation.orientations(this.nom, this.rotation);
+        this.ouvertures = Ouverture.ouvertures(this.nom, this.rotation);
         
         this.dejaVisite.add(false);
         if(this.nom == TypeTuyau.OVER) this.dejaVisite.add(false);
@@ -46,8 +46,8 @@ public class TuyauPlateau extends Tuyau {
     
     
     // Renvoie vrai si l'orientation est trouvée parmi les orientations du tuyau
-    public boolean aUneOuverture(Orientation orientation){
-        for(ArrayList<Orientation> tableauOrientations : orientations){
+    public boolean aUneOuverture(Ouverture orientation){
+        for(ArrayList<Ouverture> tableauOrientations : ouvertures){
             if(tableauOrientations.contains(orientation)) return true;
         }
         return false;
@@ -55,13 +55,13 @@ public class TuyauPlateau extends Tuyau {
     
     
     // Renvoie la liste des ouvertures (i.e. orientations) connectees, sans l'ouverture d'entree
-    public ArrayList<Orientation> ouverturesConnectees(Orientation orientation){
-        ArrayList<Orientation> ouverturesConnectees = new ArrayList<>();
+    public ArrayList<Ouverture> ouverturesConnectees(Ouverture orientation){
+        ArrayList<Ouverture> ouverturesConnectees = new ArrayList<>();
         
-        for(ArrayList<Orientation> tableauOrientations : orientations){
+        for(ArrayList<Ouverture> tableauOrientations : ouvertures){
             if(tableauOrientations.contains(orientation)) {
                 
-                for(Orientation orientationSortie : tableauOrientations){
+                for(Ouverture orientationSortie : tableauOrientations){
                     if(orientationSortie != orientation){
                         ouverturesConnectees.add(orientationSortie);
                     }
@@ -86,8 +86,8 @@ public class TuyauPlateau extends Tuyau {
         return inamovible;
     }
     
-    public ArrayList<ArrayList<Orientation>> getOrientations() {
-        return orientations;
+    public ArrayList<ArrayList<Ouverture>> getOuvertures() {
+        return ouvertures;
     }
 
     public ArrayList<Boolean> getDejaVisite() {

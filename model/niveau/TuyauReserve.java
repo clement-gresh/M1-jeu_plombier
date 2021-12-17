@@ -1,6 +1,6 @@
 package projetIG.model.niveau;
 
-import projetIG.model.CouleurTuyau;
+import projetIG.model.enumeration.CouleurTuyau;
 
 public class TuyauReserve extends Tuyau {
     protected int nombre = 0;  // Nombre de tuyaux disponibles dans la reserve

@@ -4,21 +4,19 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
-import projetIG.model.Rotation;
-import projetIG.model.TypeTuyau;
+import projetIG.model.enumeration.Rotation;
+import projetIG.model.enumeration.TypeTuyau;
 
 public class Niveau {
     protected int nbrCasesPlateauHauteur;
     protected int nbrCasesPlateauLargeur;
     protected ArrayList<TuyauPlateau> plateauCourant = new ArrayList<>();
-    //protected ArrayList<ArrayList<TuyauPlateau>> plateauCourant = new ArrayList<>();
     protected ArrayList<TuyauReserve> tuyauxReserve = new ArrayList<>(Arrays.asList(
             new TuyauReserve("C0"), new TuyauReserve("O0"),
             new TuyauReserve("L0"), new TuyauReserve("L1"),
             new TuyauReserve("T1"), new TuyauReserve("T2"), new TuyauReserve("T0"), new TuyauReserve("T3"),
             new TuyauReserve("F0"), new TuyauReserve("F1"), new TuyauReserve("F3"), new TuyauReserve("F2")
     ));
-    //protected GrapheCouleurs grapheCouleurs;
     
     public Niveau() {
         this.initialiserNiveau("src/main/java/projetIG/model/niveau/banque1/level3.p");

@@ -1,9 +1,9 @@
 package projetIG.model.niveau;
 
 import java.util.ArrayList;
-import projetIG.model.CouleurTuyau;
-import projetIG.model.Rotation;
-import projetIG.model.TypeTuyau;
+import projetIG.model.enumeration.CouleurTuyau;
+import projetIG.model.enumeration.Rotation;
+import projetIG.model.enumeration.TypeTuyau;
 
 public class Tuyau {
     protected TypeTuyau nom;

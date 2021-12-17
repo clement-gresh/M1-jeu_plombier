@@ -1,4 +1,4 @@
-package projetIG.model;
+package projetIG.model.enumeration;
 
 public enum TypeCase {
     MARRON_FONCE,

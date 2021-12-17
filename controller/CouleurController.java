@@ -4,10 +4,10 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import javax.swing.SwingUtilities;
-import projetIG.model.CouleurTuyau;
-import projetIG.model.Orientation;
-import projetIG.model.Rotation;
-import projetIG.model.TypeTuyau;
+import projetIG.model.enumeration.CouleurTuyau;
+import projetIG.model.enumeration.Ouverture;
+import projetIG.model.enumeration.Rotation;
+import projetIG.model.enumeration.TypeTuyau;
 import projetIG.model.niveau.Niveau;
 import projetIG.model.niveau.TuyauPlateau;
 
@@ -49,7 +49,7 @@ public class CouleurController extends MouseAdapter {
             if(tuyauSource.getNom() == TypeTuyau.SOURCE && !tuyauSource.getDejaVisite().get(0)) {
                 tuyauSource.setDejaVisite(0, Boolean.TRUE);
                 
-                Orientation orientationSource = tuyauSource.getOrientations().get(0).get(0);
+                Ouverture orientationSource = tuyauSource.getOuvertures().get(0).get(0);
                 
                 System.out.println("Depart d'une source C/L : " + tuyauSource.getColonne() + ", " + tuyauSource.getLigne()); //debug
 
@@ -60,13 +60,13 @@ public class CouleurController extends MouseAdapter {
         System.out.println(""); // debug
     }
     
-    private void connexionCaseSuivante(TuyauPlateau tuyauEntrant, Orientation orientationTuyauEntrant, CouleurTuyau couleur){
+    private void connexionCaseSuivante(TuyauPlateau tuyauEntrant, Ouverture orientationTuyauEntrant, CouleurTuyau couleur){
         
         //System.out.print("C/L tuyau entrant : " + tuyauEntrant.getColonne()+ ", " + tuyauEntrant.getLigne()+ ", "); //debug
         //System.out.print("Orientation : " + orientationTuyauEntrant + " changement C/L : " + Orientation.changementLigne(orientationTuyauEntrant)+ ", " + Orientation.changementColonne(orientationTuyauEntrant)+ ", "); //debug
 
-        int ligneSortie = tuyauEntrant.getLigne() + Orientation.changementLigne(orientationTuyauEntrant);
-        int colonneSortie = tuyauEntrant.getColonne() + Orientation.changementColonne(orientationTuyauEntrant);
+        int ligneSortie = tuyauEntrant.getLigne() + Ouverture.changementLigne(orientationTuyauEntrant);
+        int colonneSortie = tuyauEntrant.getColonne() + Ouverture.changementColonne(orientationTuyauEntrant);
                 
         for(TuyauPlateau tuyauPlateau : this.niveauCourant.getPlateauCourant()) {
             if(tuyauPlateau.getLigne() == ligneSortie && tuyauPlateau.getColonne() == colonneSortie){
@@ -74,9 +74,9 @@ public class CouleurController extends MouseAdapter {
                 
                 System.out.print("Nom : " + tuyauPlateau.getNom() + ", "); //debug
                 
-                Orientation orientationEntree = Orientation.values()[
+                Ouverture orientationEntree = Ouverture.values()[
                         (orientationTuyauEntrant.ordinal() + Rotation.DEMI_TOUR.ordinal())
-                        % Orientation.values().length];
+                        % Ouverture.values().length];
                 System.out.print("Orientation d'entree : " + orientationEntree + ", "); //debug
                 
                 // On execute cette partie du code si :
@@ -89,7 +89,7 @@ public class CouleurController extends MouseAdapter {
                     && 
                         // Composante N-S d'un OVER
                         ((tuyauPlateau.getNom() == TypeTuyau.OVER
-                            && (orientationEntree == Orientation.NORTH || orientationEntree == Orientation.SOUTH)
+                            && (orientationEntree == Ouverture.NORTH || orientationEntree == Ouverture.SOUTH)
                             && tuyauPlateau.getCouleur().get(1) != CouleurTuyau.NOIR
                             && (!tuyauPlateau.getDejaVisite().get(1)
                                 || tuyauPlateau.getCouleur().get(1) != couleur)
@@ -99,7 +99,7 @@ public class CouleurController extends MouseAdapter {
                         
                         // Composante E-W d'un OVER
                         (tuyauPlateau.getNom() == TypeTuyau.OVER
-                            && (orientationEntree == Orientation.EAST || orientationEntree == Orientation.WEST)
+                            && (orientationEntree == Ouverture.EAST || orientationEntree == Ouverture.WEST)
                             && tuyauPlateau.getCouleur().get(0) != CouleurTuyau.NOIR
                             && (!tuyauPlateau.getDejaVisite().get(0)
                                 || tuyauPlateau.getCouleur().get(0) != couleur)
@@ -128,7 +128,7 @@ public class CouleurController extends MouseAdapter {
                     
                     else {
                         if(tuyauPlateau.getNom() == TypeTuyau.OVER
-                            && (orientationEntree == Orientation.NORTH || orientationEntree == Orientation.SOUTH)){
+                            && (orientationEntree == Ouverture.NORTH || orientationEntree == Ouverture.SOUTH)){
                             
                             tuyauPlateau.setCouleur(1, couleur);
                             tuyauPlateau.setDejaVisite(1, Boolean.TRUE);
@@ -142,7 +142,7 @@ public class CouleurController extends MouseAdapter {
                         System.out.print("Couleur mise : " + couleur + ", "); //debug
                         System.out.print("Orientation de sortie : " + tuyauPlateau.ouverturesConnectees(orientationEntree) + ", "); //debug
                         
-                        for(Orientation orientationSortie : tuyauPlateau.ouverturesConnectees(orientationEntree)){
+                        for(Ouverture orientationSortie : tuyauPlateau.ouverturesConnectees(orientationEntree)){
                             System.out.println("Orientation de sortie : " + orientationSortie + ", "); //debug
 
                             connexionCaseSuivante(tuyauPlateau, orientationSortie, couleur);

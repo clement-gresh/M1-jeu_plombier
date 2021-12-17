@@ -6,17 +6,12 @@ import projetIG.model.enumeration.Ouverture;
 import projetIG.model.enumeration.TypeTuyau;
 
 public class TuyauPlateau extends Tuyau {
-    protected int ligne;
-    protected int colonne;
     protected boolean inamovible = false;
     protected ArrayList<ArrayList<Ouverture>> ouvertures;
     protected ArrayList<Boolean> dejaVisite = new ArrayList<>();
     
-    public TuyauPlateau(String tuyau, int ligne, int colonne) {
+    public TuyauPlateau(String tuyau) {
         super(tuyau);
-        
-        this.ligne = ligne;
-        this.colonne = colonne;
         
         if(tuyau.startsWith("*")){ this.inamovible = true; }
         
@@ -32,11 +27,8 @@ public class TuyauPlateau extends Tuyau {
     }
     
     
-    public TuyauPlateau(Tuyau tuyau, int ligne, int colonne) {
+    public TuyauPlateau(Tuyau tuyau) {
         super(tuyau);
-        
-        this.ligne = ligne;
-        this.colonne = colonne;
         
         this.ouvertures = Ouverture.ouvertures(this.nom, this.rotation);
         
@@ -73,15 +65,7 @@ public class TuyauPlateau extends Tuyau {
         return ouverturesConnectees;
     }
     
-
-    public int getLigne() {
-        return ligne;
-    }
-
-    public int getColonne() {
-        return colonne;
-    }
-
+    // GETTERS
     public boolean isInamovible() {
         return inamovible;
     }
@@ -93,7 +77,8 @@ public class TuyauPlateau extends Tuyau {
     public ArrayList<Boolean> getDejaVisite() {
         return dejaVisite;
     }
-
+    
+    // SETTERS
     public void setDejaVisite(int index, Boolean dejaVisite) {
         this.dejaVisite.set(index, dejaVisite);
     }

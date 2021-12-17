@@ -35,7 +35,7 @@ public class FenetreJeu extends JComponent {
     protected int yImageDD = 0;
     protected ImageIcon imageDD = new ImageIcon();
 
-    
+    /*
     // Constructeur
     public FenetreJeu(PanelFenetreJeu panelParent, Niveau niveau) {
         this.panelParent = panelParent;
@@ -60,7 +60,7 @@ public class FenetreJeu extends JComponent {
         
         tailleCase();
         
-        
+        /*
         construireReserve(graphics2D);
         
         construirePlateauVide(graphics2D);
@@ -69,6 +69,7 @@ public class FenetreJeu extends JComponent {
         
         // On ajoute l'image en Drag&Drop
         this.imageDD.paintIcon(this, graphics2D, this.xImageDD, this.yImageDD);
+        
     }
     
     
@@ -88,8 +89,8 @@ public class FenetreJeu extends JComponent {
         this.largeurCase = (int)  (this.panelParent.getWidth() / this.nbrCasesTotalLargeur);
         this.hauteurCase = (int)  (this.panelParent.getHeight() / this.nbrCasesTotalHauteur);
     }
-    
-    
+    */
+    /*
     // CONSTRUCTION DE LA RESERVE
     private void construireReserve(Graphics2D graphics2D){
         
@@ -353,4 +354,5 @@ public class FenetreJeu extends JComponent {
     public void setImageDD(ImageIcon imageDD) {
         this.imageDD = imageDD;
     }
+    */
 }

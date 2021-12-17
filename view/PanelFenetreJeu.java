@@ -5,6 +5,7 @@ import javax.swing.JPanel;
 import projetIG.controller.CouleurController;
 import projetIG.controller.DragDropController;
 import projetIG.model.niveau.Niveau;
+import projetIG.model.niveau.ParserNiveau;
 
 public class PanelFenetreJeu extends JPanel {
     protected Niveau niveauCourant;
@@ -13,9 +14,10 @@ public class PanelFenetreJeu extends JPanel {
         this.setLayout(new BorderLayout(10, 10));
         
         //Creation du niveau
-        this.niveauCourant = new Niveau();
+        Niveau niveau = ParserNiveau.parserNiveau("src/main/java/projetIG/model/niveau/banque1/level3.p");
         
         //Ajout de la fenetre de jeu
+        /*
         FenetreJeu fenetreJeu = new FenetreJeu(this, this.niveauCourant);
         this.add(fenetreJeu, BorderLayout.CENTER);
                 
@@ -27,5 +29,6 @@ public class PanelFenetreJeu extends JPanel {
         //Ajout du controller des couleurs sur la fenetre de jeu
         CouleurController couleurController = new CouleurController(this.niveauCourant);
         this.addMouseListener(couleurController);
+    */
     }
 }

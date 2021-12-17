@@ -12,7 +12,7 @@ import projetIG.model.niveau.Tuyau;
 import projetIG.model.niveau.TuyauPlateau;
 import projetIG.model.niveau.TuyauReserve;
 import projetIG.view.FenetreJeu;
-import static projetIG.view.FenetreJeu.combiner;
+//import static projetIG.view.FenetreJeu.combiner;
 
 public class DragDropController extends MouseAdapter {
     protected FenetreJeu fenetreJeu;
@@ -26,7 +26,7 @@ public class DragDropController extends MouseAdapter {
     public DragDropController(FenetreJeu fenetreJeu) {
         this.fenetreJeu = fenetreJeu;
     }
-    
+    /*
     @Override
     public void mousePressed(MouseEvent event) {
         if(SwingUtilities.isLeftMouseButton(event)){
@@ -184,5 +184,6 @@ public class DragDropController extends MouseAdapter {
             }
         }
     }
+*/
 
 }

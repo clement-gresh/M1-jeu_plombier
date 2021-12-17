@@ -17,7 +17,7 @@ public class CouleurController extends MouseAdapter {
     public CouleurController(Niveau niveauCourant) {
         this.niveauCourant = niveauCourant;
     }
-
+/*
     @Override
     public void mouseReleased(MouseEvent event) {
         if(SwingUtilities.isLeftMouseButton(event)){
@@ -154,4 +154,5 @@ public class CouleurController extends MouseAdapter {
             }
         }
     }
+*/
 }

@@ -4,10 +4,11 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
+import projetIG.model.enumeration.CouleurTuyau;
 import projetIG.model.enumeration.Rotation;
 import projetIG.model.enumeration.TypeTuyau;
 
-public class ParserNiveau {
+public abstract class ParserNiveau {
     static public Niveau parserNiveau(String file){
         File fichierNiveau = new File(file);
         
@@ -15,13 +16,18 @@ public class ParserNiveau {
         tuyauxPlateau.add(new ArrayList<>());
         
         ArrayList<ArrayList<TuyauReserve>> tuyauxReserve = new ArrayList<>();
-        
-        tuyauxReserve.add(new ArrayList<>(Arrays.asList(new TuyauReserve("C0"), new TuyauReserve("O0"))));
-        tuyauxReserve.add(new ArrayList<>(Arrays.asList(new TuyauReserve("L0"), new TuyauReserve("L1"))));
-        tuyauxReserve.add(new ArrayList<>(Arrays.asList(new TuyauReserve("T1"), new TuyauReserve("T2"))));
-        tuyauxReserve.add(new ArrayList<>(Arrays.asList(new TuyauReserve("T0"), new TuyauReserve("T3"))));
-        tuyauxReserve.add(new ArrayList<>(Arrays.asList(new TuyauReserve("F0"), new TuyauReserve("F1"))));
-        tuyauxReserve.add(new ArrayList<>(Arrays.asList(new TuyauReserve("F3"), new TuyauReserve("F2"))));
+        tuyauxReserve.add(new ArrayList<>(Arrays.asList(new TuyauReserve(TypeTuyau.CROSS, Rotation.PAS_DE_ROTATION),
+                                                        new TuyauReserve(TypeTuyau.OVER, Rotation.PAS_DE_ROTATION))));
+        tuyauxReserve.add(new ArrayList<>(Arrays.asList(new TuyauReserve(TypeTuyau.LINE, Rotation.PAS_DE_ROTATION),
+                                                        new TuyauReserve(TypeTuyau.LINE, Rotation.QUART_TOUR_TRIGO))));
+        tuyauxReserve.add(new ArrayList<>(Arrays.asList(new TuyauReserve(TypeTuyau.TURN, Rotation.QUART_TOUR_HORAIRE),
+                                                        new TuyauReserve(TypeTuyau.TURN, Rotation.DEMI_TOUR))));
+        tuyauxReserve.add(new ArrayList<>(Arrays.asList(new TuyauReserve(TypeTuyau.TURN, Rotation.PAS_DE_ROTATION),
+                                                        new TuyauReserve(TypeTuyau.TURN, Rotation.QUART_TOUR_TRIGO))));
+        tuyauxReserve.add(new ArrayList<>(Arrays.asList(new TuyauReserve(TypeTuyau.FORK, Rotation.PAS_DE_ROTATION),
+                                                        new TuyauReserve(TypeTuyau.FORK, Rotation.QUART_TOUR_HORAIRE))));
+        tuyauxReserve.add(new ArrayList<>(Arrays.asList(new TuyauReserve(TypeTuyau.FORK, Rotation.QUART_TOUR_TRIGO),
+                                                        new TuyauReserve(TypeTuyau.FORK, Rotation.DEMI_TOUR))));
         
         try {
             Scanner scanner = new Scanner(fichierNiveau);
@@ -47,40 +53,41 @@ public class ParserNiveau {
                 
                 String casePlateau = scanner.next();
                 
+                TypeTuyau typeTuyau;
+                boolean inamovible = false;
+                Rotation rotation;
                 
-                // CONSTRUCTION DU PLATEAU
-                // (sources et tuyaux inamovibles)
-                if(TypeTuyau.appartient(casePlateau.substring(0, 1)) == TypeTuyau.SOURCE
-                        || casePlateau.startsWith("*")){
-                    tuyauxPlateau.get(ligne).add(new TuyauPlateau(casePlateau));
+                if(casePlateau.startsWith("*")){
+                    inamovible = true;
+                    casePlateau = casePlateau.substring(1);
                 }
                 
+                typeTuyau = TypeTuyau.appartient(casePlateau.substring(0, 1));
                 
-                else {
-                     tuyauxPlateau.get(ligne).add(null);
+                
+                if(typeTuyau != TypeTuyau.NOT_A_PIPE) {
+                    int nbrRotations = Integer.parseInt(casePlateau.substring(1, 2));
+                    rotation = Rotation.values()[nbrRotations];
 
-                     
-                    // CONSTRUCTION DE LA RESERVE
-                    TypeTuyau typeTuyau = TypeTuyau.appartient(casePlateau.substring(0, 1));
-                    
-                    if(typeTuyau != TypeTuyau.NOT_A_PIPE) {
+
+                    // CONSTRUCTION DU PLATEAU
+                    // (sources et tuyaux inamovibles)
+                    if(typeTuyau == TypeTuyau.SOURCE || inamovible){
+                        CouleurTuyau couleur = (typeTuyau == TypeTuyau.SOURCE) ?
+                                CouleurTuyau.appartient(casePlateau.substring(0, 1))
+                                : CouleurTuyau.BLANC;
+                        tuyauxPlateau.get(ligne).add(new TuyauPlateau(typeTuyau, rotation, true, couleur));
+                    }
+
+                    else {
+                        tuyauxPlateau.get(ligne).add(null);
+
+                        // CONSTRUCTION DE LA RESERVE
                         boolean tuyauTrouve = false;
-                        
-                        // Tuyaux sans rotation
-                        if( typeTuyau == TypeTuyau.CROSS || typeTuyau == TypeTuyau.OVER) {
-                            Rotation rotation = Rotation.PAS_DE_ROTATION;
-                        }
 
-                        // Tuyaux avec rotation
-                        else {
-                            int nbrRotations = Integer.parseInt(casePlateau.substring(1, 2));
-                            Rotation rotation = Rotation.values()[nbrRotations];
-                        }
-                        
-                        // Augmentation du nombre disponible
                         for(ArrayList<TuyauReserve> ligneReserve : tuyauxReserve){
                             for(TuyauReserve tuyau : ligneReserve){
-                                if( tuyau.getNom() == TypeTuyau.appartient(casePlateau.substring(0, 1))){
+                                if( tuyau.getNom() == typeTuyau && tuyau.getRotation() == rotation){
                                     tuyau.augmenterNombre();
                                     tuyauTrouve = true;
                                     break;
@@ -90,6 +97,8 @@ public class ParserNiveau {
                         }
                     }
                 }
+                
+                else { tuyauxPlateau.get(ligne).add(null); }
                 
                 colonne = colonne+1;
             }

@@ -3,6 +3,7 @@ package projetIG.model.niveau;
 import java.util.ArrayList;
 import projetIG.model.enumeration.CouleurTuyau;
 import projetIG.model.enumeration.Ouverture;
+import projetIG.model.enumeration.Rotation;
 import projetIG.model.enumeration.TypeTuyau;
 
 public class TuyauPlateau extends Tuyau {
@@ -10,17 +11,16 @@ public class TuyauPlateau extends Tuyau {
     protected ArrayList<ArrayList<Ouverture>> ouvertures;
     protected ArrayList<Boolean> dejaVisite = new ArrayList<>();
     
-    public TuyauPlateau(String tuyau) {
-        super(tuyau);
-        
-        if(tuyau.startsWith("*")){ this.inamovible = true; }
-        
+    
+    // CONSTRUCTEURS
+    public TuyauPlateau(TypeTuyau typeTuyau, Rotation rotation, boolean inamovible, CouleurTuyau couleur) {
+        super(typeTuyau, rotation);
+        this.inamovible = inamovible;
         this.ouvertures = Ouverture.ouvertures(this.nom, this.rotation);
         
-        if(this.nom == TypeTuyau.SOURCE) {
-            this.inamovible = true;
-            this.couleur.set(0, CouleurTuyau.appartient( tuyau.substring(0, 1) ));
-        }
+        
+        this.couleur.add(couleur);
+        if(this.nom == TypeTuyau.OVER) this.couleur.add(couleur);
         
         this.dejaVisite.add(Boolean.FALSE);
         if(this.nom == TypeTuyau.OVER) this.dejaVisite.add(Boolean.FALSE);
@@ -46,6 +46,7 @@ public class TuyauPlateau extends Tuyau {
     }
     
     
+    // METHODES
     // Renvoie la liste des ouvertures (i.e. orientations) connectees, sans l'ouverture d'entree
     public ArrayList<Ouverture> ouverturesConnectees(Ouverture orientation){
         ArrayList<Ouverture> ouverturesConnectees = new ArrayList<>();
@@ -64,6 +65,7 @@ public class TuyauPlateau extends Tuyau {
         
         return ouverturesConnectees;
     }
+    
     
     // GETTERS
     public boolean isInamovible() {

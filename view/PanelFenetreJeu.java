@@ -14,13 +14,13 @@ public class PanelFenetreJeu extends JPanel {
         this.setLayout(new BorderLayout(10, 10));
         
         //Creation du niveau
-        Niveau niveau = ParserNiveau.parserNiveau("src/main/java/projetIG/model/niveau/banque1/level3.p");
+        this.niveauCourant = ParserNiveau.parserNiveau("src/main/java/projetIG/model/niveau/banque1/level3.p");
         
         //Ajout de la fenetre de jeu
-        /*
         FenetreJeu fenetreJeu = new FenetreJeu(this, this.niveauCourant);
         this.add(fenetreJeu, BorderLayout.CENTER);
-                
+        
+        /*      
         //Ajout du controller Drag&Drop sur la fenetre de jeu
         DragDropController dragDrop = new DragDropController(fenetreJeu);
         this.addMouseListener(dragDrop);

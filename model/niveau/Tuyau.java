@@ -9,21 +9,12 @@ public class Tuyau {
     protected TypeTuyau nom;
     protected Rotation rotation;
     protected ArrayList<CouleurTuyau> couleur = new ArrayList<>();
-
-    public Tuyau(String tuyau) {
-        if(tuyau.startsWith("*")){ tuyau = tuyau.substring(1); }
-        
-        this.nom = TypeTuyau.appartient( tuyau.substring(0, 1) );
-        
-        if(!(this.nom == TypeTuyau.CROSS) && !(this.nom == TypeTuyau.OVER)){
-            int nbrRotations = Integer.parseInt(tuyau.substring(1, 2));
-            this.rotation = Rotation.values()[nbrRotations];
-        }
-        
-        else{ this.rotation = Rotation.PAS_DE_ROTATION; }
-        
-        this.couleur.add(CouleurTuyau.NOIR);
-        if(this.nom == TypeTuyau.OVER) this.couleur.add(CouleurTuyau.NOIR);
+    
+    
+    // CONSTRUCTEURS
+    public Tuyau(TypeTuyau typeTuyau, Rotation rotation) {
+        this.nom = typeTuyau;
+        this.rotation = rotation;
     }
     
     public Tuyau(Tuyau tuyau) {
@@ -34,6 +25,8 @@ public class Tuyau {
         if(tuyau.getNom() == TypeTuyau.OVER) this.couleur.add(CouleurTuyau.BLANC);
     }
 
+    
+    // GETTERS
     public TypeTuyau getNom() {
         return nom;
     }
@@ -46,6 +39,7 @@ public class Tuyau {
         return couleur;
     }
 
+    // SETTERS
     public void setCouleur(int index, CouleurTuyau couleur) {
         this.couleur.set(index, couleur);
     }

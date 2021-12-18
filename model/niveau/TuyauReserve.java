@@ -1,33 +1,32 @@
 package projetIG.model.niveau;
 
 import projetIG.model.enumeration.CouleurTuyau;
+import projetIG.model.enumeration.Rotation;
+import projetIG.model.enumeration.TypeTuyau;
 
 public class TuyauReserve extends Tuyau {
     protected int nombre = 0;  // Nombre de tuyaux disponibles dans la reserve
 
-    public TuyauReserve(String tuyau) {
-        super(tuyau);
+    public TuyauReserve(TypeTuyau typeTuyau, Rotation rotation) {
+        super(typeTuyau, rotation);
+        
+        this.couleur.add(CouleurTuyau.BLANC);
+        if(this.nom == TypeTuyau.OVER) this.couleur.add(CouleurTuyau.BLANC);
     }
-
-    public int getNombre() {
-        return nombre;
-    }
-
+    
+    
+    // METHODES
     public void augmenterNombre() {
         this.nombre = this.nombre + 1;
-        
-        for(int i = 0; i < this.couleur.size(); i++){
-            this.couleur.set(i, CouleurTuyau.BLANC);
-        }
     }
     
     public void diminuerNombre() {
         this.nombre = this.nombre - 1;
-        
-        if(this.nombre < 1) {
-            for(int i = 0; i < this.couleur.size(); i++){
-                this.couleur.set(i, CouleurTuyau.NOIR);
-            }
-        }
+    }
+
+    
+    // GETTERS
+    public int getNombre() {
+        return nombre;
     }
 }

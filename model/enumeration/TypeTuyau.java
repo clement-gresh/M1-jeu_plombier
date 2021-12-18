@@ -1,5 +1,12 @@
 package projetIG.model.enumeration;
 
+import java.util.ArrayList;
+import java.util.Arrays;
+import static projetIG.model.enumeration.Ouverture.EAST;
+import static projetIG.model.enumeration.Ouverture.NORTH;
+import static projetIG.model.enumeration.Ouverture.SOUTH;
+import static projetIG.model.enumeration.Ouverture.WEST;
+
 public enum TypeTuyau {
     SOURCE,
     LINE,
@@ -8,6 +15,108 @@ public enum TypeTuyau {
     FORK,
     CROSS,
     NOT_A_PIPE;
+    
+    static public final ArrayList<ArrayList<ArrayList<Ouverture>>> ouvertures = new ArrayList<>();
+    
+    static public final Ouverture[][][] ouverturesTableau = {
+        {{Ouverture.NORTH}},
+        {{Ouverture.NORTH, Ouverture.SOUTH}},
+        {{Ouverture.NORTH, Ouverture.SOUTH}, {Ouverture.EAST, Ouverture.WEST}},
+        {{Ouverture.NORTH, Ouverture.EAST}},
+        {{Ouverture.NORTH, Ouverture.EAST, Ouverture.SOUTH}},
+        {{Ouverture.NORTH, Ouverture.EAST, Ouverture.SOUTH, Ouverture.WEST}}
+            
+    };
+    
+    // Initialisation de l'ArrayList ouvertures a partir du tableau ouverturesTableau
+    static {
+        int i = 0;
+        int j = 0;
+        
+        for(Ouverture[][] array1 : ouverturesTableau){
+            ouvertures.add(new ArrayList<>());
+            
+            for(Ouverture[] array2 : array1){
+                ouvertures.get(i).add(new ArrayList<>());
+                
+                for(Ouverture ouverture : array2){
+                    ouvertures.get(i).get(j).add(ouverture);
+                }
+                j = j + 1;
+            }
+            i = i + 1;
+            j = 0;
+        }
+        
+        System.out.println("ouvertures : " + ouvertures);
+    }
+    
+    /*
+    // Renvoie toutes les orientations d'un tuyau en fonction de sa rotation
+    static public ArrayList<ArrayList<Ouverture>> ouvertures(TypeTuyau type, Rotation rotation){   
+        ArrayList<ArrayList<Ouverture>> ouvertures = new ArrayList<>();
+        ouvertures.add(new ArrayList<>());
+        
+        switch (type){
+                case SOURCE :
+                    ouvertures.get(0).add(Ouverture.values()[
+                            (NORTH.ordinal() + rotation.ordinal())
+                            % Ouverture.values().length]);
+                    break;
+                case LINE :
+                    ouvertures.get(0).add(Ouverture.values()[
+                            (NORTH.ordinal() + rotation.ordinal())
+                            % Ouverture.values().length]);
+                    ouvertures.get(0).add(Ouverture.values()[
+                            (SOUTH.ordinal() + rotation.ordinal())
+                            % Ouverture.values().length]);
+                    break;
+                case OVER :
+                    ouvertures.get(0).add(Ouverture.values()[
+                            (NORTH.ordinal() + rotation.ordinal())
+                            % Ouverture.values().length]);
+                    ouvertures.get(0).add(Ouverture.values()[
+                            (SOUTH.ordinal() + rotation.ordinal())
+                            % Ouverture.values().length]);
+                    
+                    ouvertures.add(new ArrayList<>());
+                    ouvertures.get(1).add(Ouverture.values()[
+                            (EAST.ordinal() + rotation.ordinal())
+                            % Ouverture.values().length]);
+                    ouvertures.get(1).add(Ouverture.values()[
+                            (WEST.ordinal() + rotation.ordinal())
+                            % Ouverture.values().length]);
+                    break;
+                case TURN :
+                    ouvertures.get(0).add(Ouverture.values()[
+                            (NORTH.ordinal() + rotation.ordinal())
+                            % Ouverture.values().length]);
+                    ouvertures.get(0).add(Ouverture.values()[
+                            (EAST.ordinal() + rotation.ordinal())
+                            % Ouverture.values().length]);
+                    break;
+                case FORK :
+                    ouvertures.get(0).add(Ouverture.values()[
+                            (NORTH.ordinal() + rotation.ordinal())
+                            % Ouverture.values().length]);
+                    ouvertures.get(0).add(Ouverture.values()[
+                            (EAST.ordinal() + rotation.ordinal())
+                            % Ouverture.values().length]);
+                    ouvertures.get(0).add(Ouverture.values()[
+                            (SOUTH.ordinal() + rotation.ordinal())
+                            % Ouverture.values().length]);
+                    break;
+                case CROSS :
+                    ouvertures.get(0).add(Ouverture.NORTH);
+                    ouvertures.get(0).add(Ouverture.EAST);
+                    ouvertures.get(0).add(Ouverture.SOUTH);
+                    ouvertures.get(0).add(Ouverture.WEST);
+                    break; 
+        }
+        
+        return ouvertures;
+    }
+    */
     
     /*
     static public final Ouverture[][][] ouvertures = {

@@ -16,7 +16,7 @@ public class TuyauPlateau extends Tuyau {
     public TuyauPlateau(TypeTuyau typeTuyau, Rotation rotation, boolean inamovible, CouleurTuyau couleur) {
         super(typeTuyau, rotation);
         this.inamovible = inamovible;
-        this.ouvertures = Ouverture.ouvertures(this.nom, this.rotation);
+        this.ouvertures = TypeTuyau.ouvertures.get(this.nom.ordinal());
         
         
         this.couleur.add(couleur);
@@ -30,7 +30,7 @@ public class TuyauPlateau extends Tuyau {
     public TuyauPlateau(Tuyau tuyau) {
         super(tuyau);
         
-        this.ouvertures = Ouverture.ouvertures(this.nom, this.rotation);
+        this.ouvertures = TypeTuyau.ouvertures.get(this.nom.ordinal());
         
         this.couleur.add(CouleurTuyau.BLANC);
         if(tuyau.getNom() == TypeTuyau.OVER) this.couleur.add(CouleurTuyau.BLANC);
@@ -41,9 +41,9 @@ public class TuyauPlateau extends Tuyau {
     
     
     // Renvoie vrai si l'orientation est trouvée parmi les orientations du tuyau
-    public boolean aUneOuverture(Ouverture orientation){
-        for(ArrayList<Ouverture> tableauOrientations : ouvertures){
-            if(tableauOrientations.contains(orientation)) return true;
+    public boolean aUneOuverture(Ouverture ouverture, Rotation rotation){
+        for(ArrayList<Ouverture> tableauOuverture : ouvertures){
+            if(tableauOuverture.contains(ouverture)) return true;
         }
         return false;
     }
@@ -51,14 +51,14 @@ public class TuyauPlateau extends Tuyau {
     
     // METHODES
     // Renvoie la liste des ouvertures (i.e. orientations) connectees, sans l'ouverture d'entree
-    public ArrayList<Ouverture> ouverturesConnectees(Ouverture orientation){
+    public ArrayList<Ouverture> ouverturesConnectees(Ouverture ouverture, Rotation rotation){
         ArrayList<Ouverture> ouverturesConnectees = new ArrayList<>();
         
-        for(ArrayList<Ouverture> tableauOrientations : ouvertures){
-            if(tableauOrientations.contains(orientation)) {
+        for(ArrayList<Ouverture> tableauOuvertures : ouvertures){
+            if(tableauOuvertures.contains(ouverture)) {
                 
-                for(Ouverture orientationSortie : tableauOrientations){
-                    if(orientationSortie != orientation){
+                for(Ouverture orientationSortie : tableauOuvertures){
+                    if(orientationSortie != ouverture){
                         ouverturesConnectees.add(orientationSortie);
                     }
                 }

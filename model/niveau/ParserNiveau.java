@@ -5,6 +5,7 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
 import projetIG.model.enumeration.CouleurTuyau;
+import static projetIG.model.enumeration.CouleurTuyau.BLANC;
 import static projetIG.model.enumeration.CouleurTuyau.BLEU;
 import static projetIG.model.enumeration.CouleurTuyau.JAUNE;
 import static projetIG.model.enumeration.CouleurTuyau.PAS_UNE_COULEUR;
@@ -81,17 +82,17 @@ public abstract class ParserNiveau {
                 typeTuyau = typeTuyau(casePlateau.substring(0, 1));
                 
                 
-                if(typeTuyau != TypeTuyau.NOT_A_PIPE) {
+                if(typeTuyau != NOT_A_PIPE) {
                     int nbrRotations = Integer.parseInt(casePlateau.substring(1, 2));
                     rotation = Rotation.values()[nbrRotations];
 
 
                     // CONSTRUCTION DU PLATEAU
                     // (sources et tuyaux inamovibles)
-                    if(typeTuyau == TypeTuyau.SOURCE || inamovible){
-                        CouleurTuyau couleur = (typeTuyau == TypeTuyau.SOURCE) ?
+                    if(typeTuyau == SOURCE || inamovible){
+                        CouleurTuyau couleur = (typeTuyau == SOURCE) ?
                                 couleurTuyau(casePlateau.substring(0, 1))
-                                : CouleurTuyau.BLANC;
+                                : BLANC;
                         tuyauxPlateau.get(ligne).add(new TuyauPlateau(typeTuyau, rotation, true, couleur));
                     }
 

@@ -14,7 +14,7 @@ public class PanelFenetreJeu extends JPanel {
         this.setLayout(new BorderLayout(10, 10));
         
         //Creation du niveau
-        this.niveauCourant = ParserNiveau.parserNiveau("src/main/java/projetIG/model/niveau/banque1/level3.p");
+        this.niveauCourant = ParserNiveau.parserNiveau("src/main/java/projetIG/model/niveau/banque1/level5.p");
         
         //Ajout de la fenetre de jeu
         FenetreJeu fenetreJeu = new FenetreJeu(this, this.niveauCourant);

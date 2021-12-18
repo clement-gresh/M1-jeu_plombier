@@ -1,7 +1,5 @@
 package projetIG.model.enumeration;
 
-import java.util.ArrayList;
-
 public enum Ouverture {
     NORTH,
     EAST,

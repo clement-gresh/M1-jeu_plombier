@@ -13,6 +13,7 @@ import projetIG.model.niveau.TuyauPlateau;
 
 public class CouleurController extends MouseAdapter {
     protected Niveau niveauCourant;
+    protected boolean victoire;
 
     public CouleurController(Niveau niveauCourant) {
         this.niveauCourant = niveauCourant;
@@ -33,6 +34,8 @@ public class CouleurController extends MouseAdapter {
     }
     
     private void majCouleurs(){
+        this.victoire = true;
+        
         // Pour tous les tuyaux, on indique qu'ils n'ont pas ete visites 
         // et que (sauf pour les sources) ils sont blancs
         for(ArrayList<TuyauPlateau> lignePlateau : this.niveauCourant.getPlateauCourant()) {
@@ -76,7 +79,10 @@ public class CouleurController extends MouseAdapter {
             ligne = ligne + 1;
             System.out.println(""); // debug
         }
-        System.out.println(""); // debug
+        
+        if(victoire) System.out.println("Gagne !"); // debug
+        else System.out.println("Perdu..."); // debug
+        
     }
     
     private void connexionCaseSuivante(int ligne, int colonne, Ouverture ouvertureTuyauEntrant, CouleurTuyau couleur){
@@ -89,7 +95,9 @@ public class CouleurController extends MouseAdapter {
         
         TuyauPlateau tuyauPlateau = this.niveauCourant.getPlateauCourant().get(ligneSortie).get(colonneSortie);
         
-        if(tuyauPlateau != null){
+        if(tuyauPlateau == null) this.victoire = false;
+        
+        else{
             //System.out.print("C/L tuyau courant : " + colonneSortie + ", " + ligneSortie + ", "); //debug
 
             System.out.print("Nom : " + tuyauPlateau.getNom() + ", "); //debug
@@ -142,6 +150,7 @@ public class CouleurController extends MouseAdapter {
 
                     if(couleur != CouleurTuyau.NOIR && tuyauPlateau.getCouleur().get(0) != couleur){
                         couleur = CouleurTuyau.NOIR;
+                        this.victoire = false;
                         connexionCaseSuivante(ligneSortie, colonneSortie, ouvertureEntree, couleur);
                     }
                 }

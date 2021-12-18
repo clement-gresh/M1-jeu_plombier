@@ -8,6 +8,7 @@ public enum Ouverture {
     SOUTH,
     WEST;
     
+    /*
     // Renvoie toutes les orientations d'un tuyau en fonction de sa rotation
     static public ArrayList<ArrayList<Ouverture>> ouvertures(TypeTuyau type, Rotation rotation){   
         ArrayList<ArrayList<Ouverture>> ouvertures = new ArrayList<>();
@@ -72,7 +73,7 @@ public enum Ouverture {
         
         return ouvertures;
     }
-    
+    */
     
     static public int changementLigne(Ouverture orientation){
         switch (orientation){

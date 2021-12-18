@@ -20,7 +20,7 @@ public class PanelFenetreJeu extends JPanel {
         FenetreJeu fenetreJeu = new FenetreJeu(this, this.niveauCourant);
         this.add(fenetreJeu, BorderLayout.CENTER);
         
-        /*      
+              
         //Ajout du controller Drag&Drop sur la fenetre de jeu
         DragDropController dragDrop = new DragDropController(fenetreJeu);
         this.addMouseListener(dragDrop);
@@ -29,6 +29,5 @@ public class PanelFenetreJeu extends JPanel {
         //Ajout du controller des couleurs sur la fenetre de jeu
         CouleurController couleurController = new CouleurController(this.niveauCourant);
         this.addMouseListener(couleurController);
-    */
     }
 }

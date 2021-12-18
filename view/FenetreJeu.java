@@ -61,18 +61,16 @@ public class FenetreJeu extends JComponent {
         Graphics2D graphics2DIAP = (Graphics2D) this.imageArrierePlan.getGraphics();
         graphics2DIAP.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
                                     RenderingHints.VALUE_ANTIALIAS_ON);
-        
         construireArrierePlan(graphics2DIAP);
-        
-        
         graphics2D.drawImage(this.imageArrierePlan, 0, 0, this.panelParent.getWidth(),
                              this.panelParent.getHeight(), this);
         
         construireReserve(graphics2D);
+        
         afficherTuyauxPlateau(graphics2D);
         
         // On ajoute l'image en Drag&Drop
-        //this.imageDD.paintIcon(this, graphics2D, this.xImageDD, this.yImageDD);
+        this.imageDD.paintIcon(this, graphics2D, this.xImageDD, this.yImageDD);
     }
     
     

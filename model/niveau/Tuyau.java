@@ -20,9 +20,6 @@ public class Tuyau {
     public Tuyau(Tuyau tuyau) {
         this.nom = tuyau.getNom();
         this.rotation = tuyau.getRotation();
-        
-        this.couleur.add(CouleurTuyau.BLANC);
-        if(tuyau.getNom() == TypeTuyau.OVER) this.couleur.add(CouleurTuyau.BLANC);
     }
 
     

@@ -1,9 +1,5 @@
 package projetIG.model.enumeration;
 
-import java.util.ArrayList;
-import java.util.Arrays;
-import projetIG.model.niveau.TuyauReserve;
-
 public enum TypeTuyau {
     SOURCE,
     LINE,
@@ -13,7 +9,7 @@ public enum TypeTuyau {
     CROSS,
     NOT_A_PIPE;
     
-    
+    /*
     static public final Ouverture[][][] ouvertures = {
         {{Ouverture.NORTH}},
         {{Ouverture.NORTH, Ouverture.SOUTH}},
@@ -32,7 +28,7 @@ public enum TypeTuyau {
         }
     }
     
-    /*
+    
     static public final boolean[][][] ouverturesBool = new boolean[ouvertures.length][2][Ouverture.values().length];
     
     static {

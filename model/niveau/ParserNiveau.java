@@ -5,8 +5,24 @@ import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Scanner;
 import projetIG.model.enumeration.CouleurTuyau;
+import static projetIG.model.enumeration.CouleurTuyau.BLEU;
+import static projetIG.model.enumeration.CouleurTuyau.JAUNE;
+import static projetIG.model.enumeration.CouleurTuyau.PAS_UNE_COULEUR;
+import static projetIG.model.enumeration.CouleurTuyau.ROUGE;
+import static projetIG.model.enumeration.CouleurTuyau.VERT;
 import projetIG.model.enumeration.Rotation;
+import static projetIG.model.enumeration.Rotation.DEMI_TOUR;
+import static projetIG.model.enumeration.Rotation.PAS_DE_ROTATION;
+import static projetIG.model.enumeration.Rotation.QUART_TOUR_HORAIRE;
+import static projetIG.model.enumeration.Rotation.QUART_TOUR_TRIGO;
 import projetIG.model.enumeration.TypeTuyau;
+import static projetIG.model.enumeration.TypeTuyau.CROSS;
+import static projetIG.model.enumeration.TypeTuyau.FORK;
+import static projetIG.model.enumeration.TypeTuyau.LINE;
+import static projetIG.model.enumeration.TypeTuyau.NOT_A_PIPE;
+import static projetIG.model.enumeration.TypeTuyau.OVER;
+import static projetIG.model.enumeration.TypeTuyau.SOURCE;
+import static projetIG.model.enumeration.TypeTuyau.TURN;
 
 public abstract class ParserNiveau {
     static public Niveau parserNiveau(String file){
@@ -16,18 +32,18 @@ public abstract class ParserNiveau {
         tuyauxPlateau.add(new ArrayList<>());
         
         ArrayList<ArrayList<TuyauReserve>> tuyauxReserve = new ArrayList<>();
-        tuyauxReserve.add(new ArrayList<>(Arrays.asList(new TuyauReserve(TypeTuyau.CROSS, Rotation.PAS_DE_ROTATION),
-                                                        new TuyauReserve(TypeTuyau.OVER, Rotation.PAS_DE_ROTATION))));
-        tuyauxReserve.add(new ArrayList<>(Arrays.asList(new TuyauReserve(TypeTuyau.LINE, Rotation.PAS_DE_ROTATION),
-                                                        new TuyauReserve(TypeTuyau.LINE, Rotation.QUART_TOUR_TRIGO))));
-        tuyauxReserve.add(new ArrayList<>(Arrays.asList(new TuyauReserve(TypeTuyau.TURN, Rotation.QUART_TOUR_HORAIRE),
-                                                        new TuyauReserve(TypeTuyau.TURN, Rotation.DEMI_TOUR))));
-        tuyauxReserve.add(new ArrayList<>(Arrays.asList(new TuyauReserve(TypeTuyau.TURN, Rotation.PAS_DE_ROTATION),
-                                                        new TuyauReserve(TypeTuyau.TURN, Rotation.QUART_TOUR_TRIGO))));
-        tuyauxReserve.add(new ArrayList<>(Arrays.asList(new TuyauReserve(TypeTuyau.FORK, Rotation.PAS_DE_ROTATION),
-                                                        new TuyauReserve(TypeTuyau.FORK, Rotation.QUART_TOUR_HORAIRE))));
-        tuyauxReserve.add(new ArrayList<>(Arrays.asList(new TuyauReserve(TypeTuyau.FORK, Rotation.QUART_TOUR_TRIGO),
-                                                        new TuyauReserve(TypeTuyau.FORK, Rotation.DEMI_TOUR))));
+        tuyauxReserve.add(new ArrayList<>(Arrays.asList(new TuyauReserve(CROSS, PAS_DE_ROTATION),
+                                                        new TuyauReserve(OVER, PAS_DE_ROTATION))));
+        tuyauxReserve.add(new ArrayList<>(Arrays.asList(new TuyauReserve(LINE, PAS_DE_ROTATION),
+                                                        new TuyauReserve(LINE, QUART_TOUR_TRIGO))));
+        tuyauxReserve.add(new ArrayList<>(Arrays.asList(new TuyauReserve(TURN, QUART_TOUR_HORAIRE),
+                                                        new TuyauReserve(TURN, DEMI_TOUR))));
+        tuyauxReserve.add(new ArrayList<>(Arrays.asList(new TuyauReserve(TURN, PAS_DE_ROTATION),
+                                                        new TuyauReserve(TURN, QUART_TOUR_TRIGO))));
+        tuyauxReserve.add(new ArrayList<>(Arrays.asList(new TuyauReserve(FORK, PAS_DE_ROTATION),
+                                                        new TuyauReserve(FORK, QUART_TOUR_HORAIRE))));
+        tuyauxReserve.add(new ArrayList<>(Arrays.asList(new TuyauReserve(FORK, QUART_TOUR_TRIGO),
+                                                        new TuyauReserve(FORK, DEMI_TOUR))));
         
         try {
             Scanner scanner = new Scanner(fichierNiveau);
@@ -62,7 +78,7 @@ public abstract class ParserNiveau {
                     casePlateau = casePlateau.substring(1);
                 }
                 
-                typeTuyau = TypeTuyau.appartient(casePlateau.substring(0, 1));
+                typeTuyau = typeTuyau(casePlateau.substring(0, 1));
                 
                 
                 if(typeTuyau != TypeTuyau.NOT_A_PIPE) {
@@ -74,7 +90,7 @@ public abstract class ParserNiveau {
                     // (sources et tuyaux inamovibles)
                     if(typeTuyau == TypeTuyau.SOURCE || inamovible){
                         CouleurTuyau couleur = (typeTuyau == TypeTuyau.SOURCE) ?
-                                CouleurTuyau.appartient(casePlateau.substring(0, 1))
+                                couleurTuyau(casePlateau.substring(0, 1))
                                 : CouleurTuyau.BLANC;
                         tuyauxPlateau.get(ligne).add(new TuyauPlateau(typeTuyau, rotation, true, couleur));
                     }
@@ -130,6 +146,48 @@ public abstract class ParserNiveau {
             System.err.println("Exception scanner sur le niveau (Niveau.java) " + exception.getMessage());
             
             return new Niveau(0, 0, new ArrayList<>(), new ArrayList<>());
+        }
+    }
+    
+    
+    static public TypeTuyau typeTuyau(String s){
+        switch (s){
+                case "R":
+                        return SOURCE;
+                case "G":
+                        return SOURCE;
+                case "B":
+                        return SOURCE;
+                case "Y":
+                        return SOURCE;
+                case "L":
+                        return LINE;
+                case "O":
+                        return OVER;
+                case "T":
+                        return TURN;
+                case "F":
+                        return FORK;
+                case "C":
+                        return CROSS;
+                default:
+                        return NOT_A_PIPE;
+        }
+    }
+    
+    
+    static public CouleurTuyau couleurTuyau(String s){
+            switch (s){
+                    case "R":
+                        return ROUGE;
+                    case "G":
+                        return VERT;
+                    case "B":
+                        return BLEU;
+                    case "Y":
+                        return JAUNE;
+                    default:
+                        return PAS_UNE_COULEUR;
         }
     }
 }

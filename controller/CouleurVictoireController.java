@@ -11,11 +11,11 @@ import projetIG.model.enumeration.TypeTuyau;
 import projetIG.model.niveau.Niveau;
 import projetIG.model.niveau.TuyauPlateau;
 
-public class CouleurController extends MouseAdapter {
+public class CouleurVictoireController extends MouseAdapter {
     protected Niveau niveauCourant;
     protected boolean victoire;
 
-    public CouleurController(Niveau niveauCourant) {
+    public CouleurVictoireController(Niveau niveauCourant) {
         this.niveauCourant = niveauCourant;
     }
 

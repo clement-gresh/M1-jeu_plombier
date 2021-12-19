@@ -2,7 +2,7 @@ package projetIG.view;
 
 import java.awt.BorderLayout;
 import javax.swing.JPanel;
-import projetIG.controller.CouleurController;
+import projetIG.controller.CouleurVictoireController;
 import projetIG.controller.DragDropController;
 import projetIG.model.niveau.Niveau;
 import projetIG.model.niveau.ParserNiveau;
@@ -27,7 +27,7 @@ public class PanelFenetreJeu extends JPanel {
         this.addMouseMotionListener(dragDrop);
         
         //Ajout du controller des couleurs sur la fenetre de jeu
-        CouleurController couleurController = new CouleurController(this.niveauCourant);
+        CouleurVictoireController couleurController = new CouleurVictoireController(this.niveauCourant);
         this.addMouseListener(couleurController);
     }
 }

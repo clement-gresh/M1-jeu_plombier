@@ -26,6 +26,7 @@ public class DragDropController extends MouseAdapter {
     protected int nbrCasesPlateauLargeur;
     protected boolean deplacementTuyau = false;
     protected Tuyau tuyauDeplace;
+    protected int pasDeDeplacement = 10; // Represente le pas en pixel entre 2 images
 
     public DragDropController(FenetreJeu fenetreJeu) {
         this.fenetreJeu = fenetreJeu;
@@ -134,7 +135,10 @@ public class DragDropController extends MouseAdapter {
                 // On determine la colonne et la ligne de la case où le bouton a ete relache ( entre 0 et (nbrCases - 1) )
                 int colonne = (int) Math.ceil( event.getX() / this.largeurCase ) ;
                 int ligne = (int) Math.ceil( event.getY() / this.hauteurCase ) ;
-
+                
+                int departX = event.getX() - (int) (0.5 * this.largeurCase);
+                int departY = event.getY() - (int) (0.5 * this.hauteurCase);
+                
                 // On verifie qu'on se trouve a l'interieur du plateau de jeu (sans les bordures)
                 if( (colonne > 0)
                         && (colonne < this.nbrCasesPlateauLargeur - 1)
@@ -143,17 +147,19 @@ public class DragDropController extends MouseAdapter {
                         ) {
                     
                     if(this.fenetreJeu.getNiveauCourant().getPlateauCourant().get(ligne).get(colonne) != null){
-                        renvoyerDansReserve();
+                        renvoyerDansReserve(departX, departY);
                     }
                     
                     else{
+                        deplacerTuyau(departX, departY, colonne * this.largeurCase, ligne * this.hauteurCase);
+                        
                         this.fenetreJeu.getNiveauCourant().getPlateauCourant().get(ligne).set(colonne,
                                 new TuyauPlateau(this.tuyauDeplace));
                     }
                 }
 
                 else {
-                    renvoyerDansReserve();
+                    renvoyerDansReserve(departX, departY);
                 }
             
             
@@ -166,21 +172,70 @@ public class DragDropController extends MouseAdapter {
     }
     
     // Renvoie le tuyauDeplace dans la reserve
-    private void renvoyerDansReserve(){
+    private void renvoyerDansReserve(int x, int y){
         boolean tuyauTrouve = false;
+        int colonneReserve = 0;
+        int ligneReserve = 0;
         
-        for(ArrayList<TuyauReserve> ligneReserve : this.fenetreJeu.getNiveauCourant().getTuyauxReserve()){
-            for(TuyauReserve tuyauReserve : ligneReserve) {
+        // On trouve le tuyau correspondant dans la reserve au tuyau deplace
+        for(ArrayList<TuyauReserve> ligne : this.fenetreJeu.getNiveauCourant().getTuyauxReserve()){
+            for(TuyauReserve tuyauReserve : ligne) {
             
                 if(tuyauReserve.getNom() == this.tuyauDeplace.getNom() 
-                        && tuyauReserve.getRotation() == this.tuyauDeplace.getRotation()){
-
-                    tuyauReserve.augmenterNombre();     
+                        && tuyauReserve.getRotation() == this.tuyauDeplace.getRotation()){ 
                     tuyauTrouve = true;
                     break;
                 }
+                
+                colonneReserve = colonneReserve + 1;
             }
             if(tuyauTrouve) break;
+            
+            ligneReserve = ligneReserve + 1;
+            colonneReserve = 0;
+        }
+        
+        // On renvoie le tuyau dans la reserve en un mouvement rectiligne uniforme
+        TuyauReserve tuyau = this.fenetreJeu.getNiveauCourant().getTuyauxReserve().get(ligneReserve).get(colonneReserve);
+        
+        int tuyauX = (colonneReserve + this.nbrCasesPlateauLargeur) * this.largeurCase;
+        int tuyauY = ligneReserve * this.hauteurCase;
+        
+        System.out.println("X : " + x + ", Y : " + y 
+                + ", tuyauX : " + tuyauX + ", tuyauY : " + tuyauY); // debug
+        
+        deplacerTuyau(x, y, tuyauX, tuyauY);
+        
+        // On augmente le nombre de tuyaux disponibles dans la reserve
+        tuyau.augmenterNombre();
+    }
+    
+    private void deplacerTuyau(int departX, int departY, int arriveeX, int arriveeY){
+        
+        int distanceX = arriveeX - departX;
+        int distanceY = arriveeY - departY;
+        
+        int distance = (int) Math.sqrt(Math.pow(distanceX,2) + Math.pow(distanceY,2));
+        int iterations = (int) (distance / this.pasDeDeplacement);
+        
+        System.out.println("distance X : " + distanceX + ", distance Y : " + distanceY 
+                + ", distance totale : " + distance + ", nombre d'iterations : " + iterations); // debug
+        
+        for(int i = 0; i < iterations; i++ ) {
+            
+            /*try { Thread.sleep(1); }
+            catch (InterruptedException exception) {
+                System.err.println("Exception sleep (DDController) " + exception.getMessage());}
+            */
+            departX = departX + (int)(distanceX / iterations);
+            departY = departY + (int)(distanceY / iterations);
+            
+            //System.out.println("iteration n " + i + ", x : " + x + ", y : " + y); // debug
+            //System.out.println("deplacement x : " + (int)(distanceX / iterations) + ", deplacement y : " + (int)(distanceY / iterations)); // debug
+            
+            this.fenetreJeu.setXImageDD(departX);
+            this.fenetreJeu.setYImageDD(departY);
+            this.fenetreJeu.paintImmediately(0, 0, 750, 700);
         }
     }
 }

@@ -18,10 +18,6 @@ public class Niveau {
     }
     
     
-    // Enregistre la hauteur et la largeur du plateau,
-    // initialise le plateau (avec les sources et tuyaux inamovibles)
-    // ainsi que la reserve
-    
     //Getters
     public int getNbrCasesPlateauHauteur() {
         return nbrCasesPlateauHauteur;

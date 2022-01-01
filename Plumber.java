@@ -9,11 +9,15 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import projetIG.view.Accueil1;
+import projetIG.view.Accueil2;
 import projetIG.view.PanelFenetreJeu;
 import projetIG.view.menu.MyPopupMenu;
 
 public class Plumber extends JPanel {
     private JFrame frameParent;
+    private JPanel accueil1 = new Accueil1(this);
+    private JPanel accueil2;
+    private JPanel plateau;
     
     public Plumber(JFrame frameParent) {
         this.frameParent = frameParent;
@@ -26,20 +30,14 @@ public class Plumber extends JPanel {
         this.frameParent.setJMenuBar(new MyMenuBar(this.frameParent));
         
         
-        //Ajout du plateau de jeu dans un panel
-        PanelFenetreJeu panelPlateau = new PanelFenetreJeu();
-        this.add(panelPlateau, BorderLayout.CENTER);
-        
-        
         //Ajout de l'accueil
-        Accueil1 accueil1 = new Accueil1();
-        //this.add(accueil1, BorderLayout.CENTER);
+        this.add(this.accueil1, BorderLayout.CENTER);
         
         
         //Ajout du menu contextuel (clic-droit) au plateau
         MyPopupMenu popupMenu = new MyPopupMenu(this.frameParent);
         
-        panelPlateau.addMouseListener(new MouseAdapter() {
+        this.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent event) {
                 if(SwingUtilities.isRightMouseButton(event)) {
@@ -48,4 +46,29 @@ public class Plumber extends JPanel {
             }
         });
     }
+    
+    
+    // GETTERS
+    public JPanel getAccueil1() {
+        return accueil1;
+    }
+
+    public JPanel getAccueil2() {
+        return accueil2;
+    }
+
+    public JPanel getPlateau() {
+        return plateau;
+    }
+    
+
+    // SETTERS
+    public void setAccueil2(JPanel accueil2) {
+        this.accueil2 = accueil2;
+    }
+
+    public void setPlateau(JPanel plateau) {
+        this.plateau = plateau;
+    }
+    
 }

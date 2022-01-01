@@ -136,6 +136,7 @@ public class DragDropController extends MouseAdapter {
                 int colonne = (int) Math.ceil( event.getX() / this.largeurCase ) ;
                 int ligne = (int) Math.ceil( event.getY() / this.hauteurCase ) ;
                 
+                // On determine l'abscisse et l'ordonnee du coin superieur gauche de l'image
                 int departX = event.getX() - (int) (0.5 * this.largeurCase);
                 int departY = event.getY() - (int) (0.5 * this.hauteurCase);
                 
@@ -151,7 +152,7 @@ public class DragDropController extends MouseAdapter {
                     }
                     
                     else{
-                        deplacerTuyau(departX, departY, colonne * this.largeurCase, ligne * this.hauteurCase);
+                        deplacementRectiligne(departX, departY, colonne * this.largeurCase, ligne * this.hauteurCase);
                         
                         this.fenetreJeu.getNiveauCourant().getPlateauCourant().get(ligne).set(colonne,
                                 new TuyauPlateau(this.tuyauDeplace));
@@ -204,13 +205,15 @@ public class DragDropController extends MouseAdapter {
         System.out.println("X : " + x + ", Y : " + y 
                 + ", tuyauX : " + tuyauX + ", tuyauY : " + tuyauY); // debug
         
-        deplacerTuyau(x, y, tuyauX, tuyauY);
+        deplacementRectiligne(x, y, tuyauX, tuyauY);
         
         // On augmente le nombre de tuyaux disponibles dans la reserve
         tuyau.augmenterNombre();
     }
     
-    private void deplacerTuyau(int departX, int departY, int arriveeX, int arriveeY){
+    
+    // Deplacement rectiligne du tuyau d'un point de depart a un point d'arrivee
+    private void deplacementRectiligne(int departX, int departY, int arriveeX, int arriveeY){
         
         int distanceX = arriveeX - departX;
         int distanceY = arriveeY - departY;

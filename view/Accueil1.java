@@ -1,16 +1,19 @@
 package projetIG.view;
 
 import java.awt.Dimension;
-import java.awt.GridLayout;
 import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JPanel;
+import projetIG.Plumber;
 
 public class Accueil1 extends JPanel {
-
-    public Accueil1() {
-        this.setLayout(new BoxLayout(this, BoxLayout.X_AXIS));
+    protected Plumber panelParent;
+    
+    public Accueil1(Plumber panelParent) {
+        this.panelParent = panelParent;
+        
+        this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         this.setBorder( BorderFactory.createEmptyBorder(20, 20, 20, 20));
         
         this.createButton("Banque n°1");
@@ -23,7 +26,13 @@ public class Accueil1 extends JPanel {
         button.setPreferredSize(new Dimension(200, 70));
         
         button.addActionListener((event) -> {
+            Accueil2 accueil2 = new Accueil2(Accueil1.this.panelParent, nom.substring(nom.length()-1));
+            Accueil1.this.panelParent.setAccueil2(accueil2);
             
+            Accueil1.this.panelParent.removeAll();
+            Accueil1.this.panelParent.add(Accueil1.this.panelParent.getAccueil2());
+            Accueil1.this.panelParent.revalidate();
+            Accueil1.this.panelParent.repaint();
         });
         
         this.add(button);

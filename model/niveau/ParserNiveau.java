@@ -26,6 +26,9 @@ import static projetIG.model.enumeration.TypeTuyau.SOURCE;
 import static projetIG.model.enumeration.TypeTuyau.TURN;
 
 public abstract class ParserNiveau {
+    // Enregistre la hauteur et la largeur du plateau,
+    // initialise le plateau avec les sources et tuyaux inamovibles
+    // et initialise la reserve avec les tuyaux restants
     static public Niveau parserNiveau(String file){
         File fichierNiveau = new File(file);
         

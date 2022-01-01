@@ -69,7 +69,7 @@ public class FenetreJeu extends JComponent {
         
         afficherTuyauxPlateau(graphics2D);
         
-        // On ajoute l'image en Drag&Drop
+        // On ajoute l'image Drag&Drop
         this.imageDD.paintIcon(this, graphics2D, this.xImageDD, this.yImageDD);
     }
     

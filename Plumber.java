@@ -16,6 +16,7 @@ import projetIG.view.menu.MyPopupMenu;
 
 public class Plumber extends JPanel {
     private final JFrame frameParent;
+    private final MyPopupMenu popupMenu;
     private final JPanel accueil1 = new Accueil1(this);
     private JPanel accueil2;
     private JPanel plateau;
@@ -39,13 +40,13 @@ public class Plumber extends JPanel {
         
         
         //Ajout du menu contextuel (clic-droit) au plateau
-        MyPopupMenu popupMenu = new MyPopupMenu(this.frameParent, this);
+        this.popupMenu = new MyPopupMenu(this.frameParent, this);
         
         this.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent event) {
                 if(SwingUtilities.isRightMouseButton(event)) {
-                    popupMenu.show(event.getComponent(), event.getX(), event.getY());
+                    Plumber.this.popupMenu.show(event.getComponent(), event.getX(), event.getY());
                 }
             }
         });
@@ -65,7 +66,7 @@ public class Plumber extends JPanel {
     
     public void afficherAccueil1(){
         this.removeAll();
-        this.add(getAccueil1());
+        this.add(getAccueil1(), BorderLayout.CENTER);
         this.revalidate();
         this.repaint();
     }
@@ -73,11 +74,11 @@ public class Plumber extends JPanel {
     public void afficherAccueil2(int numeroBanque){
         this.setNumeroBanque(numeroBanque);
         
-        Accueil2 accueil2 = new Accueil2(this, numeroBanque);
-        this.setAccueil2(accueil2);
+        Accueil2 panelAccueil2 = new Accueil2(this, numeroBanque);
+        this.setAccueil2(panelAccueil2);
             
         this.removeAll();
-        this.add(getAccueil2());
+        this.add(getAccueil2(), BorderLayout.CENTER);
         this.revalidate();
         this.repaint();
     }
@@ -88,19 +89,26 @@ public class Plumber extends JPanel {
         
         PanelFenetreJeu panelFenetreJeu = new PanelFenetreJeu(this, this.cheminFichier(numeroBanque, numeroNiveau));
         this.setPlateau(panelFenetreJeu);
+        
+        panelFenetreJeu.addMouseListener(new MouseAdapter() {
+            @Override
+            public void mousePressed(MouseEvent event) {
+                if(SwingUtilities.isRightMouseButton(event)) {
+                    Plumber.this.popupMenu.show(event.getComponent(), event.getX(), event.getY());
+                }
+            }
+        });
 
         this.removeAll();
-        this.add(getPlateau());
+        this.add(getPlateau(), BorderLayout.CENTER);
         this.revalidate();
         this.repaint();
     }
     
     public boolean isThereNextLevel(){
-        File banque = new File(this.cheminFichier(this.numeroBanque, -1));
+        File banque = new File(this.cheminFichier(this.numeroBanque, PAS_DE_NIVEAU));
         
-        if(this.numeroNiveau < banque.list().length){ return true; }
-        
-        return false;
+        return (this.numeroNiveau < banque.list().length);
     }
     
     

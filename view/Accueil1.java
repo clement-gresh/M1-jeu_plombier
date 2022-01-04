@@ -23,19 +23,11 @@ public class Accueil1 extends JPanel {
         }
     }
     
-    private void creerBouton(String nom, int numero) {
+    private void creerBouton(String nom, int numeroBanque) {
         JButton button = new JButton(nom);
         button.setPreferredSize(new Dimension(200, 70));
         
-        button.addActionListener((event) -> {
-            Accueil2 accueil2 = new Accueil2(Accueil1.this.panelParent, numero);
-            Accueil1.this.panelParent.setAccueil2(accueil2);
-            
-            Accueil1.this.panelParent.removeAll();
-            Accueil1.this.panelParent.add(Accueil1.this.panelParent.getAccueil2());
-            Accueil1.this.panelParent.revalidate();
-            Accueil1.this.panelParent.repaint();
-        });
+        button.addActionListener((event) -> Accueil1.this.panelParent.afficherAccueil2(numeroBanque));
         
         this.add(button);
     }

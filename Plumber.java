@@ -3,7 +3,6 @@ package projetIG;
 import projetIG.view.menu.MyMenuBar;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
-import java.awt.event.ActionEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.io.File;
@@ -11,6 +10,7 @@ import javax.swing.JFrame;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import projetIG.view.Accueil1;
+import projetIG.view.Accueil2;
 import projetIG.view.PanelFenetreJeu;
 import projetIG.view.menu.MyPopupMenu;
 
@@ -63,6 +63,25 @@ public class Plumber extends JPanel {
         }
     }
     
+    public void afficherAccueil1(){
+        this.removeAll();
+        this.add(getAccueil1());
+        this.revalidate();
+        this.repaint();
+    }
+    
+    public void afficherAccueil2(int numeroBanque){
+        this.setNumeroBanque(numeroBanque);
+        
+        Accueil2 accueil2 = new Accueil2(this, numeroBanque);
+        this.setAccueil2(accueil2);
+            
+        this.removeAll();
+        this.add(getAccueil2());
+        this.revalidate();
+        this.repaint();
+    }
+    
     public void afficherNiveau(int numeroBanque, int numeroNiveau){
         this.setNumeroBanque(numeroBanque);
         this.setNumeroNiveau(numeroNiveau);
@@ -77,15 +96,9 @@ public class Plumber extends JPanel {
     }
     
     public boolean isThereNextLevel(){
-        
         File banque = new File(this.cheminFichier(this.numeroBanque, -1));
-        System.out.println("src/main/java/projetIG/model/niveau/banque" + numeroBanque);
-        System.out.println("Dossier existe : " + banque.exists());
-        System.out.println("Nombre de fichiers : " + banque.list().length);
         
-        if(this.numeroNiveau < banque.list().length){
-            return true;
-        }
+        if(this.numeroNiveau < banque.list().length){ return true; }
         
         return false;
     }

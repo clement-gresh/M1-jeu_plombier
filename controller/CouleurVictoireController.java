@@ -90,6 +90,7 @@ public class CouleurVictoireController extends MouseAdapter {
             int numeroBanque = this.panelCourant.getPanelPlumber().getNumeroBanque();
             int numeroNiveau = this.panelCourant.getPanelPlumber().getNumeroNiveau();
             
+            // Passer au niveau suivant s'il existe
             if(this.panelCourant.getPanelPlumber().isThereNextLevel()){
                 int clickButton = JOptionPane.showConfirmDialog(this.panelCourant, 
                 "VICTOIRE ! Passer au niveau suivant ?", 
@@ -97,6 +98,17 @@ public class CouleurVictoireController extends MouseAdapter {
         
                 if(clickButton == JOptionPane.YES_OPTION) {
                     this.panelCourant.getPanelPlumber().afficherNiveau(numeroBanque, numeroNiveau + 1);
+                }
+            }
+            
+            // Revenir à l'accueil sinon
+            else {
+                int clickButton = JOptionPane.showConfirmDialog(this.panelCourant, 
+                "VICTOIRE ! Revenir à l'accueil ?", 
+                "Victoire", JOptionPane.YES_NO_OPTION);
+        
+                if(clickButton == JOptionPane.YES_OPTION) {
+                    this.panelCourant.getPanelPlumber().afficherAccueil1();
                 }
             }
             

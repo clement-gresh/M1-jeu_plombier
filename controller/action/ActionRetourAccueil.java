@@ -4,13 +4,12 @@ import java.awt.event.ActionEvent;
 import java.awt.event.KeyEvent;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
-import javax.swing.JFrame;
 import javax.swing.JOptionPane;
 import javax.swing.KeyStroke;
 import projetIG.Plumber;
 
 public class ActionRetourAccueil extends AbstractAction {
-    private Plumber panelPlumber;
+    private final Plumber panelPlumber;
 
     public ActionRetourAccueil(Plumber panelPlumber) {
         this.panelPlumber = panelPlumber;

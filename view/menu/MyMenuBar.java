@@ -5,11 +5,12 @@ import javax.swing.JMenu;
 import javax.swing.JMenuBar;
 import projetIG.Plumber;
 import projetIG.controller.action.ActionQuitter;
+import projetIG.controller.action.ActionRecommencerNiveau;
 import projetIG.controller.action.ActionRetourAccueil;
 
 public class MyMenuBar extends JMenuBar {
-    private JFrame frameParent;
-    private Plumber panelPlumber;
+    private final JFrame frameParent;
+    private final Plumber panelPlumber;
 
     public MyMenuBar(JFrame frameParent, Plumber panelPlumber) {
         this.frameParent = frameParent;
@@ -20,7 +21,10 @@ public class MyMenuBar extends JMenuBar {
         menuJeu.setMnemonic('J');
         this.add(menuJeu);
         
+        // Ajout des elements du menu
         menuJeu.add(new ActionRetourAccueil(this.panelPlumber));
+        menuJeu.addSeparator();
+        menuJeu.add(new ActionRecommencerNiveau(this.panelPlumber));
         menuJeu.addSeparator();
         menuJeu.add(new ActionQuitter(this.frameParent));
     }

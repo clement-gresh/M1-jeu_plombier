@@ -16,7 +16,7 @@ import projetIG.view.menu.MyPopupMenu;
 
 public class Plumber extends JPanel {
     private final JFrame frameParent;
-    private JPanel accueil1 = new Accueil1(this);
+    private final JPanel accueil1 = new Accueil1(this);
     private JPanel accueil2;
     private JPanel plateau;
     private int numeroBanque;
@@ -31,7 +31,7 @@ public class Plumber extends JPanel {
         
         
         //Ajout de la barre de menu
-        this.frameParent.setJMenuBar(new MyMenuBar(this.frameParent));
+        this.frameParent.setJMenuBar(new MyMenuBar(this.frameParent, this));
         
         
         //Ajout de l'accueil
@@ -39,7 +39,7 @@ public class Plumber extends JPanel {
         
         
         //Ajout du menu contextuel (clic-droit) au plateau
-        MyPopupMenu popupMenu = new MyPopupMenu(this.frameParent);
+        MyPopupMenu popupMenu = new MyPopupMenu(this.frameParent, this);
         
         this.addMouseListener(new MouseAdapter() {
             @Override

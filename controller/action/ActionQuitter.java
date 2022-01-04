@@ -10,7 +10,7 @@ import javax.swing.JOptionPane;
 import javax.swing.KeyStroke;
 
 public class ActionQuitter extends AbstractAction {
-    private JFrame frameParent;
+    private final JFrame frameParent;
 
     public ActionQuitter(JFrame frameParent) {
         this.frameParent = frameParent;

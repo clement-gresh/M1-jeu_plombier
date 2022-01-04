@@ -3,19 +3,25 @@ package projetIG.controller;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
+import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
+import projetIG.Plumber;
 import projetIG.model.enumeration.CouleurTuyau;
 import projetIG.model.enumeration.Ouverture;
 import projetIG.model.enumeration.Rotation;
 import projetIG.model.enumeration.TypeTuyau;
 import projetIG.model.niveau.Niveau;
 import projetIG.model.niveau.TuyauPlateau;
+import projetIG.view.PanelFenetreJeu;
 
 public class CouleurVictoireController extends MouseAdapter {
+    protected PanelFenetreJeu panelCourant;
     protected Niveau niveauCourant;
+    
     protected boolean victoire;
 
-    public CouleurVictoireController(Niveau niveauCourant) {
+    public CouleurVictoireController(PanelFenetreJeu panelCourant, Niveau niveauCourant) {
+        this.panelCourant = panelCourant;
         this.niveauCourant = niveauCourant;
     }
 
@@ -62,11 +68,11 @@ public class CouleurVictoireController extends MouseAdapter {
                     
                     tuyauSource.setDejaVisite(0, Boolean.TRUE);
 
-                    Ouverture ouvertureModel = TypeTuyau.ouvertures
-                                               .get(TypeTuyau.SOURCE.ordinal()).get(0).get(0);
+                    Ouverture ouvertureModel = TypeTuyau.ouvertures.get(TypeTuyau.SOURCE.ordinal())
+                                                                   .get(0).get(0);
                     Ouverture ouvertureSource = TypeTuyau.ouvertureAvecRotation(
-                                                ouvertureModel, tuyauSource.getRotation(),
-                                                TypeTuyau.AJOUTER_ROTATION);
+                                                        ouvertureModel, tuyauSource.getRotation(),
+                                                        TypeTuyau.AJOUTER_ROTATION);
                     
                     System.out.println("Depart d'une source. Orientation : " + TypeTuyau.ouvertures.get(TypeTuyau.SOURCE.ordinal()).get(0).get(0)); //debug
 
@@ -80,7 +86,22 @@ public class CouleurVictoireController extends MouseAdapter {
             System.out.println(""); // debug
         }
         
-        if(victoire) System.out.println("Gagne !"); // debug
+        if(victoire) {
+            int numeroBanque = this.panelCourant.getPanelPlumber().getNumeroBanque();
+            int numeroNiveau = this.panelCourant.getPanelPlumber().getNumeroNiveau();
+            
+            if(this.panelCourant.getPanelPlumber().isThereNextLevel()){
+                int clickButton = JOptionPane.showConfirmDialog(this.panelCourant, 
+                "VICTOIRE ! Passer au niveau suivant ?", 
+                "Victoire", JOptionPane.YES_NO_OPTION);
+        
+                if(clickButton == JOptionPane.YES_OPTION) {
+                    this.panelCourant.getPanelPlumber().afficherNiveau(numeroBanque, numeroNiveau + 1);
+                }
+            }
+            
+            
+        }
         else System.out.println("Perdu..."); // debug
         
     }

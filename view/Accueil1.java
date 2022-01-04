@@ -9,6 +9,7 @@ import projetIG.Plumber;
 
 public class Accueil1 extends JPanel {
     protected Plumber panelParent;
+    protected final int NOMBRE_BANQUES = 2;
     
     public Accueil1(Plumber panelParent) {
         this.panelParent = panelParent;
@@ -16,17 +17,18 @@ public class Accueil1 extends JPanel {
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         this.setBorder( BorderFactory.createEmptyBorder(20, 20, 20, 20));
         
-        this.createButton("Banque n°1");
-        this.createButton("Banque n°2");
         
+        for(int i = 1; i <= NOMBRE_BANQUES; i++){
+            this.creerBouton("Banque n° " + i, i);
+        }
     }
     
-    private void createButton(String nom) {
+    private void creerBouton(String nom, int numero) {
         JButton button = new JButton(nom);
         button.setPreferredSize(new Dimension(200, 70));
         
         button.addActionListener((event) -> {
-            Accueil2 accueil2 = new Accueil2(Accueil1.this.panelParent, nom.substring(nom.length()-1));
+            Accueil2 accueil2 = new Accueil2(Accueil1.this.panelParent, numero);
             Accueil1.this.panelParent.setAccueil2(accueil2);
             
             Accueil1.this.panelParent.removeAll();

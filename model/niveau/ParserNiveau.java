@@ -39,7 +39,7 @@ public abstract class ParserNiveau {
         tuyauxReserve.add(new ArrayList<>(Arrays.asList(new TuyauReserve(CROSS, PAS_DE_ROTATION),
                                                         new TuyauReserve(OVER, PAS_DE_ROTATION))));
         tuyauxReserve.add(new ArrayList<>(Arrays.asList(new TuyauReserve(LINE, PAS_DE_ROTATION),
-                                                        new TuyauReserve(LINE, QUART_TOUR_TRIGO))));
+                                                        new TuyauReserve(LINE, QUART_TOUR_HORAIRE))));
         tuyauxReserve.add(new ArrayList<>(Arrays.asList(new TuyauReserve(TURN, QUART_TOUR_HORAIRE),
                                                         new TuyauReserve(TURN, DEMI_TOUR))));
         tuyauxReserve.add(new ArrayList<>(Arrays.asList(new TuyauReserve(TURN, PAS_DE_ROTATION),
@@ -86,9 +86,9 @@ public abstract class ParserNiveau {
                 
                 
                 if(typeTuyau != NOT_A_PIPE) {
+                    
                     int nbrRotations = Integer.parseInt(casePlateau.substring(1, 2));
                     rotation = Rotation.values()[nbrRotations];
-
 
                     // CONSTRUCTION DU PLATEAU
                     // (sources et tuyaux inamovibles)

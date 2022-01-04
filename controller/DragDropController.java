@@ -226,10 +226,10 @@ public class DragDropController extends MouseAdapter {
         
         for(int i = 0; i < iterations; i++ ) {
             
-            /*try { Thread.sleep(1); }
+            try { Thread.sleep(50); }
             catch (InterruptedException exception) {
-                System.err.println("Exception sleep (DDController) " + exception.getMessage());}
-            */
+                System.err.println("Exception fonction sleep (DragDropController) : " + exception.getMessage());}
+            
             departX = departX + (int)(distanceX / iterations);
             departY = departY + (int)(distanceY / iterations);
             

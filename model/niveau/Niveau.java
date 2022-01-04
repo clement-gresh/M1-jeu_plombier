@@ -8,9 +8,11 @@ public class Niveau {
     protected ArrayList<ArrayList<TuyauPlateau>> plateauCourant = new ArrayList<>();
     protected ArrayList<ArrayList<TuyauReserve>> tuyauxReserve = new ArrayList<>();
 
+    // Constructeur
     public Niveau(int nbrCasesPlateauHauteur, int nbrCasesPlateauLargeur,
             ArrayList<ArrayList<TuyauPlateau>> plateauCourant,
             ArrayList<ArrayList<TuyauReserve>> tuyauxReserve) {
+        
         this.nbrCasesPlateauHauteur = nbrCasesPlateauHauteur;
         this.nbrCasesPlateauLargeur = nbrCasesPlateauLargeur;
         this.plateauCourant = plateauCourant;

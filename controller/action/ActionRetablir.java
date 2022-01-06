@@ -6,15 +6,12 @@ import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.ImageIcon;
 import javax.swing.KeyStroke;
-import projetIG.Plumber;
 import projetIG.controller.AnnulerManager;
 
 public class ActionRetablir extends AbstractAction {
-    private final Plumber panelPlumber;
     private final AnnulerManager annulerManager;
 
-    public ActionRetablir(Plumber panelPlumber, AnnulerManager annulerManager) {
-        this.panelPlumber = panelPlumber;
+    public ActionRetablir(AnnulerManager annulerManager) {
         this.annulerManager = annulerManager;
         
         this.putValue(Action.NAME, "Rétablir");

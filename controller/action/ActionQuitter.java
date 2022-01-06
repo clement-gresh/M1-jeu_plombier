@@ -26,11 +26,11 @@ public class ActionQuitter extends AbstractAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        int clickButton = JOptionPane.showConfirmDialog(this.frameParent, 
+        int clicBouton = JOptionPane.showConfirmDialog(this.frameParent, 
                 "Etes vous sur de vouloir quitter le jeu ?", 
-                "Quitter", JOptionPane.YES_NO_OPTION);
+                "Quitter", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
         
-        if(clickButton == JOptionPane.YES_OPTION) {
+        if(clicBouton == JOptionPane.YES_OPTION) {
             this.frameParent.dispose();
         }
     }

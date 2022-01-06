@@ -11,16 +11,19 @@ import projetIG.model.enumeration.Rotation;
 import projetIG.model.enumeration.TypeTuyau;
 import projetIG.model.niveau.Niveau;
 import projetIG.model.niveau.TuyauPlateau;
+import projetIG.view.FenetreJeu;
 import projetIG.view.PanelFenetreJeu;
 
 public class CouleurVictoireController extends MouseAdapter {
     protected PanelFenetreJeu panelCourant;
+    protected FenetreJeu fenetreJeu;
     protected Niveau niveauCourant;
     
     protected boolean victoire;
 
-    public CouleurVictoireController(PanelFenetreJeu panelCourant, Niveau niveauCourant) {
+    public CouleurVictoireController(PanelFenetreJeu panelCourant, FenetreJeu fenetreJeu, Niveau niveauCourant) {
         this.panelCourant = panelCourant;
+        this.fenetreJeu = fenetreJeu;
         this.niveauCourant = niveauCourant;
     }
 
@@ -86,6 +89,9 @@ public class CouleurVictoireController extends MouseAdapter {
         }
         
         if(victoire) {
+            this.fenetreJeu.paintImmediately(0, 0, this.fenetreJeu.getPanelParent().getTaillePixelLargeur(),
+                                             this.fenetreJeu.getPanelParent().getTaillePixelHauteur());
+            
             int numeroBanque = this.panelCourant.getPanelPlumber().getNumeroBanque();
             int numeroNiveau = this.panelCourant.getPanelPlumber().getNumeroNiveau();
             

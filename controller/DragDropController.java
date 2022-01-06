@@ -58,8 +58,8 @@ public class DragDropController extends MouseAdapter {
             this.hauteurCase = this.fenetreJeu.getHauteurCase();
             this.largeurCase = this.fenetreJeu.getLargeurCase();
             
-            this.nbrCasesTotalHauteur = this.fenetreJeu.getNbrCasesTotalHauteur();
-            this.nbrCasesTotalLargeur = this.fenetreJeu.getNbrCasesTotalLargeur();
+            this.nbrCasesTotalHauteur = this.fenetreJeu.getPanelParent().getNbrCasesTotalHauteur();
+            this.nbrCasesTotalLargeur = this.fenetreJeu.getPanelParent().getNbrCasesTotalLargeur();
             
             this.nbrCasesPlateauHauteur = this.fenetreJeu.getNiveauCourant().getNbrCasesPlateauHauteur();
             this.nbrCasesPlateauLargeur = this.fenetreJeu.getNiveauCourant().getNbrCasesPlateauLargeur();

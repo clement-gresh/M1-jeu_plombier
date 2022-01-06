@@ -52,6 +52,7 @@ public class DeplacementPlaReAnnulable extends AbstractUndoableEdit {
     public void undo() throws CannotUndoException {
         niveau.getPlateauCourant().get(this.lignePlateau).set(colonnePlateau, new TuyauPlateau(tuyau));
         niveau.getTuyauxReserve().get(ligneReserve).get(colonneReserve).diminuerNombre();
+        
         fenetreJeu.getPanelParent().getCouleurController().majCouleurs();
         fenetreJeu.paintImmediately(0, 0, this.fenetreJeu.getPanelParent().getTaillePixelLargeur(),
                                           this.fenetreJeu.getPanelParent().getTaillePixelHauteur());

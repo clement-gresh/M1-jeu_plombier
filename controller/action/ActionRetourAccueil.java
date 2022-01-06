@@ -6,12 +6,12 @@ import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.JOptionPane;
 import javax.swing.KeyStroke;
-import projetIG.Plumber;
+import projetIG.Plombier;
 
 public class ActionRetourAccueil extends AbstractAction {
-    private final Plumber panelPlumber;
+    private final Plombier panelPlumber;
 
-    public ActionRetourAccueil(Plumber panelPlumber) {
+    public ActionRetourAccueil(Plombier panelPlumber) {
         this.panelPlumber = panelPlumber;
         
         this.putValue(Action.NAME, "Accueil");
@@ -32,7 +32,6 @@ public class ActionRetourAccueil extends AbstractAction {
         
         if(clickButton == JOptionPane.YES_OPTION) {
             this.panelPlumber.afficherAccueil1();
-            this.setEnabled(false);
         }
         
     }

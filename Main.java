@@ -7,11 +7,10 @@ public class Main {
 
     public static void main(String[] args) {
         JFrame frame = new JFrame("Plumber");
-        frame.setDefaultCloseOperation(WindowConstants.EXIT_ON_CLOSE);
+        frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         
-        Plumber plumber = new Plumber(frame);
+        Plombier plumber = new Plombier(frame);
         frame.getContentPane().add(plumber);
-        
         
         frame.pack();
         frame.setResizable(false);

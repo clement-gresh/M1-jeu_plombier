@@ -5,13 +5,13 @@ import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JPanel;
-import projetIG.Plumber;
+import projetIG.Plombier;
 
 public class Accueil1 extends JPanel {
-    protected Plumber panelParent;
+    protected Plombier panelParent;
     protected final int NOMBRE_BANQUES = 2;
     
-    public Accueil1(Plumber panelParent) {
+    public Accueil1(Plombier panelParent) {
         this.panelParent = panelParent;
         
         

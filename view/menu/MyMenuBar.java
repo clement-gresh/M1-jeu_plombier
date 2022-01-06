@@ -3,7 +3,6 @@ package projetIG.view.menu;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
-import projetIG.Plumber;
 import projetIG.controller.action.ActionAnnuler;
 import projetIG.controller.action.ActionQuitter;
 import projetIG.controller.action.ActionRecommencerNiveau;
@@ -12,7 +11,7 @@ import projetIG.controller.action.ActionRetourAccueil;
 
 public class MyMenuBar extends JMenuBar {
 
-    public MyMenuBar(JFrame frameParent, Plumber panelPlumber, 
+    public MyMenuBar(JFrame frameParent, ActionRetourAccueil actionRetourAccueil, ActionRecommencerNiveau actionRecommencer,
                      ActionAnnuler actionAnnuler, ActionRetablir actionRetablir) {
         
         //Creation du menu Jeu
@@ -21,13 +20,11 @@ public class MyMenuBar extends JMenuBar {
         this.add(menuJeu);
         
         // Ajout des elements du menu
-        menuJeu.add(new ActionRetourAccueil(panelPlumber));
+        menuJeu.add(actionRetourAccueil);
         menuJeu.addSeparator();
-        menuJeu.add(new ActionRecommencerNiveau(panelPlumber));
+        menuJeu.add(actionRecommencer);
         menuJeu.add(actionAnnuler);
         menuJeu.add(actionRetablir);
-        //menuJeu.add(annuler);
-        //menuJeu.add(retablir);
         menuJeu.addSeparator();
         menuJeu.add(new ActionQuitter(frameParent));
     }

@@ -4,19 +4,30 @@ import projetIG.view.menu.MyMenuBar;
 import java.awt.BorderLayout;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
+import java.awt.event.WindowAdapter;
+import java.awt.event.WindowEvent;
 import java.io.File;
 import javax.swing.JFrame;
+import javax.swing.JOptionPane;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import projetIG.controller.AnnulerManager;
 import projetIG.controller.action.ActionAnnuler;
+import projetIG.controller.action.ActionRecommencerNiveau;
 import projetIG.controller.action.ActionRetablir;
+import projetIG.controller.action.ActionRetourAccueil;
 import projetIG.view.Accueil1;
 import projetIG.view.Accueil2;
 import projetIG.view.PanelFenetreJeu;
 import projetIG.view.menu.MyPopupMenu;
 
-public class Plumber extends JPanel {
+public class Plombier extends JPanel {
+    public static final int PAS_DE_NIVEAU = -1;
+    public static final boolean RETOUR_ACCUEIL_ACTIVE = true;
+    public static final boolean RETOUR_ACCUEIL_DESACTIVE = false;
+    public static final boolean RECOMMENCER_NIVEAU_ACTIVE = true;
+    public static final boolean RECOMMENCER_NIVEAU_DESACTIVE = false;
+    
     private final JFrame frameParent;
     private final AnnulerManager annulerManager;
     private final MyPopupMenu popupMenu;
@@ -25,38 +36,56 @@ public class Plumber extends JPanel {
     private PanelFenetreJeu plateau;
     private int numeroBanque;
     private int numeroNiveau;
-    public static int PAS_DE_NIVEAU = -1;
+    private final ActionRetourAccueil actionRetourAccueil;
+    private final ActionRecommencerNiveau actionRecommencer;
     
-    public Plumber(JFrame frameParent) {
+    public Plombier(JFrame frameParent) {
+        //Demande de confirmation lors de la fermeture de la fenêtre
         this.frameParent = frameParent;
+        this.frameParent.addWindowListener(new WindowAdapter() {
+            @Override
+            public void windowClosing(WindowEvent e) {
+                int clicBouton = JOptionPane.showConfirmDialog(Plombier.this.frameParent, 
+                        "Etes vous sur de vouloir quitter le jeu ?", 
+                        "Quitter", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+
+                if(clicBouton == JOptionPane.YES_OPTION) {
+                    Plombier.this.frameParent.dispose();
+                }
+            }
+            
+        });
         
         this.setLayout(new BorderLayout());
         
         
         //Ajout du manager pour Annuler/Retablir
-        //JMenuItem annuler = new JMenuItem("Annuler");
-        //JMenuItem retablir = new JMenuItem("Retablir");
         this.annulerManager = new AnnulerManager(this);
         
+        //Creation des actions des menus
+        this.actionRetourAccueil = new ActionRetourAccueil(this);
+        this.actionRecommencer = new ActionRecommencerNiveau(this);
         ActionAnnuler actionAnnuler = annulerManager.getAnnuler();
         ActionRetablir actionRetablir = annulerManager.getRetablir();
         
         //Ajout de la barre de menu
-        this.frameParent.setJMenuBar(new MyMenuBar(this.frameParent, this, actionAnnuler, actionRetablir));
+        this.frameParent.setJMenuBar(new MyMenuBar(this.frameParent, actionRetourAccueil,
+                                         actionRecommencer, actionAnnuler, actionRetablir));
         
         
         //Ajout de l'accueil
-        this.add(this.accueil1, BorderLayout.CENTER);
+        this.afficherAccueil1();
         
         
         //Ajout du menu contextuel (clic-droit) a la fenetre
-        this.popupMenu = new MyPopupMenu(this.frameParent, this, actionAnnuler, actionRetablir);
+        this.popupMenu = new MyPopupMenu(this.frameParent, actionRetourAccueil,
+                                         actionRecommencer, actionAnnuler, actionRetablir);
         
         this.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent event) {
                 if(SwingUtilities.isRightMouseButton(event)) {
-                    Plumber.this.popupMenu.show(event.getComponent(), event.getX(), event.getY());
+                    Plombier.this.popupMenu.show(event.getComponent(), event.getX(), event.getY());
                 }
             }
         });
@@ -77,28 +106,20 @@ public class Plumber extends JPanel {
     
     // Affiche l'accueil permettant de choisir la banque de niveaux
     public void afficherAccueil1(){
-        this.removeAll();
-        this.add(getAccueil1(), BorderLayout.CENTER);
-        this.frameParent.pack();
-        this.revalidate();
-        this.repaint();
+        this.afficher(this.accueil1, RETOUR_ACCUEIL_DESACTIVE, RECOMMENCER_NIVEAU_DESACTIVE);
     }
     
-    //Cree et affiche l'accueil permettant de choisir le niveau
+    // Cree et affiche l'accueil permettant de choisir le niveau
     public void afficherAccueil2(int numeroBanque){
         this.setNumeroBanque(numeroBanque);
         
         Accueil2 panelAccueil2 = new Accueil2(this, numeroBanque);
         this.setAccueil2(panelAccueil2);
             
-        this.removeAll();
-        this.add(getAccueil2(), BorderLayout.CENTER);
-        this.frameParent.pack();
-        this.revalidate();
-        this.repaint();
+        this.afficher(this.accueil2, RETOUR_ACCUEIL_DESACTIVE, RECOMMENCER_NIVEAU_DESACTIVE);
     }
     
-    //Cree le niveau et affiche le plateau correspondant
+    // Cree le niveau et affiche le plateau correspondant
     public void afficherNiveau(int numeroBanque, int numeroNiveau){
         this.setNumeroBanque(numeroBanque);
         this.setNumeroNiveau(numeroNiveau);
@@ -112,13 +133,21 @@ public class Plumber extends JPanel {
             @Override
             public void mousePressed(MouseEvent event) {
                 if(SwingUtilities.isRightMouseButton(event)) {
-                    Plumber.this.popupMenu.show(event.getComponent(), event.getX(), event.getY());
+                    Plombier.this.popupMenu.show(event.getComponent(), event.getX(), event.getY());
                 }
             }
         });
 
+        this.afficher(this.plateau, RETOUR_ACCUEIL_ACTIVE, RECOMMENCER_NIVEAU_ACTIVE);
+    }
+    
+    private void afficher(JPanel panel, boolean actionRetour, boolean actionRecommencer){
         this.removeAll();
-        this.add(getPlateau(), BorderLayout.CENTER);
+        this.add(panel, BorderLayout.CENTER);
+        this.annulerManager.discardAllEdits();
+        this.annulerManager.updateItems();
+        this.actionRetourAccueil.setEnabled(actionRetour);
+        this.actionRecommencer.setEnabled(actionRecommencer);
         this.frameParent.pack();
         this.revalidate();
         this.repaint();

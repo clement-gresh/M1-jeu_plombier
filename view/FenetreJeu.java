@@ -34,8 +34,8 @@ public class FenetreJeu extends JComponent {
     protected Niveau niveauCourant;
     protected BufferedImage pipes = new BufferedImage(820, 960, BufferedImage.TYPE_INT_ARGB);
     protected BufferedImage imageArrierePlan;
-    protected int nbrCasesTotalLargeur;
-    protected int nbrCasesTotalHauteur;
+    protected int taillePixelLargeur;
+    protected int taillePixelHauteur;
     protected int largeurCase;
     protected int hauteurCase;
     protected int xImageDD = 0;
@@ -44,15 +44,17 @@ public class FenetreJeu extends JComponent {
 
     
     // Constructeur
-    public FenetreJeu(PanelFenetreJeu panelParent, Niveau niveau) {
+    public FenetreJeu(PanelFenetreJeu panelParent, Niveau niveau, int taillePixelLargeur, int taillePixelHauteur) {
         this.panelParent = panelParent;
         this.niveauCourant = niveau;
-        this.imageArrierePlan = new BufferedImage(panelParent.getTaillePixelLargeur(),
-                                                  panelParent.getTaillePixelHauteur(),
+        this.taillePixelLargeur = taillePixelLargeur;
+        this.taillePixelHauteur = taillePixelHauteur;
+        
+        this.imageArrierePlan = new BufferedImage(taillePixelLargeur,
+                                                  taillePixelHauteur,
                                                   BufferedImage.TYPE_INT_ARGB);
         
-        this.setPreferredSize(new Dimension(this.panelParent.getTaillePixelLargeur(),
-                                            this.panelParent.getTaillePixelHauteur())); // largeur, hauteur
+        this.setPreferredSize(new Dimension(taillePixelLargeur, taillePixelHauteur)); // largeur, hauteur
         
         // On recupere le gif contenant les images des tuyaux
         try { this.pipes = ImageIO.read(new File("src/main/java/projetIG/view/image/pipes.gif")); }
@@ -60,8 +62,8 @@ public class FenetreJeu extends JComponent {
         
         
         // On determine la taille d'une case en pixel
-        this.largeurCase = (int)  (this.panelParent.getTaillePixelLargeur() / this.panelParent.getNbrCasesTotalLargeur());
-        this.hauteurCase = (int)  (this.panelParent.getTaillePixelHauteur() / this.panelParent.getNbrCasesTotalHauteur());
+        this.largeurCase = (int)  (taillePixelLargeur / this.panelParent.getNbrCasesTotalLargeur());
+        this.hauteurCase = (int)  (taillePixelHauteur / this.panelParent.getNbrCasesTotalHauteur());
         
         
         // On construit l'image d'arriere plan
@@ -100,8 +102,7 @@ public class FenetreJeu extends JComponent {
                                     RenderingHints.VALUE_ANTIALIAS_ON);
         
         graphics2D.setColor(BLACK);
-        graphics2D.fillRect(0, 0, this.panelParent.getTaillePixelLargeur(),
-                                  this.panelParent.getTaillePixelHauteur());
+        graphics2D.fillRect(0, 0, this.taillePixelLargeur, this.taillePixelHauteur);
         
         
         
@@ -135,8 +136,7 @@ public class FenetreJeu extends JComponent {
         // On affiche les cases et les tuyaux en noir
         
         // Abscisse de la ligne verticale separant le plateau de la reserve
-        int abscisseReserve = this.panelParent.getTaillePixelLargeur() 
-                              - NBR_CASES_RESERVE_LARGEUR * this.largeurCase;
+        int abscisseReserve = this.taillePixelLargeur - NBR_CASES_RESERVE_LARGEUR * this.largeurCase;
         
         int colonneReserve = 0;
         int ligneReserve = 0;
@@ -303,14 +303,6 @@ public class FenetreJeu extends JComponent {
 
     public BufferedImage getPipes() {
         return pipes;
-    }
-
-    public int getNbrCasesTotalLargeur() {
-        return nbrCasesTotalLargeur;
-    }
-
-    public int getNbrCasesTotalHauteur() {
-        return nbrCasesTotalHauteur;
     }
 
     public int getLargeurCase() {

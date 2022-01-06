@@ -42,7 +42,6 @@ public class DeplacementPlaPlaAnnulable extends AbstractUndoableEdit {
         fenetreJeu.getPanelParent().getCouleurController().majCouleurs();
         fenetreJeu.paintImmediately(0, 0, this.fenetreJeu.getPanelParent().getTaillePixelLargeur(),
                                           this.fenetreJeu.getPanelParent().getTaillePixelHauteur());
-        //fenetreJeu.getPanelParent().getCo
     }
 
     @Override

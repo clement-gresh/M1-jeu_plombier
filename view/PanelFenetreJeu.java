@@ -3,7 +3,7 @@ package projetIG.view;
 import java.awt.BorderLayout;
 import java.awt.Dimension;
 import javax.swing.JPanel;
-import projetIG.Plumber;
+import projetIG.Plombier;
 import projetIG.controller.CouleurVictoireController;
 import projetIG.controller.DragDropController;
 import projetIG.model.niveau.Niveau;
@@ -13,7 +13,7 @@ public class PanelFenetreJeu extends JPanel {
     public static final int NBR_CASES_RESERVE_LARGEUR = 2;
     public static final int NBR_CASES_RESERVE_HAUTEUR = 6; 
     
-    protected Plumber panelPlumber;
+    protected Plombier panelPlumber;
     protected Niveau niveauCourant;
     protected int nbrCasesTotalLargeur;
     protected int nbrCasesTotalHauteur;
@@ -23,7 +23,7 @@ public class PanelFenetreJeu extends JPanel {
     protected CouleurVictoireController couleurController;
     
     // Constructeur
-    public PanelFenetreJeu(Plumber panelPlumber, String cheminNiveau) {
+    public PanelFenetreJeu(Plombier panelPlumber, String cheminNiveau) {
         this.panelPlumber = panelPlumber;
         this.setLayout(new BorderLayout(10, 10));
         
@@ -33,17 +33,15 @@ public class PanelFenetreJeu extends JPanel {
         
         
         // Calcul de la taille de la fenetre de jeu (en cases et en pixels)
-        this.nbrCasesTotalLargeur = this.niveauCourant.getNbrCasesPlateauLargeur()
-                                    + NBR_CASES_RESERVE_LARGEUR;
-        this.nbrCasesTotalHauteur = Integer.max(this.niveauCourant.getNbrCasesPlateauHauteur(),
-                                                NBR_CASES_RESERVE_HAUTEUR);
+        this.nbrCasesTotalLargeur = this.niveauCourant.getNbrCasesPlateauLargeur() + NBR_CASES_RESERVE_LARGEUR;
+        this.nbrCasesTotalHauteur = Integer.max(this.niveauCourant.getNbrCasesPlateauHauteur(), NBR_CASES_RESERVE_HAUTEUR);
         this.taillePixelLargeur = (int) (this.taillePixelHauteur * this.nbrCasesTotalLargeur / this.nbrCasesTotalHauteur);
         
         this.setPreferredSize(new Dimension(this.taillePixelLargeur, this.taillePixelHauteur)); // largeur, hauteur
         
         
         //Ajout de la fenetre de jeu
-        FenetreJeu fenetreJeu = new FenetreJeu(this, this.niveauCourant);
+        FenetreJeu fenetreJeu = new FenetreJeu(this, this.niveauCourant, this.taillePixelLargeur, this.taillePixelHauteur);
         this.add(fenetreJeu, BorderLayout.CENTER);
         
               
@@ -52,15 +50,16 @@ public class PanelFenetreJeu extends JPanel {
         this.addMouseListener(dragDrop);
         this.addMouseMotionListener(dragDrop);
         
-        //Ajout du controller des couleurs sur la fenetre de jeu
-        couleurController = new CouleurVictoireController(this, this.niveauCourant);
+        
+        //Ajout du controller Couleurs & Victoire sur la fenetre de jeu
+        couleurController = new CouleurVictoireController(this, fenetreJeu, this.niveauCourant);
         
         this.addMouseListener(couleurController);
     }
     
     
     // Getters
-    public Plumber getPanelPlumber() {
+    public Plombier getPanelPlumber() {
         return panelPlumber;
     }
 
@@ -86,7 +85,7 @@ public class PanelFenetreJeu extends JPanel {
     
     
 
-    public DragDropController getDragDrop() {
+    public DragDropController getDragDropController() {
         return dragDrop;
     }
 

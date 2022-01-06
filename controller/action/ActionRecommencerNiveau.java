@@ -7,12 +7,12 @@ import javax.swing.Action;
 import javax.swing.ImageIcon;
 import javax.swing.JOptionPane;
 import javax.swing.KeyStroke;
-import projetIG.Plumber;
+import projetIG.Plombier;
 
 public class ActionRecommencerNiveau extends AbstractAction {
-    private final Plumber panelPlumber;
+    private final Plombier panelPlumber;
 
-    public ActionRecommencerNiveau(Plumber panelPlumber) {
+    public ActionRecommencerNiveau(Plombier panelPlumber) {
         this.panelPlumber = panelPlumber;
         
         this.putValue(Action.NAME, "Recommencer");

@@ -4,23 +4,20 @@ import javax.swing.undo.CannotRedoException;
 import javax.swing.undo.CannotUndoException;
 import javax.swing.undo.UndoManager;
 import javax.swing.undo.UndoableEdit;
-import projetIG.Plumber;
+import projetIG.Plombier;
 import projetIG.controller.action.ActionAnnuler;
 import projetIG.controller.action.ActionRetablir;
 
 public class AnnulerManager extends UndoManager {
-    private ActionAnnuler annuler;
-    private ActionRetablir retablir;
+    private final ActionAnnuler annuler;
+    private final ActionRetablir retablir;
 
-    public AnnulerManager(Plumber panelPlumber) {
-        this.annuler = new ActionAnnuler(panelPlumber, this);
-        this.retablir = new ActionRetablir(panelPlumber, this);
+    public AnnulerManager(Plombier panelPlumber) {
+        this.annuler = new ActionAnnuler(this);
+        this.retablir = new ActionRetablir(this);
         
         this.annuler.setEnabled(false);
         this.retablir.setEnabled(false);
-        
-        //this.annuler.addActionListener( (event) -> AnnulerManager.this.undo());
-        //this.retablir.addActionListener( (event) -> AnnulerManager.this.redo());
     }
 
     @Override
@@ -42,7 +39,7 @@ public class AnnulerManager extends UndoManager {
         this.updateItems();
     }
     
-    private void updateItems(){
+    public void updateItems(){
         retablir.setEnabled(canRedo());
         annuler.setEnabled(canUndo());
     }

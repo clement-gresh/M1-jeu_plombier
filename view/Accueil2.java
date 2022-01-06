@@ -6,13 +6,13 @@ import javax.swing.BorderFactory;
 import javax.swing.BoxLayout;
 import javax.swing.JButton;
 import javax.swing.JPanel;
-import projetIG.Plumber;
+import projetIG.Plombier;
 
 public class Accueil2 extends JPanel {
-    protected Plumber panelParent;
+    protected Plombier panelParent;
     protected int numeroBanque;
     
-    public Accueil2(Plumber panelParent, int numeroBanque) {
+    public Accueil2(Plombier panelParent, int numeroBanque) {
         this.panelParent = panelParent;
         this.numeroBanque = numeroBanque;
         
@@ -21,7 +21,7 @@ public class Accueil2 extends JPanel {
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         this.setBorder( BorderFactory.createEmptyBorder(20, 20, 20, 20));
         
-        File banque = new File( panelParent.cheminFichier(numeroBanque, Plumber.PAS_DE_NIVEAU) );
+        File banque = new File( panelParent.cheminFichier(numeroBanque, Plombier.PAS_DE_NIVEAU) );
         
         for(int i = 1; i <= banque.list().length; i++){
             this.creerBouton("Niveau n° " + i, i);

@@ -6,9 +6,9 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import javax.swing.ImageIcon;
 import javax.swing.SwingUtilities;
-import projetIG.controller.AnnulerRetablir.DeplacementPlaPlaAnnulable;
-import projetIG.controller.AnnulerRetablir.DeplacementPlaReAnnulable;
-import projetIG.controller.AnnulerRetablir.DeplacementRePlaAnnulable;
+import projetIG.controller.annulerRetablir.DeplacementPlaPlaAnnulable;
+import projetIG.controller.annulerRetablir.DeplacementPlaReAnnulable;
+import projetIG.controller.annulerRetablir.DeplacementRePlaAnnulable;
 import projetIG.model.enumeration.CouleurTuyau;
 import projetIG.model.enumeration.Rotation;
 import projetIG.model.enumeration.TypeTuyau;
@@ -18,9 +18,12 @@ import projetIG.model.niveau.TuyauPlateau;
 import projetIG.model.niveau.TuyauReserve;
 import projetIG.view.FenetreJeu;
 import projetIG.view.ModificationsImage;
-//import static projetIG.view.FenetreJeu.combiner;
 
 public class DragDropController extends MouseAdapter {
+    public static final int AUCUNE = 0;
+    public static final int PLATEAU = 1;
+    public static final int RESERVE = 2;
+    
     protected FenetreJeu fenetreJeu;
     protected int hauteurCase;
     protected int largeurCase;
@@ -34,9 +37,6 @@ public class DragDropController extends MouseAdapter {
     
     protected Niveau niveau;
     protected AnnulerManager annulerManager;
-    protected static final int AUCUNE = 0;
-    protected static final int PLATEAU = 1;
-    protected static final int RESERVE = 2;
     protected int zoneDepart = AUCUNE;
     protected int ligneDepart;
     protected int colonneDepart;

@@ -1,6 +1,8 @@
 package projetIG.view;
 
 import java.awt.Color;
+import static java.awt.Color.BLACK;
+import java.awt.Dimension;
 import java.awt.Font;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
@@ -13,13 +15,16 @@ import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
 import projetIG.model.enumeration.CouleurTuyau;
+import static projetIG.model.enumeration.CouleurTuyau.NOIR;
 import projetIG.model.enumeration.Rotation;
+import static projetIG.model.enumeration.Rotation.PAS_DE_ROTATION;
 import projetIG.model.enumeration.TypeCase;
+import static projetIG.model.enumeration.TypeCase.MARRON_FONCE;
 import projetIG.model.enumeration.TypeTuyau;
+import static projetIG.model.enumeration.TypeTuyau.NOT_A_PIPE;
 import projetIG.model.niveau.Niveau;
 import projetIG.model.niveau.TuyauPlateau;
 import projetIG.model.niveau.TuyauReserve;
-import static projetIG.view.PanelFenetreJeu.NBR_CASES_RESERVE_HAUTEUR;
 import static projetIG.view.PanelFenetreJeu.NBR_CASES_RESERVE_LARGEUR;
 
 public class FenetreJeu extends JComponent {   
@@ -46,11 +51,23 @@ public class FenetreJeu extends JComponent {
                                                   panelParent.getTaillePixelHauteur(),
                                                   BufferedImage.TYPE_INT_ARGB);
         
+        this.setPreferredSize(new Dimension(this.panelParent.getTaillePixelLargeur(),
+                                            this.panelParent.getTaillePixelHauteur())); // largeur, hauteur
+        
+        // On recupere le gif contenant les images des tuyaux
         try { this.pipes = ImageIO.read(new File("src/main/java/projetIG/view/image/pipes.gif")); }
         catch (IOException exception) { System.err.println("Erreur importation pipes.gif : " + exception.getMessage());}
         
-        tailleCase();
         
+        // On determine la taille d'une case en pixel
+        this.largeurCase = (int)  (this.panelParent.getTaillePixelLargeur() / this.panelParent.getNbrCasesTotalLargeur());
+        this.hauteurCase = (int)  (this.panelParent.getTaillePixelHauteur() / this.panelParent.getNbrCasesTotalHauteur());
+        
+        
+        // On construit l'image d'arriere plan
+        construireArrierePlan();
+        
+        repaint();
     }
 
     @Override
@@ -61,12 +78,6 @@ public class FenetreJeu extends JComponent {
         graphics2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
                                     RenderingHints.VALUE_ANTIALIAS_ON);
         
-        tailleCase();
-        
-        Graphics2D graphics2DIAP = (Graphics2D) this.imageArrierePlan.getGraphics();
-        graphics2DIAP.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
-                                    RenderingHints.VALUE_ANTIALIAS_ON);
-        construireArrierePlan(graphics2DIAP);
         graphics2D.drawImage(this.imageArrierePlan, 0, 0, this.panelParent.getWidth(),
                              this.panelParent.getHeight(), this);
         
@@ -79,25 +90,19 @@ public class FenetreJeu extends JComponent {
     }
     
     
-    // On determine le nombre de cases en hauteur et en largeur
-    private void tailleCase(){
-        int nbrCasesPlateauLargeur = this.niveauCourant.getNbrCasesPlateauLargeur();
-        int nbrCasesPlateauHauteur = this.niveauCourant.getNbrCasesPlateauHauteur();
-        
-        
-        this.nbrCasesTotalLargeur = nbrCasesPlateauLargeur + NBR_CASES_RESERVE_LARGEUR;
-        this.nbrCasesTotalHauteur = Integer.max(nbrCasesPlateauHauteur, NBR_CASES_RESERVE_HAUTEUR);
-        
-        // On determine la taille d'une case en pixel
-        this.largeurCase = (int)  (this.panelParent.getWidth() / this.nbrCasesTotalLargeur);
-        this.hauteurCase = (int)  (this.panelParent.getHeight() / this.nbrCasesTotalHauteur);
-    }
     
     
     // CONSTRUCTION DE L'IMAGE DE FOND
-    private void construireArrierePlan(Graphics2D graphics2D){
-        graphics2D.setColor(Color.BLACK);
-        graphics2D.fillRect(0, 0, this.getWidth(), this.getHeight());
+    private void construireArrierePlan(){
+        
+        Graphics2D graphics2D = (Graphics2D) this.imageArrierePlan.getGraphics();
+        graphics2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
+                                    RenderingHints.VALUE_ANTIALIAS_ON);
+        
+        graphics2D.setColor(BLACK);
+        graphics2D.fillRect(0, 0, this.panelParent.getTaillePixelLargeur(),
+                                  this.panelParent.getTaillePixelHauteur());
+        
         
         
         // PLATEAU
@@ -116,7 +121,7 @@ public class FenetreJeu extends JComponent {
                 
                 Rotation nombreRotation = Rotation.nombreRotationsCase( lignePlateau, colonnePlateau, 
                                                                         nbrCasesPlateauLargeur, nbrCasesPlateauHauteur);
-                if(nombreRotation != Rotation.PAS_DE_ROTATION) 
+                if(nombreRotation != PAS_DE_ROTATION) 
                     imgTemp = ModificationsImage.pivoter(imgTemp, nombreRotation.ordinal());
                 
                 graphics2D.drawImage(imgTemp,
@@ -128,8 +133,10 @@ public class FenetreJeu extends JComponent {
         
         // RESERVE
         // On affiche les cases et les tuyaux en noir
+        
         // Abscisse de la ligne verticale separant le plateau de la reserve
-        int abscisseReserve = this.panelParent.getWidth() - NBR_CASES_RESERVE_LARGEUR * this.largeurCase;
+        int abscisseReserve = this.panelParent.getTaillePixelLargeur() 
+                              - NBR_CASES_RESERVE_LARGEUR * this.largeurCase;
         
         int colonneReserve = 0;
         int ligneReserve = 0;
@@ -140,8 +147,8 @@ public class FenetreJeu extends JComponent {
                 
                 // On ajoute le background de la case dans la reserve (i.e. un carre marron fonce)
                 BufferedImage image = this.pipes.getSubimage(
-                         TypeCase.MARRON_FONCE.ordinal() * (120 + 20),
-                         TypeTuyau.NOT_A_PIPE.ordinal() * (120 + 20), 120, 120);
+                         MARRON_FONCE.ordinal() * (120 + 20),
+                         NOT_A_PIPE.ordinal() * (120 + 20), 120, 120);
 
                 graphics2D.drawImage(image,
                             abscisseReserve + this.largeurCase * colonneReserve,
@@ -150,7 +157,7 @@ public class FenetreJeu extends JComponent {
                 
                 
                 // On ajoute les tuyaux en noir
-                dessinerTuyauReserve(graphics2D, tuyauReserve, CouleurTuyau.NOIR,
+                dessinerTuyauReserve(graphics2D, tuyauReserve, NOIR,
                                      abscisseReserve, colonneReserve, ligneReserve);
                 
                 colonneReserve = colonneReserve + 1;

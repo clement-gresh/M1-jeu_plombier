@@ -27,8 +27,10 @@ public class PanelFenetreJeu extends JPanel {
         this.panelPlumber = panelPlumber;
         this.setLayout(new BorderLayout(10, 10));
         
+        
         //Creation du niveau
         this.niveauCourant = ParserNiveau.parserNiveau(cheminNiveau);
+        
         
         // Calcul de la taille de la fenetre de jeu (en cases et en pixels)
         this.nbrCasesTotalLargeur = this.niveauCourant.getNbrCasesPlateauLargeur()
@@ -38,6 +40,7 @@ public class PanelFenetreJeu extends JPanel {
         this.taillePixelLargeur = (int) (this.taillePixelHauteur * this.nbrCasesTotalLargeur / this.nbrCasesTotalHauteur);
         
         this.setPreferredSize(new Dimension(this.taillePixelLargeur, this.taillePixelHauteur)); // largeur, hauteur
+        
         
         //Ajout de la fenetre de jeu
         FenetreJeu fenetreJeu = new FenetreJeu(this, this.niveauCourant);

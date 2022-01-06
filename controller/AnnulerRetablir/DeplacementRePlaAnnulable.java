@@ -1,27 +1,32 @@
+
 package projetIG.controller.AnnulerRetablir;
 
 import javax.swing.undo.AbstractUndoableEdit;
 import javax.swing.undo.CannotRedoException;
 import javax.swing.undo.CannotUndoException;
 import projetIG.model.niveau.Niveau;
+import projetIG.model.niveau.Tuyau;
 import projetIG.model.niveau.TuyauPlateau;
+import projetIG.view.FenetreJeu;
 
 public class DeplacementRePlaAnnulable extends AbstractUndoableEdit {
+    private final FenetreJeu fenetreJeu;
     private final Niveau niveau;
-    private final TuyauPlateau tuyauPlateau;
-    private final int lignePlateau;
-    private final int colonnePlateau;
+    private final Tuyau tuyau;
     private final int ligneReserve;
     private final int colonneReserve;
+    private final int lignePlateau;
+    private final int colonnePlateau;
 
-    public DeplacementRePlaAnnulable(Niveau niveau, TuyauPlateau tuyauPlateau, int lignePlateau,
-                                 int colonnePlateau, int ligneReserve, int colonneReserve) {
+    public DeplacementRePlaAnnulable(FenetreJeu fenetreJeu, Niveau niveau, Tuyau tuyau,
+            int ligneReserve, int colonneReserve, int lignePlateau, int colonnePlateau) {
+        this.fenetreJeu = fenetreJeu;
         this.niveau = niveau;
-        this.tuyauPlateau = tuyauPlateau;
-        this.lignePlateau = lignePlateau;
-        this.colonnePlateau = colonnePlateau;
+        this.tuyau = tuyau;
         this.ligneReserve = ligneReserve;
         this.colonneReserve = colonneReserve;
+        this.lignePlateau = lignePlateau;
+        this.colonnePlateau = colonnePlateau;
     }
 
     @Override
@@ -31,8 +36,12 @@ public class DeplacementRePlaAnnulable extends AbstractUndoableEdit {
 
     @Override
     public void redo() throws CannotRedoException {
-        niveau.getPlateauCourant().get(this.lignePlateau).set(colonnePlateau, tuyauPlateau);
+        niveau.getPlateauCourant().get(this.lignePlateau).set(colonnePlateau, new TuyauPlateau(tuyau));
         niveau.getTuyauxReserve().get(ligneReserve).get(colonneReserve).diminuerNombre();
+        
+        fenetreJeu.getPanelParent().getCouleurController().majCouleurs();
+        fenetreJeu.paintImmediately(0, 0, 750, 700);
+        //fenetreJeu.getPanelParent().getCo
     }
 
     @Override
@@ -44,6 +53,9 @@ public class DeplacementRePlaAnnulable extends AbstractUndoableEdit {
     public void undo() throws CannotUndoException {
         niveau.getPlateauCourant().get(this.lignePlateau).set(colonnePlateau, null);
         niveau.getTuyauxReserve().get(ligneReserve).get(colonneReserve).augmenterNombre();
+        
+        fenetreJeu.getPanelParent().getCouleurController().majCouleurs();
+        fenetreJeu.paintImmediately(0, 0, 750, 700);
     }
     
     

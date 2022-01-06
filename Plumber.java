@@ -136,15 +136,15 @@ public class Plumber extends JPanel {
         return annulerManager;
     }
 
-    public JPanel getAccueil1() {
+    public Accueil1 getAccueil1() {
         return accueil1;
     }
 
-    public JPanel getAccueil2() {
+    public Accueil2 getAccueil2() {
         return accueil2;
     }
 
-    public JPanel getPlateau() {
+    public PanelFenetreJeu getPlateau() {
         return plateau;
     }
 
@@ -158,11 +158,11 @@ public class Plumber extends JPanel {
     
 
     // SETTERS
-    public void setAccueil2(JPanel accueil2) {
+    public void setAccueil2(Accueil2 accueil2) {
         this.accueil2 = accueil2;
     }
 
-    public void setPlateau(JPanel plateau) {
+    public void setPlateau(PanelFenetreJeu plateau) {
         this.plateau = plateau;
     }
 

@@ -38,7 +38,7 @@ public class CouleurVictoireController extends MouseAdapter {
         }
     }
     
-    private void majCouleurs(){
+    public void majCouleurs(){
         this.victoire = true;
         
         // Pour tous les tuyaux, on indique qu'ils n'ont pas ete visites 

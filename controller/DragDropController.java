@@ -6,7 +6,9 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import javax.swing.ImageIcon;
 import javax.swing.SwingUtilities;
+import projetIG.controller.AnnulerRetablir.DeplacementPlaPlaAnnulable;
 import projetIG.controller.AnnulerRetablir.DeplacementPlaReAnnulable;
+import projetIG.controller.AnnulerRetablir.DeplacementRePlaAnnulable;
 import projetIG.model.enumeration.CouleurTuyau;
 import projetIG.model.enumeration.Rotation;
 import projetIG.model.enumeration.TypeTuyau;
@@ -279,13 +281,17 @@ public class DragDropController extends MouseAdapter {
             System.out.println("Depart : " + this.zoneDepart + " ligne " + this.ligneDepart + ", colonne " + this.colonneDepart);
             System.out.println("Arrivee  : " + this.zoneArrive + "  ligne " + this.ligneArrive + ", colonne " + this.colonneArrive);
             */
-            this.annulerManager.addEdit(new DeplacementPlaReAnnulable(niveau, tuyauDeplace, ligneDepart, colonneDepart, ligneArrive, colonneArrive));
+            this.annulerManager.addEdit(new DeplacementPlaReAnnulable(fenetreJeu, niveau,
+                    tuyauDeplace, ligneDepart, colonneDepart, ligneArrive, colonneArrive));
         }
         else if(this.zoneDepart == RESERVE && this.zoneArrive == PLATEAU){
-            
+            this.annulerManager.addEdit(new DeplacementRePlaAnnulable(fenetreJeu, niveau,
+                    tuyauDeplace, ligneDepart, colonneDepart, ligneArrive, colonneArrive));
         }
         else if(this.zoneDepart == PLATEAU && this.zoneArrive == PLATEAU){
             
+            this.annulerManager.addEdit(new DeplacementPlaPlaAnnulable(fenetreJeu, niveau,
+                    tuyauDeplace, ligneDepart, colonneDepart, ligneArrive, colonneArrive));
         }
     }
 }

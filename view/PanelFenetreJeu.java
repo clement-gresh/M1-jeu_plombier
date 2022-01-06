@@ -12,6 +12,8 @@ import projetIG.model.niveau.ParserNiveau;
 public class PanelFenetreJeu extends JPanel {
     protected Plumber panelPlumber;
     protected Niveau niveauCourant;
+    protected DragDropController dragDrop;
+    protected CouleurVictoireController couleurController;
     
     // Constructeur
     public PanelFenetreJeu(Plumber panelPlumber, String cheminNiveau) {
@@ -28,13 +30,12 @@ public class PanelFenetreJeu extends JPanel {
         
               
         //Ajout du controller Drag&Drop sur la fenetre de jeu
-        DragDropController dragDrop = new DragDropController(fenetreJeu);
+        dragDrop = new DragDropController(fenetreJeu);
         this.addMouseListener(dragDrop);
         this.addMouseMotionListener(dragDrop);
         
         //Ajout du controller des couleurs sur la fenetre de jeu
-        CouleurVictoireController couleurController
-                = new CouleurVictoireController(this, this.niveauCourant);
+        couleurController = new CouleurVictoireController(this, this.niveauCourant);
         
         this.addMouseListener(couleurController);
     }
@@ -47,5 +48,13 @@ public class PanelFenetreJeu extends JPanel {
 
     public Niveau getNiveauCourant() {
         return niveauCourant;
+    }
+
+    public DragDropController getDragDrop() {
+        return dragDrop;
+    }
+
+    public CouleurVictoireController getCouleurController() {
+        return couleurController;
     }
 }

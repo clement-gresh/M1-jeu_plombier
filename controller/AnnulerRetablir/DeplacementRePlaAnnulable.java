@@ -40,7 +40,8 @@ public class DeplacementRePlaAnnulable extends AbstractUndoableEdit {
         niveau.getTuyauxReserve().get(ligneReserve).get(colonneReserve).diminuerNombre();
         
         fenetreJeu.getPanelParent().getCouleurController().majCouleurs();
-        fenetreJeu.paintImmediately(0, 0, 750, 700);
+        fenetreJeu.paintImmediately(0, 0, this.fenetreJeu.getPanelParent().getTaillePixelLargeur(),
+                                          this.fenetreJeu.getPanelParent().getTaillePixelHauteur());
         //fenetreJeu.getPanelParent().getCo
     }
 
@@ -55,7 +56,8 @@ public class DeplacementRePlaAnnulable extends AbstractUndoableEdit {
         niveau.getTuyauxReserve().get(ligneReserve).get(colonneReserve).augmenterNombre();
         
         fenetreJeu.getPanelParent().getCouleurController().majCouleurs();
-        fenetreJeu.paintImmediately(0, 0, 750, 700);
+        fenetreJeu.paintImmediately(0, 0, this.fenetreJeu.getPanelParent().getTaillePixelLargeur(),
+                                          this.fenetreJeu.getPanelParent().getTaillePixelHauteur());
     }
     
     

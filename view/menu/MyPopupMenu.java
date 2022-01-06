@@ -1,10 +1,8 @@
 package projetIG.view.menu;
 
 import javax.swing.JFrame;
-import javax.swing.JMenuItem;
 import javax.swing.JPopupMenu;
 import projetIG.Plumber;
-import projetIG.controller.AnnulerManager;
 import projetIG.controller.action.ActionAnnuler;
 import projetIG.controller.action.ActionQuitter;
 import projetIG.controller.action.ActionRecommencerNiveau;

@@ -10,19 +10,34 @@ import projetIG.model.niveau.Niveau;
 import projetIG.model.niveau.ParserNiveau;
 
 public class PanelFenetreJeu extends JPanel {
+    public static final int NBR_CASES_RESERVE_LARGEUR = 2;
+    public static final int NBR_CASES_RESERVE_HAUTEUR = 6; 
+    
     protected Plumber panelPlumber;
     protected Niveau niveauCourant;
+    protected int nbrCasesTotalLargeur;
+    protected int nbrCasesTotalHauteur;
+    protected int taillePixelLargeur;
+    protected int taillePixelHauteur = 700;
     protected DragDropController dragDrop;
     protected CouleurVictoireController couleurController;
     
     // Constructeur
     public PanelFenetreJeu(Plumber panelPlumber, String cheminNiveau) {
         this.panelPlumber = panelPlumber;
-        this.setPreferredSize(new Dimension(750, 700)); // largeur, hauteur
         this.setLayout(new BorderLayout(10, 10));
         
         //Creation du niveau
         this.niveauCourant = ParserNiveau.parserNiveau(cheminNiveau);
+        
+        // Calcul de la taille de la fenetre de jeu (en cases et en pixels)
+        this.nbrCasesTotalLargeur = this.niveauCourant.getNbrCasesPlateauLargeur()
+                                    + NBR_CASES_RESERVE_LARGEUR;
+        this.nbrCasesTotalHauteur = Integer.max(this.niveauCourant.getNbrCasesPlateauHauteur(),
+                                                NBR_CASES_RESERVE_HAUTEUR);
+        this.taillePixelLargeur = (int) (this.taillePixelHauteur * this.nbrCasesTotalLargeur / this.nbrCasesTotalHauteur);
+        
+        this.setPreferredSize(new Dimension(this.taillePixelLargeur, this.taillePixelHauteur)); // largeur, hauteur
         
         //Ajout de la fenetre de jeu
         FenetreJeu fenetreJeu = new FenetreJeu(this, this.niveauCourant);
@@ -49,6 +64,24 @@ public class PanelFenetreJeu extends JPanel {
     public Niveau getNiveauCourant() {
         return niveauCourant;
     }
+
+    public int getNbrCasesTotalLargeur() {
+        return nbrCasesTotalLargeur;
+    }
+
+    public int getNbrCasesTotalHauteur() {
+        return nbrCasesTotalHauteur;
+    }
+
+    public int getTaillePixelLargeur() {
+        return taillePixelLargeur;
+    }
+
+    public int getTaillePixelHauteur() {
+        return taillePixelHauteur;
+    }
+    
+    
 
     public DragDropController getDragDrop() {
         return dragDrop;

@@ -19,6 +19,8 @@ import projetIG.model.enumeration.TypeTuyau;
 import projetIG.model.niveau.Niveau;
 import projetIG.model.niveau.TuyauPlateau;
 import projetIG.model.niveau.TuyauReserve;
+import static projetIG.view.PanelFenetreJeu.NBR_CASES_RESERVE_HAUTEUR;
+import static projetIG.view.PanelFenetreJeu.NBR_CASES_RESERVE_LARGEUR;
 
 public class FenetreJeu extends JComponent {   
     
@@ -26,7 +28,7 @@ public class FenetreJeu extends JComponent {
     protected PanelFenetreJeu panelParent;
     protected Niveau niveauCourant;
     protected BufferedImage pipes = new BufferedImage(820, 960, BufferedImage.TYPE_INT_ARGB);
-    protected BufferedImage imageArrierePlan = new BufferedImage(750, 700, BufferedImage.TYPE_INT_ARGB);
+    protected BufferedImage imageArrierePlan;
     protected int nbrCasesTotalLargeur;
     protected int nbrCasesTotalHauteur;
     protected int largeurCase;
@@ -40,6 +42,9 @@ public class FenetreJeu extends JComponent {
     public FenetreJeu(PanelFenetreJeu panelParent, Niveau niveau) {
         this.panelParent = panelParent;
         this.niveauCourant = niveau;
+        this.imageArrierePlan = new BufferedImage(panelParent.getTaillePixelLargeur(),
+                                                  panelParent.getTaillePixelHauteur(),
+                                                  BufferedImage.TYPE_INT_ARGB);
         
         try { this.pipes = ImageIO.read(new File("src/main/java/projetIG/view/image/pipes.gif")); }
         catch (IOException exception) { System.err.println("Erreur importation pipes.gif : " + exception.getMessage());}
@@ -79,12 +84,9 @@ public class FenetreJeu extends JComponent {
         int nbrCasesPlateauLargeur = this.niveauCourant.getNbrCasesPlateauLargeur();
         int nbrCasesPlateauHauteur = this.niveauCourant.getNbrCasesPlateauHauteur();
         
-        //Nombre de lignes et colonnes de la reserve (constant quel que soit le niveau)
-        int nbrCasesReserveLargeur = 2;
-        int nbrCasesReserveHauteur = 6; 
         
-        this.nbrCasesTotalLargeur = nbrCasesPlateauLargeur + nbrCasesReserveLargeur;
-        this.nbrCasesTotalHauteur = Integer.max(nbrCasesPlateauHauteur, nbrCasesReserveHauteur);
+        this.nbrCasesTotalLargeur = nbrCasesPlateauLargeur + NBR_CASES_RESERVE_LARGEUR;
+        this.nbrCasesTotalHauteur = Integer.max(nbrCasesPlateauHauteur, NBR_CASES_RESERVE_HAUTEUR);
         
         // On determine la taille d'une case en pixel
         this.largeurCase = (int)  (this.panelParent.getWidth() / this.nbrCasesTotalLargeur);
@@ -127,7 +129,7 @@ public class FenetreJeu extends JComponent {
         // RESERVE
         // On affiche les cases et les tuyaux en noir
         // Abscisse de la ligne verticale separant le plateau de la reserve
-        int abscisseReserve = this.panelParent.getWidth() - 2 * this.largeurCase;
+        int abscisseReserve = this.panelParent.getWidth() - NBR_CASES_RESERVE_LARGEUR * this.largeurCase;
         
         int colonneReserve = 0;
         int ligneReserve = 0;
@@ -163,7 +165,7 @@ public class FenetreJeu extends JComponent {
     // CONSTRUCTION DE LA RESERVE
     private void construireReserve(Graphics2D graphics2D){
         // Abscisse de la ligne verticale separant le plateau de la reserve
-        int abscisseReserve = this.panelParent.getWidth() - 2 * this.largeurCase;
+        int abscisseReserve = this.panelParent.getWidth() - NBR_CASES_RESERVE_LARGEUR * this.largeurCase;
         
         int colonneReserve = 0;
         int ligneReserve = 0;

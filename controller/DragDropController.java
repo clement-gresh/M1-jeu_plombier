@@ -268,7 +268,8 @@ public class DragDropController extends MouseAdapter {
             
             this.fenetreJeu.setXImageDD(departX);
             this.fenetreJeu.setYImageDD(departY);
-            this.fenetreJeu.paintImmediately(0, 0, 750, 700);
+            this.fenetreJeu.paintImmediately(0, 0, this.fenetreJeu.getPanelParent().getTaillePixelLargeur(),
+                                                  this.fenetreJeu.getPanelParent().getTaillePixelHauteur());
         }
     }
     

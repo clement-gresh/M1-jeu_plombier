@@ -1,6 +1,7 @@
 package projetIG.view;
 
 import java.awt.BorderLayout;
+import java.awt.Dimension;
 import javax.swing.JPanel;
 import projetIG.Plumber;
 import projetIG.controller.CouleurVictoireController;
@@ -15,6 +16,7 @@ public class PanelFenetreJeu extends JPanel {
     // Constructeur
     public PanelFenetreJeu(Plumber panelPlumber, String cheminNiveau) {
         this.panelPlumber = panelPlumber;
+        this.setPreferredSize(new Dimension(750, 700)); // largeur, hauteur
         this.setLayout(new BorderLayout(10, 10));
         
         //Creation du niveau

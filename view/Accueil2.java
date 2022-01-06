@@ -16,6 +16,8 @@ public class Accueil2 extends JPanel {
         this.panelParent = panelParent;
         this.numeroBanque = numeroBanque;
         
+        
+        this.setPreferredSize(new Dimension(1050, 700)); // largeur, hauteur
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         this.setBorder( BorderFactory.createEmptyBorder(20, 20, 20, 20));
         

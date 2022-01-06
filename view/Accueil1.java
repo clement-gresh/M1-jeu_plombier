@@ -14,6 +14,8 @@ public class Accueil1 extends JPanel {
     public Accueil1(Plumber panelParent) {
         this.panelParent = panelParent;
         
+        
+        this.setPreferredSize(new Dimension(550, 700)); // largeur, hauteur
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         this.setBorder( BorderFactory.createEmptyBorder(20, 20, 20, 20));
         

@@ -55,7 +55,7 @@ public abstract class ParserNiveau {
             int nbrCasesPlateauHauteur = scanner.nextInt();
             int nbrCasesPlateauLargeur = scanner.nextInt();
             
-            System.out.println("Hauteur : " + nbrCasesPlateauHauteur + " et Largeur : " + nbrCasesPlateauLargeur); // debug
+            //System.out.println("Hauteur : " + nbrCasesPlateauHauteur + " et Largeur : " + nbrCasesPlateauLargeur); // debug
             
             //Variables locales pour compter les colonnes et lignes du plateau
             int colonne = 0;
@@ -126,6 +126,7 @@ public abstract class ParserNiveau {
             scanner.close();
             
             //debug
+            /*
             System.out.println(tuyauxPlateau);  
             for(ArrayList<TuyauPlateau> lignePlateau : tuyauxPlateau) {
                 for(TuyauPlateau tuyau : lignePlateau){
@@ -140,6 +141,7 @@ public abstract class ParserNiveau {
                 }
             }
             System.out.println("");
+            */
             //fin debug
             
             

@@ -5,7 +5,6 @@ import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
 import javax.swing.SwingUtilities;
-import projetIG.Plumber;
 import projetIG.model.enumeration.CouleurTuyau;
 import projetIG.model.enumeration.Ouverture;
 import projetIG.model.enumeration.Rotation;
@@ -74,7 +73,7 @@ public class CouleurVictoireController extends MouseAdapter {
                                                         ouvertureModel, tuyauSource.getRotation(),
                                                         TypeTuyau.AJOUTER_ROTATION);
                     
-                    System.out.println("Depart d'une source. Orientation : " + TypeTuyau.ouvertures.get(TypeTuyau.SOURCE.ordinal()).get(0).get(0)); //debug
+                    //System.out.println("Depart d'une source. Orientation : " + TypeTuyau.ouvertures.get(TypeTuyau.SOURCE.ordinal()).get(0).get(0)); //debug
 
                     connexionCaseSuivante(ligne, colonne, ouvertureSource,
                                           tuyauSource.getCouleur().get(0));
@@ -83,7 +82,7 @@ public class CouleurVictoireController extends MouseAdapter {
             }
             colonne = 0;
             ligne = ligne + 1;
-            System.out.println(""); // debug
+            //System.out.println(""); // debug
         }
         
         if(victoire) {
@@ -114,7 +113,7 @@ public class CouleurVictoireController extends MouseAdapter {
             
             
         }
-        else System.out.println("Perdu..."); // debug
+        //else System.out.println("Perdu..."); // debug
         
     }
     
@@ -133,12 +132,12 @@ public class CouleurVictoireController extends MouseAdapter {
         else{
             //System.out.print("C/L tuyau courant : " + colonneSortie + ", " + ligneSortie + ", "); //debug
 
-            System.out.print("Nom : " + tuyauPlateau.getNom() + ", "); //debug
+            //System.out.print("Nom : " + tuyauPlateau.getNom() + ", "); //debug
 
             Ouverture ouvertureEntree = Ouverture.values()[
                     (ouvertureTuyauEntrant.ordinal() + Rotation.DEMI_TOUR.ordinal())
                     % Ouverture.values().length];
-            System.out.print("Orientation d'entree : " + ouvertureEntree + ", "); //debug
+            //System.out.print("Orientation d'entree : " + ouvertureEntree + ", "); //debug
 
             // On execute cette partie du code si :
             // - le tuyau a une ouverture
@@ -178,7 +177,7 @@ public class CouleurVictoireController extends MouseAdapter {
             ){
 
                 if(tuyauPlateau.getNom() == TypeTuyau.SOURCE){
-                    System.out.print("Arrivee a une source. "); //debug
+                    //System.out.print("Arrivee a une source. "); //debug
                     tuyauPlateau.setDejaVisite(0, Boolean.TRUE);
 
                     if(couleur != CouleurTuyau.NOIR && tuyauPlateau.getCouleur().get(0) != couleur){
@@ -201,11 +200,11 @@ public class CouleurVictoireController extends MouseAdapter {
                         tuyauPlateau.setDejaVisite(0, Boolean.TRUE);
                     }
 
-                    System.out.print("Couleur mise : " + couleur + ", "); //debug
+                    //System.out.print("Couleur mise : " + couleur + ", "); //debug
                     System.out.print("Orientation de sortie : " + TypeTuyau.ouverturesConnectees(tuyauPlateau.getNom(), ouvertureEntree, tuyauPlateau.getRotation()) + ", "); //debug
 
                     for(Ouverture orientationSortie : TypeTuyau.ouverturesConnectees(tuyauPlateau.getNom(), ouvertureEntree, tuyauPlateau.getRotation())){
-                        System.out.println("Orientation de sortie : " + orientationSortie + ", "); //debug
+                        //System.out.println("Orientation de sortie : " + orientationSortie + ", "); //debug
 
                         connexionCaseSuivante(ligneSortie, colonneSortie, orientationSortie, couleur);
                     }

@@ -32,6 +32,7 @@ public class ActionRetourAccueil extends AbstractAction {
         
         if(clickButton == JOptionPane.YES_OPTION) {
             this.panelPlumber.afficherAccueil1();
+            this.setEnabled(false);
         }
         
     }

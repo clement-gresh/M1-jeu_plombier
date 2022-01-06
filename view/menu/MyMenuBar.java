@@ -3,18 +3,19 @@ package projetIG.view.menu;
 import javax.swing.JFrame;
 import javax.swing.JMenu;
 import javax.swing.JMenuBar;
+import javax.swing.JMenuItem;
 import projetIG.Plumber;
+import projetIG.controller.AnnulerManager;
+import projetIG.controller.action.ActionAnnuler;
 import projetIG.controller.action.ActionQuitter;
 import projetIG.controller.action.ActionRecommencerNiveau;
+import projetIG.controller.action.ActionRetablir;
 import projetIG.controller.action.ActionRetourAccueil;
 
 public class MyMenuBar extends JMenuBar {
-    private final JFrame frameParent;
-    private final Plumber panelPlumber;
 
-    public MyMenuBar(JFrame frameParent, Plumber panelPlumber) {
-        this.frameParent = frameParent;
-        this.panelPlumber = panelPlumber;
+    public MyMenuBar(JFrame frameParent, Plumber panelPlumber, 
+                     ActionAnnuler actionAnnuler, ActionRetablir actionRetablir) {
         
         //Creation du menu Jeu
         JMenu menuJeu = new JMenu("Jeu");
@@ -22,10 +23,14 @@ public class MyMenuBar extends JMenuBar {
         this.add(menuJeu);
         
         // Ajout des elements du menu
-        menuJeu.add(new ActionRetourAccueil(this.panelPlumber));
+        menuJeu.add(new ActionRetourAccueil(panelPlumber));
         menuJeu.addSeparator();
-        menuJeu.add(new ActionRecommencerNiveau(this.panelPlumber));
+        menuJeu.add(new ActionRecommencerNiveau(panelPlumber));
+        menuJeu.add(actionAnnuler);
+        menuJeu.add(actionRetablir);
+        //menuJeu.add(annuler);
+        //menuJeu.add(retablir);
         menuJeu.addSeparator();
-        menuJeu.add(new ActionQuitter(this.frameParent));
+        menuJeu.add(new ActionQuitter(frameParent));
     }
 }

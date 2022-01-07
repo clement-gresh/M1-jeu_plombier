@@ -26,6 +26,9 @@ public class ActionRetourAccueil extends AbstractAction {
     @Override
     public void actionPerformed(ActionEvent e) {
         
+        Plombier.pressAlt();
+        ActionRetourAccueil.this.panelPlumber.getFrameParent().setAlwaysOnTop(true);
+        
         int clickButton = JOptionPane.showConfirmDialog(this.panelPlumber, 
                 "Etes-vous sûr de vouloir retourner à l'accueil ? La partie en cours sera perdue.", 
                 "Retour à l'accueil", JOptionPane.YES_NO_OPTION);
@@ -34,6 +37,9 @@ public class ActionRetourAccueil extends AbstractAction {
             this.panelPlumber.afficherAccueil1();
         }
         
+        
+        ActionRetourAccueil.this.panelPlumber.getFrameParent().setAlwaysOnTop(false);
+        Plombier.releaseAlt();
     }
     
 }

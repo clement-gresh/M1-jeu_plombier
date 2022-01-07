@@ -1,7 +1,10 @@
 package projetIG;
 
+import java.awt.AWTException;
 import projetIG.view.menu.MyMenuBar;
 import java.awt.BorderLayout;
+import java.awt.Robot;
+import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.event.WindowAdapter;
@@ -45,15 +48,8 @@ public class Plombier extends JPanel {
         this.frameParent.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
-                int clicBouton = JOptionPane.showConfirmDialog(Plombier.this.frameParent, 
-                        "Etes vous sur de vouloir quitter le jeu ?", 
-                        "Quitter", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
-
-                if(clicBouton == JOptionPane.YES_OPTION) {
-                    Plombier.this.frameParent.dispose();
-                }
+                Plombier.this.confirmClose();
             }
-            
         });
         
         this.setLayout(new BorderLayout());
@@ -69,7 +65,7 @@ public class Plombier extends JPanel {
         ActionRetablir actionRetablir = annulerManager.getRetablir();
         
         //Ajout de la barre de menu
-        this.frameParent.setJMenuBar(new MyMenuBar(this.frameParent, actionRetourAccueil,
+        this.frameParent.setJMenuBar(new MyMenuBar(this, actionRetourAccueil,
                                          actionRecommencer, actionAnnuler, actionRetablir));
         
         
@@ -78,7 +74,7 @@ public class Plombier extends JPanel {
         
         
         //Ajout du menu contextuel (clic-droit) a la fenetre
-        this.popupMenu = new MyPopupMenu(this.frameParent, actionRetourAccueil,
+        this.popupMenu = new MyPopupMenu(this, actionRetourAccueil,
                                          actionRecommencer, actionAnnuler, actionRetablir);
         
         this.addMouseListener(new MouseAdapter() {
@@ -141,6 +137,7 @@ public class Plombier extends JPanel {
         this.afficher(this.plateau, RETOUR_ACCUEIL_ACTIVE, RECOMMENCER_NIVEAU_ACTIVE);
     }
     
+    // Affiche le panel selectionne et met a jour les boutons du menu
     private void afficher(JPanel panel, boolean actionRetour, boolean actionRecommencer){
         this.removeAll();
         this.add(panel, BorderLayout.CENTER);
@@ -153,14 +150,56 @@ public class Plombier extends JPanel {
         this.repaint();
     }
     
+    // Determine s'il y a un niveau suivant dans la banque de niveau
     public boolean isThereNextLevel(){
         File banque = new File(this.cheminFichier(this.numeroBanque, PAS_DE_NIVEAU));
         
         return (this.numeroNiveau < banque.list().length);
     }
     
+    // Demande confirmation avant la cloture de la frame
+    public void confirmClose() {
+        Plombier.pressAlt();
+        this.frameParent.setAlwaysOnTop(true);
+        
+        int clicBouton = JOptionPane.showConfirmDialog(Plombier.this.frameParent, 
+                "Etes vous sur de vouloir quitter le jeu ?", 
+                "Quitter", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
+
+        if(clicBouton == JOptionPane.YES_OPTION) {
+            Plombier.this.frameParent.dispose();
+        }
+        
+        this.frameParent.setAlwaysOnTop(false);
+        Plombier.releaseAlt();
+    }
+    
+    // "Presse" le bouton Alt jusqu'a l'appel de releaseAlt()
+    public static void pressAlt(){
+        try {
+            Robot r = new Robot();
+            r.keyPress(KeyEvent.VK_ALT);
+        } catch (AWTException ex) {
+            System.out.println("Erreur press Alt : " + ex.getMessage());
+        }
+    }
+
+    // "Relache" le bouton Alt
+    public static void releaseAlt(){
+        try {
+            Robot r = new Robot();
+            r.keyRelease(KeyEvent.VK_ALT);
+        } catch (AWTException ex) {
+            System.out.println("Erreur press Alt : " + ex.getMessage());
+        }
+    }
+    
     
     // GETTERS
+    public JFrame getFrameParent() {
+        return frameParent;
+    }
+
     public AnnulerManager getAnnulerManager() {
         return annulerManager;
     }

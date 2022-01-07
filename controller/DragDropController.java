@@ -1,5 +1,6 @@
 package projetIG.controller;
 
+import java.awt.MouseInfo;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
@@ -23,6 +24,9 @@ public class DragDropController extends MouseAdapter {
     public static final int AUCUNE = 0;
     public static final int PLATEAU = 1;
     public static final int RESERVE = 2;
+    public static final int PAS_DE_DEPLACEMENT = 10; // Represente le pas en pixel entre 2 images lors d'un mouvement
+    public static final int PAS_DE_TEMPS = 2; // Represente le temps d'affichage en ms entre 2 images lors d'un mouvement
+    
     
     protected FenetreJeu fenetreJeu;
     protected int hauteurCase;
@@ -33,8 +37,6 @@ public class DragDropController extends MouseAdapter {
     protected int nbrCasesPlateauLargeur;
     protected boolean deplacementTuyau = false;
     protected Tuyau tuyauDeplace;
-    protected int pasDeDeplacement = 10; // Represente le pas en pixel entre 2 images lors d'un mouvement
-    
     protected Niveau niveau;
     protected AnnulerManager annulerManager;
     protected int zoneDepart = AUCUNE;
@@ -249,14 +251,16 @@ public class DragDropController extends MouseAdapter {
         int distanceY = arriveeY - departY;
         
         int distance = (int) Math.sqrt(Math.pow(distanceX,2) + Math.pow(distanceY,2));
-        int iterations = (int) (distance / this.pasDeDeplacement);
+        int iterations = (int) (distance / this.PAS_DE_DEPLACEMENT);
         
         //System.out.println("distance X : " + distanceX + ", distance Y : " + distanceY 
         //        + ", distance totale : " + distance + ", nombre d'iterations : " + iterations); // debug
         
         for(int i = 0; i < iterations; i++ ) {
+            // HACK Linux (sleep) : force la communication entre la MV et le serveur X a chaque rafraichissement
+            MouseInfo.getPointerInfo ();
             
-            try { Thread.sleep(2); }
+            try { Thread.sleep(PAS_DE_TEMPS); }
             catch (InterruptedException exception) {
                 System.err.println("Exception fonction sleep (DragDropController) : " + exception.getMessage());}
             

@@ -5,15 +5,14 @@ import java.awt.event.KeyEvent;
 import javax.swing.AbstractAction;
 import javax.swing.Action;
 import javax.swing.ImageIcon;
-import javax.swing.JFrame;
-import javax.swing.JOptionPane;
 import javax.swing.KeyStroke;
+import projetIG.Plombier;
 
 public class ActionQuitter extends AbstractAction {
-    private final JFrame frameParent;
+    private final Plombier panelPlombier;
 
-    public ActionQuitter(JFrame frameParent) {
-        this.frameParent = frameParent;
+    public ActionQuitter(Plombier panelPlombier) {
+        this.panelPlombier = panelPlombier;
         
         this.putValue(Action.NAME, "Quitter");
         this.putValue(Action.SMALL_ICON, new ImageIcon(
@@ -26,13 +25,6 @@ public class ActionQuitter extends AbstractAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        int clicBouton = JOptionPane.showConfirmDialog(this.frameParent, 
-                "Etes vous sur de vouloir quitter le jeu ?", 
-                "Quitter", JOptionPane.YES_NO_OPTION, JOptionPane.WARNING_MESSAGE);
-        
-        if(clicBouton == JOptionPane.YES_OPTION) {
-            this.frameParent.dispose();
-        }
+        ActionQuitter.this.panelPlombier.confirmClose();
     }
-    
 }

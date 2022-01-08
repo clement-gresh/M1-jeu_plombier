@@ -4,7 +4,6 @@ import java.awt.MouseInfo;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.awt.image.BufferedImage;
-import java.util.ArrayList;
 import javax.swing.ImageIcon;
 import javax.swing.SwingUtilities;
 import projetIG.controller.annulerRetablir.PvPAnnulable;
@@ -13,7 +12,10 @@ import projetIG.controller.annulerRetablir.RvPAnnulable;
 import projetIG.model.enumeration.Couleur;
 import static projetIG.model.enumeration.Dir.N;
 import projetIG.model.enumeration.TypeTuyau;
+import static projetIG.model.enumeration.TypeTuyau.TURN;
 import projetIG.model.niveau.Niveau;
+import static projetIG.model.niveau.ParserNiveau.HAUTEUR_RESERVE;
+import static projetIG.model.niveau.ParserNiveau.LARGEUR_RESERVE;
 import projetIG.model.niveau.Tuyau;
 import projetIG.model.niveau.TuyauPlateau;
 import projetIG.model.niveau.TuyauReserve;
@@ -50,8 +52,8 @@ public class DragDropController extends MouseAdapter {
 
     public DragDropController(PanelJeu fenetreJeu) {
         this.fenetreJeu = fenetreJeu;
-        this.annulerManager = fenetreJeu.getPanelPlombier().getAnnulerManager();
-        this.niveau = fenetreJeu.getNiveauCourant();
+        this.annulerManager = fenetreJeu.getPlombier().getAnnulerManager();
+        this.niveau = fenetreJeu.getNiveau();
     }
     
     @Override
@@ -61,11 +63,11 @@ public class DragDropController extends MouseAdapter {
             this.hauteurCase = this.fenetreJeu.getHauteurCase();
             this.largeurCase = this.fenetreJeu.getLargeurCase();
             
-            this.casesTotalHauteur = this.fenetreJeu.getNbrCasesTotalHauteur();
-            this.casesTotalLargeur = this.fenetreJeu.getNbrCasesTotalLargeur();
+            this.casesTotalHauteur = this.fenetreJeu.getCasesTotalHauteur();
+            this.casesTotalLargeur = this.fenetreJeu.getCasesTotalLargeur();
             
-            this.casesPlateauHauteur = this.fenetreJeu.getNiveauCourant().getHauteur();
-            this.casesPlateauLargeur = this.fenetreJeu.getNiveauCourant().getLargeur();
+            this.casesPlateauHauteur = this.fenetreJeu.getNiveau().getHauteur();
+            this.casesPlateauLargeur = this.fenetreJeu.getNiveau().getLargeur();
                         
             // On determine la colonne et la ligne de la case où le clic a eu lieu ( entre 0 et (nbrCases - 1) )
             this.cDepart = (int) Math.ceil( event.getX() / this.largeurCase ) ;
@@ -82,8 +84,7 @@ public class DragDropController extends MouseAdapter {
                 
                 cDepart = cDepart - (this.casesTotalLargeur - 2);
                 
-                TuyauReserve tuyauReserve = this.fenetreJeu.getNiveauCourant().getReserve()
-                                            .get(lDepart).get(cDepart);
+                TuyauReserve tuyauReserve = this.fenetreJeu.getNiveau().getReserve()[lDepart][cDepart];
 
                 if(tuyauReserve.getNombre() > 0) {
                     tuyauReserve.diminuerNombre();
@@ -98,7 +99,7 @@ public class DragDropController extends MouseAdapter {
             // Sinon, si le clic a lieu sur le plateau de jeu
             else if (cDepart < this.casesPlateauLargeur && lDepart < this.casesPlateauHauteur) {
                 
-                TuyauPlateau tuyauPlateau = this.fenetreJeu.getNiveauCourant().getPlateau()[lDepart][cDepart];
+                TuyauPlateau tuyauPlateau = this.fenetreJeu.getNiveau().getPlateau()[lDepart][cDepart];
                 
                 if(tuyauPlateau != null && !tuyauPlateau.isInamovible()){
                     this.deplacement = true;
@@ -106,7 +107,7 @@ public class DragDropController extends MouseAdapter {
                     this.depart = PLATEAU;
 
                     // On enleve le tuyau du plateau
-                    this.fenetreJeu.getNiveauCourant().getPlateau()[lDepart][cDepart] = null;
+                    this.fenetreJeu.getNiveau().getPlateau()[lDepart][cDepart] = null;
                 }
             }
             
@@ -169,14 +170,14 @@ public class DragDropController extends MouseAdapter {
                         && (lArrivee < this.casesPlateauHauteur - 1)
                         ) {
                     
-                    if(this.fenetreJeu.getNiveauCourant().getPlateau()[lArrivee][cArrivee] != null){
+                    if(this.fenetreJeu.getNiveau().getPlateau()[lArrivee][cArrivee] != null){
                         renvoyerDansReserve(departX, departY);
                     }
                     
                     else{
-                        deplacementRectiligne(departX, departY, cArrivee * this.largeurCase, lArrivee * this.hauteurCase);
+                        rectiligne(departX, departY, cArrivee * this.largeurCase, lArrivee * this.hauteurCase);
                         
-                        this.fenetreJeu.getNiveauCourant().getPlateau()[lArrivee][cArrivee] 
+                        this.fenetreJeu.getNiveau().getPlateau()[lArrivee][cArrivee] 
                                                             = new TuyauPlateau(this.tuyauDeplace);
                         this.arrivee = PLATEAU;
                     }
@@ -192,7 +193,7 @@ public class DragDropController extends MouseAdapter {
                 this.deplacement = false;
                 this.fenetreJeu.repaint();
                 
-                this.ajouterActionAnnulable();
+                this.ajouterAnnulable();
                 this.depart = AUCUNE;
                 this.arrivee = AUCUNE;
             }
@@ -202,49 +203,44 @@ public class DragDropController extends MouseAdapter {
     // Renvoie le tuyauDeplace dans la reserve
     private void renvoyerDansReserve(int x, int y){
         boolean tuyauTrouve = false;
-        int colonneReserve = 0;
-        int ligneReserve = 0;
+        int l = 0;
+        int c = 0;
+        TuyauReserve tuyau = new TuyauReserve(TURN, N);
         
-        // On trouve le tuyau correspondant dans la reserve au tuyau deplace
-        for(ArrayList<TuyauReserve> ligne : this.fenetreJeu.getNiveauCourant().getReserve()){
-            for(TuyauReserve tuyauReserve : ligne) {
-            
-                if(tuyauReserve.getNom() == this.tuyauDeplace.getNom() 
-                        && tuyauReserve.getRotation() == this.tuyauDeplace.getRotation()){ 
+        // On trouve dans la reserve le tuyau correspondant au tuyau deplace
+        for(l = 0; l < HAUTEUR_RESERVE; l++){
+            for(c = 0; c < LARGEUR_RESERVE; c++){
+                tuyau = this.fenetreJeu.getNiveau().getReserve()[l][c];
+                
+                if(tuyau.getNom() == this.tuyauDeplace.getNom() 
+                        && tuyau.getRotation() == this.tuyauDeplace.getRotation()){ 
                     tuyauTrouve = true;
                     break;
                 }
-                
-                colonneReserve = colonneReserve + 1;
             }
-            if(tuyauTrouve) break;
-            
-            ligneReserve = ligneReserve + 1;
-            colonneReserve = 0;
+            if(tuyauTrouve){
+                break;
+            }
         }
         
-        this.cArrivee = colonneReserve;
-        this.lArrivee = ligneReserve;
+        this.cArrivee = c;
+        this.lArrivee = l;
         
         // On renvoie le tuyau dans la reserve en un mouvement rectiligne uniforme
-        TuyauReserve tuyau = this.fenetreJeu.getNiveauCourant().getReserve().get(ligneReserve).get(colonneReserve);
+        int tuyauX = (c + this.casesPlateauLargeur) * this.largeurCase;
+        int tuyauY = l * this.hauteurCase;
         
-        int tuyauX = (colonneReserve + this.casesPlateauLargeur) * this.largeurCase;
-        int tuyauY = ligneReserve * this.hauteurCase;
-        
-        //System.out.println("X : " + x + ", Y : " + y 
-        //        + ", tuyauX : " + tuyauX + ", tuyauY : " + tuyauY); // debug
-        
-        deplacementRectiligne(x, y, tuyauX, tuyauY);
+        rectiligne(x, y, tuyauX, tuyauY);
         
         // On augmente le nombre de tuyaux disponibles dans la reserve
         tuyau.augmenterNombre();
         this.arrivee = RESERVE;
     }
     
+          
     
     // Deplacement rectiligne du tuyau d'un point de depart a un point d'arrivee
-    private void deplacementRectiligne(int departX, int departY, int arriveeX, int arriveeY){
+    private void rectiligne(int departX, int departY, int arriveeX, int arriveeY){
         
         int distanceX = arriveeX - departX;
         int distanceY = arriveeY - departY;
@@ -261,41 +257,37 @@ public class DragDropController extends MouseAdapter {
             
             try { Thread.sleep(TEMPS); }
             catch (InterruptedException exception) {
-                System.err.println("Exception fonction sleep (DragDropController) : " + exception.getMessage());}
+                System.err.println("Exception fonction sleep (DragDropController) : " + exception.getMessage());
+            }
             
             departX = departX + (int)(distanceX / iterations);
             departY = departY + (int)(distanceY / iterations);
             
-            //System.out.println("iteration n " + i + ", x : " + departX + ", y : " + departY); // debug
-            //System.out.println("deplacement x : " + (int)(distanceX / iterations) + ", deplacement y : " + (int)(distanceY / iterations)); // debug
-            
             this.fenetreJeu.setXImageDD(departX);
             this.fenetreJeu.setYImageDD(departY);
-            this.fenetreJeu.paintImmediately(0, 0, this.fenetreJeu.getTaillePixelLargeur(),
-                                                  this.fenetreJeu.getTaillePixelHauteur());
+            this.fenetreJeu.paintImmediately(0, 0, this.fenetreJeu.getPixelsLargeur(),
+                                                  this.fenetreJeu.getPixelsHauteur());
         }
     }
     
     
-    private void ajouterActionAnnulable(){
+    private void ajouterAnnulable(){
         if(this.depart == PLATEAU && this.arrivee == RESERVE){
-            // debug
-            /*
-            System.out.println("");
-            System.out.println("Depart : " + this.zoneDepart + " ligne " + this.ligneDepart + ", colonne " + this.colonneDepart);
-            System.out.println("Arrivee  : " + this.zoneArrive + "  ligne " + this.ligneArrive + ", colonne " + this.colonneArrive);
-            */
+            
             this.annulerManager.addEdit(new PvRAnnulable(fenetreJeu, niveau,
-                    tuyauDeplace, lDepart, cDepart, lArrivee, cArrivee));
+                                        tuyauDeplace, lDepart, cDepart, lArrivee, cArrivee));
         }
+        
         else if(this.depart == RESERVE && this.arrivee == PLATEAU){
+            
             this.annulerManager.addEdit(new RvPAnnulable(fenetreJeu, niveau,
-                    tuyauDeplace, lDepart, cDepart, lArrivee, cArrivee));
+                                        tuyauDeplace, lDepart, cDepart, lArrivee, cArrivee));
         }
+        
         else if(this.depart == PLATEAU && this.arrivee == PLATEAU){
             
             this.annulerManager.addEdit(new PvPAnnulable(fenetreJeu, niveau,
-                    tuyauDeplace, lDepart, cDepart, lArrivee, cArrivee));
+                                        tuyauDeplace, lDepart, cDepart, lArrivee, cArrivee));
         }
     }
 }

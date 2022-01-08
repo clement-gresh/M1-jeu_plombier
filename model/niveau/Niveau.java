@@ -1,6 +1,5 @@
 package projetIG.model.niveau;
 
-import java.util.ArrayList;
 import projetIG.model.enumeration.Couleur;
 import static projetIG.model.enumeration.Couleur.BLANC;
 import static projetIG.model.enumeration.Couleur.NOIR;
@@ -18,13 +17,11 @@ public class Niveau {
     protected int hauteur;
     protected int largeur;
     protected TuyauPlateau[][] plateau;
-    protected ArrayList<ArrayList<TuyauReserve>> reserve = new ArrayList<>();
+    protected TuyauReserve[][] reserve;
     protected boolean victoire = false;
 
     // Constructeur
-    public Niveau(int hauteur, int largeur,
-            TuyauPlateau[][] plateau,
-            ArrayList<ArrayList<TuyauReserve>> reserve) {
+    public Niveau(int hauteur, int largeur, TuyauPlateau[][] plateau, TuyauReserve[][] reserve) {
         
         this.hauteur = hauteur;
         this.largeur = largeur;
@@ -186,7 +183,7 @@ public class Niveau {
         return plateau;
     }
 
-    public ArrayList<ArrayList<TuyauReserve>> getReserve() {
+    public TuyauReserve[][] getReserve() {
         return reserve;
     }
     

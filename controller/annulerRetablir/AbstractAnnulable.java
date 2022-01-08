@@ -40,17 +40,17 @@ public class AbstractAnnulable extends AbstractUndoableEdit {
 
     protected void enleverTuyau(int l, int c, int zone){
         if(zone == PLATEAU) niveau.getPlateau()[l][c] = null;
-        else if(zone == RESERVE) niveau.getReserve().get(l).get(c).diminuerNombre();
+        else if(zone == RESERVE) niveau.getReserve()[l][c].diminuerNombre();
     }
     
     protected void ajouterTuyau(int l, int c, int zone){
         if(zone == PLATEAU) niveau.getPlateau()[l][c] = new TuyauPlateau(tuyau);
-        else if(zone == RESERVE) niveau.getReserve().get(l).get(c).augmenterNombre();
+        else if(zone == RESERVE) niveau.getReserve()[l][c].augmenterNombre();
     }
     
     protected void maj(){
-        fenetreJeu.getNiveauCourant().majCouleurs();
-        fenetreJeu.paintImmediately(0, 0, this.fenetreJeu.getTaillePixelLargeur(),
-                                          this.fenetreJeu.getTaillePixelHauteur());
+        fenetreJeu.getNiveau().majCouleurs();
+        fenetreJeu.paintImmediately(0, 0, this.fenetreJeu.getPixelsLargeur(),
+                                          this.fenetreJeu.getPixelsHauteur());
     }
 }

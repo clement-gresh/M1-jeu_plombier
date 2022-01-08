@@ -13,7 +13,6 @@ import java.awt.RenderingHints;
 import java.awt.image.BufferedImage;
 import java.io.File;
 import java.io.IOException;
-import java.util.ArrayList;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import static javax.swing.JOptionPane.YES_OPTION;
@@ -34,12 +33,11 @@ import static projetIG.model.enumeration.Dir.N;
 import static projetIG.model.enumeration.Dir.O;
 import static projetIG.model.enumeration.Dir.S;
 import projetIG.model.niveau.ParserNiveau;
+import static projetIG.model.niveau.ParserNiveau.HAUTEUR_RESERVE;
+import static projetIG.model.niveau.ParserNiveau.LARGEUR_RESERVE;
 
 public class PanelJeu extends JPanel {
     // Attributs statiques
-    public static final int NBR_CASES_RESERVE_LARGEUR = 2;
-    public static final int NBR_CASES_RESERVE_HAUTEUR = 6; 
-    
     public static final int CASE = 6;
     public static final int MARRON = 0;
     public static final int COIN = 3;
@@ -49,20 +47,22 @@ public class PanelJeu extends JPanel {
     
     
     // Attributs non-statiques
-    protected Plombier panelPlombier;
-    protected Niveau niveauCourant;
+    protected Plombier plombier;
+    protected Niveau niveau;
     protected BufferedImage pipes = new BufferedImage(820, 960, BufferedImage.TYPE_INT_ARGB);
-    protected BufferedImage imageArrierePlan;
+    protected BufferedImage arrierePlan;
     
-    protected int nbrCasesTotalLargeur;
-    protected int nbrCasesTotalHauteur;
-    protected int taillePixelLargeur;
-    protected int taillePixelHauteur = 700;
+    protected int casesPlateauLargeur;
+    protected int casesPlateauHauteur;
+    protected int casesTotalLargeur;
+    protected int casesTotalHauteur;
+    protected int pixelsLargeur;
+    protected int pixelsHauteur = 700;
     protected int largeurCase;
     protected int hauteurCase;
     
     protected DragDropController dragDrop;
-    protected VictoireController couleurController;
+    protected VictoireController victoireController;
     protected int xImageDD = 0;
     protected int yImageDD = 0;
     protected ImageIcon imageDD = new ImageIcon();
@@ -70,17 +70,19 @@ public class PanelJeu extends JPanel {
     
     // Constructeur
     public PanelJeu(Plombier panelPlombier, String cheminNiveau) {
-        this.panelPlombier = panelPlombier;
+        this.plombier = panelPlombier;
         
         //Creation du niveau
-        this.niveauCourant = ParserNiveau.parserNiveau(cheminNiveau);
+        this.niveau = ParserNiveau.parserNiveau(cheminNiveau);
         
         // Calcul de la taille de la fenetre de jeu (en cases et en pixels)
-        this.nbrCasesTotalLargeur = this.niveauCourant.getLargeur() + NBR_CASES_RESERVE_LARGEUR;
-        this.nbrCasesTotalHauteur = Integer.max(this.niveauCourant.getHauteur(), NBR_CASES_RESERVE_HAUTEUR);
-        this.taillePixelLargeur = (int) (this.taillePixelHauteur * this.nbrCasesTotalLargeur / this.nbrCasesTotalHauteur);
+        this.casesPlateauLargeur = this.niveau.getLargeur();
+        this.casesPlateauHauteur = this.niveau.getHauteur();
+        this.casesTotalLargeur = this.casesPlateauLargeur + LARGEUR_RESERVE;
+        this.casesTotalHauteur = Integer.max(this.casesPlateauHauteur, HAUTEUR_RESERVE);
+        this.pixelsLargeur = (int) (this.pixelsHauteur * this.casesTotalLargeur / this.casesTotalHauteur);
         
-        this.setPreferredSize(new Dimension(this.taillePixelLargeur, this.taillePixelHauteur)); // largeur, hauteur
+        this.setPreferredSize(new Dimension(this.pixelsLargeur, this.pixelsHauteur)); // largeur, hauteur
         this.setLayout(new BorderLayout(10, 10));
         
               
@@ -91,15 +93,9 @@ public class PanelJeu extends JPanel {
         
         
         //Ajout du controller Couleurs & Victoire sur la fenetre de jeu
-        couleurController = new VictoireController(this, this.niveauCourant);
+        victoireController = new VictoireController(this, this.niveau);
         
-        this.addMouseListener(couleurController);
-        
-        
-        
-        this.imageArrierePlan = new BufferedImage(taillePixelLargeur,
-                                                  taillePixelHauteur,
-                                                  BufferedImage.TYPE_INT_ARGB);
+        this.addMouseListener(victoireController);
         
         // On recupere le gif contenant les images des tuyaux
         try { this.pipes = ImageIO.read(new File("src/main/java/projetIG/view/image/pipes.gif")); }
@@ -107,8 +103,8 @@ public class PanelJeu extends JPanel {
         
         
         // On determine la taille d'une case en pixel
-        this.largeurCase = (int)  (taillePixelLargeur / this.nbrCasesTotalLargeur);
-        this.hauteurCase = (int)  (taillePixelHauteur / this.nbrCasesTotalHauteur);
+        this.largeurCase = (int)  (pixelsLargeur / this.casesTotalLargeur);
+        this.hauteurCase = (int)  (pixelsHauteur / this.casesTotalHauteur);
         
         
         // On construit l'image d'arriere plan
@@ -125,8 +121,8 @@ public class PanelJeu extends JPanel {
         graphics2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
                                     RenderingHints.VALUE_ANTIALIAS_ON);
         
-        graphics2D.drawImage(this.imageArrierePlan, 0, 0, this.panelPlombier.getWidth(),
-                             this.panelPlombier.getHeight(), this);
+        graphics2D.drawImage(this.arrierePlan, 0, 0, this.plombier.getWidth(),
+                             this.plombier.getHeight(), this);
         
         reserve(graphics2D);
         
@@ -141,38 +137,35 @@ public class PanelJeu extends JPanel {
     
     // CONSTRUCTION DE L'IMAGE DE FOND
     private void arrierePlan(){
+        // Initialisation de l'image (taille, antialiasing et fond noir)
+        this.arrierePlan = new BufferedImage(pixelsLargeur, pixelsHauteur,
+                                                  BufferedImage.TYPE_INT_ARGB);
         
-        Graphics2D graphics2D = (Graphics2D) this.imageArrierePlan.getGraphics();
+        Graphics2D graphics2D = (Graphics2D) this.arrierePlan.getGraphics();
         graphics2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
                                     RenderingHints.VALUE_ANTIALIAS_ON);
         
         graphics2D.setColor(BLACK);
-        graphics2D.fillRect(0, 0, this.taillePixelLargeur, this.taillePixelHauteur);
+        graphics2D.fillRect(0, 0, this.pixelsLargeur, this.pixelsHauteur);
         
         
         
         // PLATEAU
         // On affiche les coins, bordures et background des cases
-        int nbrCasesPlateauLargeur = this.niveauCourant.getLargeur();
-        int nbrCasesPlateauHauteur = this.niveauCourant.getHauteur();
-        
-        for(int lignePlateau = 0; lignePlateau < this.niveauCourant.getHauteur(); lignePlateau ++){
-            for(int colonnePlateau = 0; colonnePlateau < this.niveauCourant.getLargeur(); colonnePlateau ++){
+        for(int l = 0; l < casesPlateauHauteur; l ++){
+            for(int c = 0; c < casesPlateauLargeur; c ++){
                 
-                BufferedImage imgTemp = this.pipes.getSubimage(
-                        this.typeCase(lignePlateau, colonnePlateau, nbrCasesPlateauLargeur, nbrCasesPlateauHauteur) 
-                            * (120 + 20),
-                        6 * (120 + 20),
-                        120, 120);
+                BufferedImage img = this.pipes.getSubimage(
+                            this.typeCase(l, c, casesPlateauLargeur, casesPlateauHauteur) * (120 + 20),
+                            HAUTEUR_RESERVE * (120 + 20), 120, 120);
                 
-                Dir nombreRotation = this.nbrRotations( lignePlateau, colonnePlateau, 
-                                                                        nbrCasesPlateauLargeur, nbrCasesPlateauHauteur);
-                if(nombreRotation != N) 
-                    imgTemp = ModificationsImage.pivoter(imgTemp, nombreRotation.ordinal());
+                Dir nombreRotation = this.nbrRotations(l, c, casesPlateauLargeur, casesPlateauHauteur);
                 
-                graphics2D.drawImage(imgTemp,
-                        this.largeurCase * colonnePlateau, this.hauteurCase * lignePlateau,
-                        this.largeurCase, this.hauteurCase, this);
+                if(nombreRotation != N) img = ModificationsImage.pivoter(img, nombreRotation.ordinal());
+                
+                graphics2D.drawImage(img,
+                            this.largeurCase * c, this.hauteurCase * l,
+                            this.largeurCase, this.hauteurCase, this);
             }
         }
         
@@ -181,34 +174,23 @@ public class PanelJeu extends JPanel {
         // On affiche les cases et les tuyaux en noir
         
         // Abscisse de la ligne verticale separant le plateau de la reserve
-        int abscisseReserve = this.taillePixelLargeur - NBR_CASES_RESERVE_LARGEUR * this.largeurCase;
+        int abscisseReserve = this.pixelsLargeur - LARGEUR_RESERVE * this.largeurCase;
+                
         
-        int colonneReserve = 0;
-        int ligneReserve = 0;
-        
-        
-        for(ArrayList<TuyauReserve> ligne : this.niveauCourant.getReserve()) {
-            for(TuyauReserve tuyauReserve : ligne) {
+        for(int l = 0; l < HAUTEUR_RESERVE; l++){
+            for(int c = 0; c < LARGEUR_RESERVE; c++){
+                TuyauReserve tuyau = this.niveau.getReserve()[l][c];
                 
                 // On ajoute le background de la case dans la reserve (i.e. un carre marron fonce)
                 BufferedImage image = this.pipes.getSubimage(MARRON * (120 + 20),
-                         CASE * (120 + 20), 120, 120);
+                                                             CASE * (120 + 20), 120, 120);
 
-                graphics2D.drawImage(image,
-                            abscisseReserve + this.largeurCase * colonneReserve,
-                            this.hauteurCase * ligneReserve,
-                            this.largeurCase, this.hauteurCase, this);
-                
+                graphics2D.drawImage(image, abscisseReserve + this.largeurCase * c, 
+                                     this.hauteurCase * l, this.largeurCase, this.hauteurCase, this);
                 
                 // On ajoute les tuyaux en noir
-                tuyauReserve(graphics2D, tuyauReserve, NOIR,
-                                     abscisseReserve, colonneReserve, ligneReserve);
-                
-                colonneReserve = colonneReserve + 1;
+                tuyauReserve(graphics2D, tuyau, NOIR, abscisseReserve, c, l);
             }
-            
-            colonneReserve = 0;
-            ligneReserve = ligneReserve + 1;
         }
     }
     
@@ -232,19 +214,19 @@ public class PanelJeu extends JPanel {
     
     
     // Determine le nombre de rotations necessaires de l'image pour un COIN, une BORDURE ou une CASE quelconque
-    private Dir nbrRotations(int ligne, int colonne, int nbrCasesLargeur, int nbrCasesHauteur){
+    private Dir nbrRotations(int ligne, int colonne, int casesLargeur, int casesHauteur){
         
         // Pour les coins du plateau
         if(ligne == 0 && colonne == 0) return N;
-        else if(ligne == 0 && colonne == nbrCasesLargeur - 1) return E;
-        else if(ligne == nbrCasesHauteur - 1 && colonne == 0) return O;
-        else if(ligne == nbrCasesHauteur - 1 && colonne == nbrCasesLargeur - 1) return S;
+        else if(ligne == 0 && colonne == casesLargeur - 1) return E;
+        else if(ligne == casesHauteur - 1 && colonne == 0) return O;
+        else if(ligne == casesHauteur - 1 && colonne == casesLargeur - 1) return S;
         
         // Pour les bords du plateau
         else if(ligne == 0) return N;
-        else if(ligne == nbrCasesHauteur - 1) return S;
+        else if(ligne == casesHauteur - 1) return S;
         else if(colonne == 0) return O;
-        else if(colonne == nbrCasesLargeur - 1) return E;
+        else if(colonne == casesLargeur - 1) return E;
         
         //Pour les autres cases du plateau
         else return N;
@@ -253,33 +235,25 @@ public class PanelJeu extends JPanel {
     // CONSTRUCTION DE LA RESERVE
     private void reserve(Graphics2D graphics2D){
         // Abscisse de la ligne verticale separant le plateau de la reserve
-        int abscisseReserve = this.panelPlombier.getWidth() - NBR_CASES_RESERVE_LARGEUR * this.largeurCase;
+        int abscisseReserve = this.plombier.getWidth() - LARGEUR_RESERVE * this.largeurCase;
         
-        int colonneReserve = 0;
-        int ligneReserve = 0;
-        
-        for(ArrayList<TuyauReserve> ligne : this.niveauCourant.getReserve()) {
-            for(TuyauReserve tuyauReserve : ligne) {
+        for(int l = 0; l < HAUTEUR_RESERVE; l++){
+            for(int c = 0; c < LARGEUR_RESERVE; c++){
+                TuyauReserve tuyau = this.niveau.getReserve()[l][c];
                 
                 // On affiche en bas a gauche de chaque case le nombre de tuyaux correspondant disponibles
                 Font font = new Font("Arial", BOLD, 15);
                 graphics2D.setFont(font);
                 graphics2D.setColor(WHITE);
 
-                graphics2D.drawString(String.valueOf(tuyauReserve.getNombre()),
-                            abscisseReserve + this.largeurCase * colonneReserve + 5,
-                            this.hauteurCase * (ligneReserve + 1) - 5);
+                graphics2D.drawString(String.valueOf(tuyau.getNombre()),
+                                     abscisseReserve + this.largeurCase * c + 5,
+                                      this.hauteurCase * (l + 1) - 5);
 
-                if(tuyauReserve.getNombre() > 0){
-                    tuyauReserve(graphics2D, tuyauReserve, BLANC,
-                                         abscisseReserve, colonneReserve, ligneReserve);
+                if(tuyau.getNombre() > 0){
+                    tuyauReserve(graphics2D, tuyau, BLANC, abscisseReserve, c, l);
                 }
-
-                colonneReserve = colonneReserve + 1;
             }
-            
-            colonneReserve = 0;
-            ligneReserve = ligneReserve + 1;
         }
     }
     
@@ -287,10 +261,10 @@ public class PanelJeu extends JPanel {
     // AJOUT DES TUYAUX AU PLATEAU
     private void tuyauxPlateau(Graphics2D graphics2D){
         
-        for(int l = 0; l < this.niveauCourant.getHauteur(); l++) {
-            for(int c = 0; c < this.niveauCourant.getLargeur(); c++) {
+        for(int l = 0; l < casesPlateauHauteur; l++) {
+            for(int c = 0; c < casesPlateauLargeur; c++) {
             
-                TuyauPlateau tuyau = this.niveauCourant.getPlateau()[l][c];
+                TuyauPlateau tuyau = this.niveau.getPlateau()[l][c];
                 
                 if(tuyau != null) {
                     BufferedImage imgTemp;
@@ -365,68 +339,60 @@ public class PanelJeu extends JPanel {
     
     public void victoire(){
         // On met a jour la vue avant d'afficher une fenetre de dialogue
-        this.paintImmediately(0, 0, taillePixelLargeur, taillePixelHauteur);
+        this.paintImmediately(0, 0, pixelsLargeur, pixelsHauteur);
 
 
         // Passer au niveau suivant s'il existe
-        if(this.panelPlombier.isThereNextLevel()){
+        if(this.plombier.isThereNextLevel()){
             
-            int numeroBanque = this.panelPlombier.getNumeroBanque();
-            int numeroNiveau = this.panelPlombier.getNumeroNiveau();
+            int numeroBanque = this.plombier.getNumeroBanque();
+            int numeroNiveau = this.plombier.getNumeroNiveau();
 
-            int clicBouton = Plombier.fenetreConfirmation(this.panelPlombier.getFrameParent(),
+            int clicBouton = Plombier.fenetreConfirmation(this.plombier.getFrameParent(),
                                          "Victoire", "VICTOIRE ! Passer au niveau suivant ?");
 
-            if(clicBouton == YES_OPTION) this.panelPlombier.afficherNiveau(numeroBanque, numeroNiveau + 1);
+            if(clicBouton == YES_OPTION) this.plombier.afficherNiveau(numeroBanque, numeroNiveau + 1);
         }
 
 
         // Revenir à l'accueil sinon
         else {
-            int clicBouton = Plombier.fenetreConfirmation(this.panelPlombier.getFrameParent(),
+            int clicBouton = Plombier.fenetreConfirmation(this.plombier.getFrameParent(),
                                          "Victoire", "VICTOIRE ! Revenir à l'accueil ?");
 
-            if(clicBouton == YES_OPTION) this.panelPlombier.afficherPnlBanques();
+            if(clicBouton == YES_OPTION) this.plombier.afficherPnlBanques();
         }
     }
     
     
     
     // GETTERS
-    public Plombier getPanelPlombier() {
-        return panelPlombier;
+    public Plombier getPlombier() {
+        return plombier;
     }
 
-    public Niveau getNiveauCourant() {
-        return niveauCourant;
+    public Niveau getNiveau() {
+        return niveau;
     }
 
     public BufferedImage getPipes() {
         return pipes;
     }
 
-    public int getNbrCasesTotalLargeur() {
-        return nbrCasesTotalLargeur;
+    public int getCasesTotalLargeur() {
+        return casesTotalLargeur;
     }
 
-    public int getNbrCasesTotalHauteur() {
-        return nbrCasesTotalHauteur;
+    public int getCasesTotalHauteur() {
+        return casesTotalHauteur;
     }
 
-    public int getTaillePixelLargeur() {
-        return taillePixelLargeur;
+    public int getPixelsLargeur() {
+        return pixelsLargeur;
     }
 
-    public void setTaillePixelLargeur(int taillePixelLargeur) {
-        this.taillePixelLargeur = taillePixelLargeur;
-    }
-
-    public int getTaillePixelHauteur() {
-        return taillePixelHauteur;
-    }
-
-    public void setTaillePixelHauteur(int taillePixelHauteur) {
-        this.taillePixelHauteur = taillePixelHauteur;
+    public int getPixelsHauteur() {
+        return pixelsHauteur;
     }
 
     public int getLargeurCase() {
@@ -441,8 +407,8 @@ public class PanelJeu extends JPanel {
         return dragDrop;
     }
 
-    public VictoireController getCouleurController() {
-        return couleurController;
+    public VictoireController getVictoireController() {
+        return victoireController;
     }
     
 

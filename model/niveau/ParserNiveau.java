@@ -2,7 +2,6 @@ package projetIG.model.niveau;
 
 import java.io.File;
 import java.util.ArrayList;
-import java.util.Arrays;
 import java.util.Scanner;
 import projetIG.model.enumeration.Couleur;
 import static projetIG.model.enumeration.Couleur.BLANC;
@@ -25,27 +24,24 @@ import static projetIG.model.enumeration.Dir.S;
 import static projetIG.model.enumeration.Dir.O;
 
 public abstract class ParserNiveau {
+    public static final int LARGEUR_RESERVE = 2;
+    public static final int HAUTEUR_RESERVE = 6; 
+    
     // Enregistre la hauteur et la largeur du plateau,
     // initialise le plateau avec les sources et tuyaux inamovibles
     // et initialise la reserve avec les tuyaux restants
     static public Niveau parserNiveau(String file){
         File fichierNiveau = new File(file);
         
-        TuyauPlateau[][] tuyauxPlateau;
+        TuyauPlateau[][] plateau;
         
-        ArrayList<ArrayList<TuyauReserve>> tuyauxReserve = new ArrayList<>();
-        tuyauxReserve.add(new ArrayList<>(Arrays.asList(new TuyauReserve(CROSS, N),
-                                                        new TuyauReserve(OVER, N))));
-        tuyauxReserve.add(new ArrayList<>(Arrays.asList(new TuyauReserve(LINE, N),
-                                                        new TuyauReserve(LINE, E))));
-        tuyauxReserve.add(new ArrayList<>(Arrays.asList(new TuyauReserve(TURN, E),
-                                                        new TuyauReserve(TURN, S))));
-        tuyauxReserve.add(new ArrayList<>(Arrays.asList(new TuyauReserve(TURN, N),
-                                                        new TuyauReserve(TURN, O))));
-        tuyauxReserve.add(new ArrayList<>(Arrays.asList(new TuyauReserve(FORK, N),
-                                                        new TuyauReserve(FORK, E))));
-        tuyauxReserve.add(new ArrayList<>(Arrays.asList(new TuyauReserve(FORK, O),
-                                                        new TuyauReserve(FORK, S))));
+        TuyauReserve[][] reserve = {{new TuyauReserve(CROSS, N), new TuyauReserve(OVER, N)},
+                                    {new TuyauReserve(LINE, N), new TuyauReserve(LINE, E)},
+                                    {new TuyauReserve(TURN, E), new TuyauReserve(TURN, S)},
+                                    {new TuyauReserve(TURN, N), new TuyauReserve(TURN, O)},
+                                    {new TuyauReserve(FORK, N), new TuyauReserve(FORK, E)},
+                                    {new TuyauReserve(FORK, O), new TuyauReserve(FORK, S)}
+        };
         
         try {
             Scanner scanner = new Scanner(fichierNiveau);
@@ -53,7 +49,7 @@ public abstract class ParserNiveau {
             int hauteur = scanner.nextInt();
             int largeur = scanner.nextInt();
             
-            tuyauxPlateau = new TuyauPlateau[hauteur][largeur];
+            plateau = new TuyauPlateau[hauteur][largeur];
             
             int colonne = 0;
             int ligne = 0;
@@ -89,19 +85,22 @@ public abstract class ParserNiveau {
                         Couleur couleur = (typeTuyau == SOURCE) ?
                                 couleurTuyau(casePlateau.substring(0, 1))
                                 : BLANC;
-                        tuyauxPlateau[ligne][colonne] = new TuyauPlateau(typeTuyau, rotation, true, couleur);
+                        plateau[ligne][colonne] = new TuyauPlateau(typeTuyau, rotation, true, couleur);
                     }
 
                     else {
-                        tuyauxPlateau[ligne][colonne] = null;
+                        plateau[ligne][colonne] = null;
 
                         // CONSTRUCTION DE LA RESERVE
                         boolean tuyauTrouve = false;
-
-                        for(ArrayList<TuyauReserve> ligneReserve : tuyauxReserve){
-                            for(TuyauReserve tuyau : ligneReserve){
-                                if( tuyau.getNom() == typeTuyau && tuyau.getRotation() == rotation){
-                                    tuyau.augmenterNombre();
+                        
+                        for(int l = 0; l < HAUTEUR_RESERVE; l++){
+                            for(int c = 0; c < LARGEUR_RESERVE; c++){
+                                
+                                if( reserve[l][c].getNom() == typeTuyau
+                                        && reserve[l][c].getRotation() == rotation){
+                                    
+                                    reserve[l][c].augmenterNombre();
                                     tuyauTrouve = true;
                                     break;
                                 }
@@ -111,40 +110,21 @@ public abstract class ParserNiveau {
                     }
                 }
                 
-                else { tuyauxPlateau[ligne][colonne] = null; }
+                else { plateau[ligne][colonne] = null; }
                 
                 colonne = colonne+1;
             }
                         
             scanner.close();
             
-            //debug
-            /*
-            System.out.println(tuyauxPlateau);  
-            for(ArrayList<TuyauPlateau> lignePlateau : tuyauxPlateau) {
-                for(TuyauPlateau tuyau : lignePlateau){
-                    if(tuyau != null) System.out.print("nom: " + tuyau.getNom() + ", inamovible : " + tuyau.isInamovible() + ", ");
-                }
-            }
-            System.out.println("");
             
-            for(ArrayList<TuyauReserve> ligneReserve : tuyauxReserve) {
-                for(TuyauReserve tuyau : ligneReserve){
-                    System.out.print("nom: " + tuyau.getNom() + ", nombre : " + tuyau.getNombre() + ", ");
-                }
-            }
-            System.out.println("");
-            */
-            //fin debug
-            
-            
-            return new Niveau(hauteur, largeur, tuyauxPlateau, tuyauxReserve);
+            return new Niveau(hauteur, largeur, plateau, reserve);
         }
         
         catch (Exception exception) {
             System.err.println("Exception scanner sur le niveau (Niveau.java) " + exception.getMessage());
             
-            return new Niveau(0, 0, new TuyauPlateau[0][0], new ArrayList<>());
+            return new Niveau(0, 0, new TuyauPlateau[0][0], new TuyauReserve[0][0]);
         }
     }
     

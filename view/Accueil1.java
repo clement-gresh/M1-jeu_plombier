@@ -18,7 +18,7 @@ public class Accueil1 extends JPanel {
         this.setPreferredSize(new Dimension(850, 700)); // largeur, hauteur
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         this.setBorder( BorderFactory.createEmptyBorder(20, 20, 20, 20));
-        
+        this.setAlignmentX(CENTER_ALIGNMENT);
         
         for(int i = 1; i <= NOMBRE_BANQUES; i++){
             this.creerBouton("Banque n° " + i, i);
@@ -28,6 +28,7 @@ public class Accueil1 extends JPanel {
     private void creerBouton(String nom, int numeroBanque) {
         JButton button = new JButton(nom);
         button.setPreferredSize(new Dimension(200, 70));
+        button.setAlignmentX(CENTER_ALIGNMENT);
         
         button.addActionListener((event) -> Accueil1.this.panelParent.afficherAccueil2(numeroBanque));
         

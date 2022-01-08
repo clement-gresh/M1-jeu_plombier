@@ -26,19 +26,16 @@ public class AnnulerManager extends UndoManager {
         this.updateItems();
         return b;
     }
-
     @Override
     public void redo() throws CannotRedoException {
         super.redo();
         this.updateItems();
     }
-
     @Override
     public void undo() throws CannotUndoException {
         super.undo();
         this.updateItems();
     }
-    
     public void updateItems(){
         retablir.setEnabled(canRedo());
         annuler.setEnabled(canUndo());

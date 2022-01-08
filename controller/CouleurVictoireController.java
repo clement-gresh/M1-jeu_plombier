@@ -4,11 +4,23 @@ import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
 import java.util.ArrayList;
 import javax.swing.JOptionPane;
+import static javax.swing.JOptionPane.YES_NO_OPTION;
+import static javax.swing.JOptionPane.YES_OPTION;
 import javax.swing.SwingUtilities;
+import projetIG.Plombier;
 import projetIG.model.enumeration.CouleurTuyau;
+import static projetIG.model.enumeration.CouleurTuyau.BLANC;
+import static projetIG.model.enumeration.CouleurTuyau.NOIR;
 import projetIG.model.enumeration.Ouverture;
-import projetIG.model.enumeration.Rotation;
+import static projetIG.model.enumeration.Ouverture.EAST;
+import static projetIG.model.enumeration.Ouverture.NORTH;
+import static projetIG.model.enumeration.Ouverture.SOUTH;
+import static projetIG.model.enumeration.Ouverture.WEST;
+import static projetIG.model.enumeration.Rotation.DEMI_TOUR;
 import projetIG.model.enumeration.TypeTuyau;
+import static projetIG.model.enumeration.TypeTuyau.AJOUTER_ROTATION;
+import static projetIG.model.enumeration.TypeTuyau.OVER;
+import static projetIG.model.enumeration.TypeTuyau.SOURCE;
 import projetIG.model.niveau.Niveau;
 import projetIG.model.niveau.TuyauPlateau;
 import projetIG.view.FenetreJeu;
@@ -41,6 +53,7 @@ public class CouleurVictoireController extends MouseAdapter {
         }
     }
     
+    // Met a jour les couleurs des tuyaux et determine s'il y a victoire
     public void majCouleurs(){
         this.victoire = true;
         
@@ -50,9 +63,9 @@ public class CouleurVictoireController extends MouseAdapter {
             for(TuyauPlateau tuyauPlateau : lignePlateau) {
                 if(tuyauPlateau != null) {
                     for(int i = 0; i < tuyauPlateau.getDejaVisite().size(); i++){
-                        tuyauPlateau.setDejaVisite(i, Boolean.FALSE);
+                        tuyauPlateau.setDejaVisite(i, false);
 
-                        if(tuyauPlateau.getNom() != TypeTuyau.SOURCE) tuyauPlateau.setCouleur(i, CouleurTuyau.BLANC);
+                        if(tuyauPlateau.getNom() != SOURCE) tuyauPlateau.setCouleur(i, BLANC);
                     }
                 }
             }
@@ -61,23 +74,22 @@ public class CouleurVictoireController extends MouseAdapter {
         int colonne = 0;
         int ligne = 0;
         
-        // On parcourt les tuyaux en partant des sources
+        // On parcourt les tuyaux en partant des sources (qui n'ont pas encore ete visitee)
         for(ArrayList<TuyauPlateau> lignePlateau : this.niveauCourant.getPlateauCourant()) {
             for(TuyauPlateau tuyauSource : lignePlateau) {
                 if(tuyauSource != null
-                        && tuyauSource.getNom() == TypeTuyau.SOURCE
+                        && tuyauSource.getNom() == SOURCE
                         && !tuyauSource.getDejaVisite().get(0)) {
                     
-                    tuyauSource.setDejaVisite(0, Boolean.TRUE);
-
-                    Ouverture ouvertureModel = TypeTuyau.ouvertures.get(TypeTuyau.SOURCE.ordinal())
-                                                                   .get(0).get(0);
+                    tuyauSource.setDejaVisite(0, true);
+                    
+                    // On determine l'ouverture de la source a partir de celle du modele
+                    Ouverture ouvertureModel = TypeTuyau.ouvertures.get(SOURCE.ordinal()).get(0).get(0);
                     Ouverture ouvertureSource = TypeTuyau.ouvertureAvecRotation(
                                                         ouvertureModel, tuyauSource.getRotation(),
-                                                        TypeTuyau.AJOUTER_ROTATION);
+                                                        AJOUTER_ROTATION);
                     
-                    //System.out.println("Depart d'une source. Orientation : " + TypeTuyau.ouvertures.get(TypeTuyau.SOURCE.ordinal()).get(0).get(0)); //debug
-
+                    // On applique le traitement a la case a laquelle la source est connectee
                     connexionCaseSuivante(ligne, colonne, ouvertureSource,
                                           tuyauSource.getCouleur().get(0));
                 }
@@ -85,78 +97,87 @@ public class CouleurVictoireController extends MouseAdapter {
             }
             colonne = 0;
             ligne = ligne + 1;
-            //System.out.println(""); // debug
         }
         
         if(victoire) {
+            // On met a jour la vue avant d'afficher une fenetre de dialogue
             this.fenetreJeu.paintImmediately(0, 0, this.fenetreJeu.getPanelParent().getTaillePixelLargeur(),
                                              this.fenetreJeu.getPanelParent().getTaillePixelHauteur());
             
             int numeroBanque = this.panelCourant.getPanelPlumber().getNumeroBanque();
             int numeroNiveau = this.panelCourant.getPanelPlumber().getNumeroNiveau();
             
+            
             // Passer au niveau suivant s'il existe
             if(this.panelCourant.getPanelPlumber().isThereNextLevel()){
+                Plombier.pressAlt();
+                this.panelCourant.getPanelPlumber().getFrameParent().setAlwaysOnTop(true);
+                
                 int clickButton = JOptionPane.showConfirmDialog(this.panelCourant, 
-                "VICTOIRE ! Passer au niveau suivant ?", 
-                "Victoire", JOptionPane.YES_NO_OPTION);
+                                            "VICTOIRE ! Passer au niveau suivant ?", 
+                                            "Victoire", YES_NO_OPTION);
         
-                if(clickButton == JOptionPane.YES_OPTION) {
+                if(clickButton == YES_OPTION) {
                     this.panelCourant.getPanelPlumber().afficherNiveau(numeroBanque, numeroNiveau + 1);
                 }
+                
+                this.panelCourant.getPanelPlumber().getFrameParent().setAlwaysOnTop(false);
+                Plombier.releaseAlt();
             }
+            
             
             // Revenir à l'accueil sinon
             else {
+                Plombier.pressAlt();
+                this.panelCourant.getPanelPlumber().getFrameParent().setAlwaysOnTop(true);
+                
                 int clickButton = JOptionPane.showConfirmDialog(this.panelCourant, 
                 "VICTOIRE ! Revenir à l'accueil ?", 
-                "Victoire", JOptionPane.YES_NO_OPTION);
+                "Victoire", YES_NO_OPTION);
         
-                if(clickButton == JOptionPane.YES_OPTION) {
+                if(clickButton == YES_OPTION) {
                     this.panelCourant.getPanelPlumber().afficherAccueil1();
                 }
+                
+                this.panelCourant.getPanelPlumber().getFrameParent().setAlwaysOnTop(false);
+                Plombier.releaseAlt();
             }
-            
-            
         }
-        //else System.out.println("Perdu..."); // debug
-        
     }
     
+    
+    // Fonction recursive qui trouve les cases auxquelles sont connectees les tuyaux du plateau pour mettre a jour
+    // les couleurs et determiner s'il y a victoire ou non
     private void connexionCaseSuivante(int ligne, int colonne, Ouverture ouvertureTuyauEntrant, CouleurTuyau couleur){
         
-        //System.out.print("C/L tuyau entrant : " + tuyauEntrant.getColonne()+ ", " + tuyauEntrant.getLigne()+ ", "); //debug
-        //System.out.print("Orientation : " + orientationTuyauEntrant + " changement C/L : " + Orientation.changementLigne(orientationTuyauEntrant)+ ", " + Orientation.changementColonne(orientationTuyauEntrant)+ ", "); //debug
-
         int ligneSortie = ligne + Ouverture.changementLigne(ouvertureTuyauEntrant);
         int colonneSortie = colonne + Ouverture.changementColonne(ouvertureTuyauEntrant);
         
         TuyauPlateau tuyauPlateau = this.niveauCourant.getPlateauCourant().get(ligneSortie).get(colonneSortie);
         
+        // Si le tuyau donne sur une case vide, il n'y a pas victoire
         if(tuyauPlateau == null) this.victoire = false;
         
         else{
-            //System.out.print("C/L tuyau courant : " + colonneSortie + ", " + ligneSortie + ", "); //debug
-
-            //System.out.print("Nom : " + tuyauPlateau.getNom() + ", "); //debug
-
-            Ouverture ouvertureEntree = Ouverture.values()[
-                    (ouvertureTuyauEntrant.ordinal() + Rotation.DEMI_TOUR.ordinal())
-                    % Ouverture.values().length];
-            //System.out.print("Orientation d'entree : " + ouvertureEntree + ", "); //debug
-
+            // On determine par l'ouverture d'entree
+            Ouverture ouvertureEntree = TypeTuyau.ouvertureAvecRotation(
+                    ouvertureTuyauEntrant, DEMI_TOUR, AJOUTER_ROTATION);
+            
+            // Si le tuyau n'a pas d'ouverture correspondant, il n'y a pas victoire
+            if( !TypeTuyau.aUneOuverture(tuyauPlateau.getNom(), ouvertureEntree, tuyauPlateau.getRotation()) ){
+                this.victoire = false;
+            }
+            
             // On execute cette partie du code si :
-            // - le tuyau a une ouverture
+            // - le tuyau a une ouverture correspondant a l'entree
             // - ET la composante du tuyau n'est pas noire
             // - ET (la composante du tuyau n'a pas deja ete visite 
-            //       OU a deja ete visitee mais peinte avec une couleur differente de celle actuellement utilisee)
-            if(TypeTuyau.aUneOuverture(tuyauPlateau.getNom(), ouvertureEntree, tuyauPlateau.getRotation())
-
-                && 
+            //       OU est peinte avec une couleur differente de celle actuellement utilisee)
+            else if(
                     // Composante N-S d'un OVER
-                    ((tuyauPlateau.getNom() == TypeTuyau.OVER
-                        && (ouvertureEntree == Ouverture.NORTH || ouvertureEntree == Ouverture.SOUTH)
-                        && tuyauPlateau.getCouleur().get(1) != CouleurTuyau.NOIR
+                    ((tuyauPlateau.getNom() == OVER
+                        && (ouvertureEntree == NORTH || ouvertureEntree == SOUTH)
+                        && tuyauPlateau.getCouleur().get(1) != NOIR
                         && (!tuyauPlateau.getDejaVisite().get(1)
                             || tuyauPlateau.getCouleur().get(1) != couleur)
                         )
@@ -164,54 +185,57 @@ public class CouleurVictoireController extends MouseAdapter {
                     ||
 
                     // Composante E-W d'un OVER
-                    (tuyauPlateau.getNom() == TypeTuyau.OVER
-                        && (ouvertureEntree == Ouverture.EAST || ouvertureEntree == Ouverture.WEST)
-                        && tuyauPlateau.getCouleur().get(0) != CouleurTuyau.NOIR
+                    (tuyauPlateau.getNom() == OVER
+                        && (ouvertureEntree == EAST || ouvertureEntree == WEST)
+                        && tuyauPlateau.getCouleur().get(0) != NOIR
                         && (!tuyauPlateau.getDejaVisite().get(0)
                             || tuyauPlateau.getCouleur().get(0) != couleur)
                         )
 
                     ||
 
-                    // Tuyaux autre que OVER
-                    (tuyauPlateau.getNom() != TypeTuyau.OVER
-                        && tuyauPlateau.getCouleur().get(0) != CouleurTuyau.NOIR
+                    // Tuyaux autres que OVER
+                    (tuyauPlateau.getNom() != OVER
+                        && tuyauPlateau.getCouleur().get(0) != NOIR
                         && (!tuyauPlateau.getDejaVisite().get(0)
                             || tuyauPlateau.getCouleur().get(0) != couleur)
                         )
                 )
             ){
-
-                if(tuyauPlateau.getNom() == TypeTuyau.SOURCE){
-                    //System.out.print("Arrivee a une source. "); //debug
-                    tuyauPlateau.setDejaVisite(0, Boolean.TRUE);
-
-                    if(couleur != CouleurTuyau.NOIR && tuyauPlateau.getCouleur().get(0) != couleur){
-                        couleur = CouleurTuyau.NOIR;
+                
+                // Si on arrive a une source et qu'elle est de couleur differente, la couleur courante devient noire
+                if(tuyauPlateau.getNom() == SOURCE){
+                    tuyauPlateau.setDejaVisite(0, true);
+                    
+                    if(couleur != NOIR && tuyauPlateau.getCouleur().get(0) != couleur){
+                        couleur = NOIR;
                         this.victoire = false;
                         connexionCaseSuivante(ligneSortie, colonneSortie, ouvertureEntree, couleur);
                     }
                 }
-
+                
+                // Sinon on met a jour la couleur du tuyau avec la couleur courante
                 else {
-                    if(tuyauPlateau.getNom() == TypeTuyau.OVER
-                        && (ouvertureEntree == Ouverture.NORTH || ouvertureEntree == Ouverture.SOUTH)){
+                    // Composante N-S d'un OVER
+                    if(tuyauPlateau.getNom() == OVER
+                        && (ouvertureEntree == NORTH || ouvertureEntree == SOUTH)){
 
                         tuyauPlateau.setCouleur(1, couleur);
-                        tuyauPlateau.setDejaVisite(1, Boolean.TRUE);
+                        tuyauPlateau.setDejaVisite(1, true);
                     }
-
+                    
+                    // Autres tuyaux (y compris composante E-O d'un over)
                     else {
                         tuyauPlateau.setCouleur(0, couleur);
                         tuyauPlateau.setDejaVisite(0, Boolean.TRUE);
                     }
-
-                    //System.out.print("Couleur mise : " + couleur + ", "); //debug
-                    System.out.print("Orientation de sortie : " + TypeTuyau.ouverturesConnectees(tuyauPlateau.getNom(), ouvertureEntree, tuyauPlateau.getRotation()) + ", "); //debug
-
-                    for(Ouverture orientationSortie : TypeTuyau.ouverturesConnectees(tuyauPlateau.getNom(), ouvertureEntree, tuyauPlateau.getRotation())){
-                        //System.out.println("Orientation de sortie : " + orientationSortie + ", "); //debug
-
+                    
+                    // On applique le meme traitement a toutes les cases auxquelles le tuyau est connecte
+                    // (i.e. toutes celles sur lesquelles il a une ouverture, sauf pour l'ouverture d'entree)
+                    for(Ouverture orientationSortie : 
+                            TypeTuyau.ouverturesConnectees(
+                                    tuyauPlateau.getNom(), ouvertureEntree, tuyauPlateau.getRotation())){
+                        
                         connexionCaseSuivante(ligneSortie, colonneSortie, orientationSortie, couleur);
                     }
                 }

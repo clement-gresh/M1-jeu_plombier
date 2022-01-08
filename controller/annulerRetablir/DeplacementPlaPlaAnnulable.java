@@ -30,9 +30,7 @@ public class DeplacementPlaPlaAnnulable extends AbstractUndoableEdit {
     }
 
     @Override
-    public boolean canRedo() {
-        return true;
-    }
+    public boolean canRedo() { return true; }
 
     @Override
     public void redo() throws CannotRedoException {
@@ -45,9 +43,7 @@ public class DeplacementPlaPlaAnnulable extends AbstractUndoableEdit {
     }
 
     @Override
-    public boolean canUndo() {
-        return true;
-    }
+    public boolean canUndo() { return true; }
 
     @Override
     public void undo() throws CannotUndoException {

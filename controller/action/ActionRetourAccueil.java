@@ -15,8 +15,6 @@ public class ActionRetourAccueil extends AbstractAction {
         this.panelPlumber = panelPlumber;
         
         this.putValue(Action.NAME, "Accueil");
-        //this.putValue(Action.SMALL_ICON, new ImageIcon(
-        //        "src/main/java/projetIG/view/image/icone/exit.png"));
         this.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_A);
         this.putValue(Action.SHORT_DESCRIPTION, "Retourner à l'accueil (Ctrl + A)");
         this.putValue(Action.ACCELERATOR_KEY, 
@@ -36,7 +34,6 @@ public class ActionRetourAccueil extends AbstractAction {
         if(clickButton == JOptionPane.YES_OPTION) {
             this.panelPlumber.afficherAccueil1();
         }
-        
         
         ActionRetourAccueil.this.panelPlumber.getFrameParent().setAlwaysOnTop(false);
         Plombier.releaseAlt();

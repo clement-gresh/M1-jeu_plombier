@@ -1,6 +1,7 @@
 package projetIG.model.enumeration;
 
 import java.util.ArrayList;
+import java.util.Arrays;
 
 public enum TypeTuyau {
     SOURCE,
@@ -13,71 +14,50 @@ public enum TypeTuyau {
     static public final boolean AJOUT = true;
     static public final boolean SOUSTRAIRE = false;
     
-    static public final ArrayList<ArrayList<ArrayList<Dir>>> ouvertures = new ArrayList<>();
-    
-    
-    // Initialisation de l'ArrayList ouvertures
-    static {
-        Dir[][][] ouverturesTableau = {
+    static public final Dir[][][] ouvertures = {
             {{Dir.N}},
             {{Dir.N, Dir.S}},
             {{Dir.N, Dir.S}, {Dir.E, Dir.O}},
             {{Dir.N, Dir.E}},
             {{Dir.N, Dir.E, Dir.S}},
-            {{Dir.N, Dir.E, Dir.S, Dir.O}}
-        };
-        
-        int i = 0;
-        int j = 0;
-        
-        for(Dir[][] array1 : ouverturesTableau){
-            ouvertures.add(new ArrayList<>());
-            
-            for(Dir[] array2 : array1){
-                ouvertures.get(i).add(new ArrayList<>());
-                
-                for(Dir ouverture : array2){
-                    ouvertures.get(i).get(j).add(ouverture);
-                }
-                j = j + 1;
-            }
-            i = i + 1;
-            j = 0;
-        }
-    }
-    
+            {{Dir.N, Dir.E, Dir.S, Dir.O}}};
     
     
     // Renvoie vrai si l'ouverture est trouvée parmi les ouvertures du tuyau
-    public boolean aOuverture(Dir ouverture, Dir rotation){
-        Dir ouvertureModele = ouverture.rotation(rotation, SOUSTRAIRE);
+    public boolean aOuverture(Dir dir, Dir rotation){
+        Dir dirModele = dir.rotation(rotation, SOUSTRAIRE);
         
         // On détermine si le modèle de tuyau a une ouverture
-        for(ArrayList<Dir> tableauOuverture : ouvertures.get(this.ordinal())){
-            if(tableauOuverture.contains(ouvertureModele)) return true;
+        for(Dir[] tableau : ouvertures[this.ordinal()]){
+            for(int i = 0; i < tableau.length; i++){
+                if(tableau[i] == dirModele) return true;
+            }
         }
         return false;
     }
     
     
     // Renvoie la liste des ouvertures connectees, autres que l'ouverture d'entree
-    public ArrayList<Dir> dirSorties(Dir ouvertureEntree, Dir rotation){
-        Dir ouvertureModele = ouvertureEntree.rotation(rotation, SOUSTRAIRE);
+    public Dir[] dirSorties(Dir dirEntree, Dir rotation){
+        Dir dirModele = dirEntree.rotation(rotation, SOUSTRAIRE);
         
-        ArrayList<Dir> ouverturesConnectees = new ArrayList<>();
-        
-        for(ArrayList<Dir> tableauOuvertures : ouvertures.get(this.ordinal())){
-            if(tableauOuvertures.contains(ouvertureModele)) {
-                
-                for(Dir ouvertureSortie : tableauOuvertures){
-                    if(ouvertureSortie != ouvertureModele){
-                        ouverturesConnectees.add(ouvertureSortie.rotation(rotation, AJOUT));
+        for(Dir[] directions : ouvertures[this.ordinal()]){
+            for(int i = 0; i < directions.length; i++){
+                if(directions[i] == dirModele) {
+                    
+                    // On enleve l'ouverture d'entree et on applique la rotation du tuyaux aux autres
+                    ArrayList<Dir> dirConnectees = new ArrayList<>(Arrays.asList(directions));
+                    dirConnectees.remove(i);
+                    
+                    for(int j = 0; j < dirConnectees.size(); j++){ 
+                        dirConnectees.set(j, dirConnectees.get(j).rotation(rotation, AJOUT));
                     }
+                    
+                    return dirConnectees.toArray(new Dir[0]);
                 }
-                break;
             }
         }
         
-        return ouverturesConnectees;
+        return new Dir[0];
     }
 }

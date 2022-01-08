@@ -65,7 +65,7 @@ public class Niveau {
                    tuyau.setDejaVisite(0, true);
                     
                     // On determine l'ouverture de la source a partir de celle du modele
-                    Dir dirModel = TypeTuyau.ouvertures.get(SOURCE.ordinal()).get(0).get(0);
+                    Dir dirModel = TypeTuyau.ouvertures[SOURCE.ordinal()][0][0];
                     Dir dirSource = dirModel.rotation(tuyau.getRotation(), AJOUT);
                     
                     // On applique le traitement a la case a laquelle la source est connectee
@@ -90,7 +90,7 @@ public class Niveau {
         if(tuyau == null) this.victoire = false;
         
         else{
-            // On determine la direction d'entree
+            // On determine la direction d'entree (demi-tour par rapport à la direction de sortie de la case precedente)
             Dir dirEntree = entree.rotation(S, AJOUT);
             
             // Si le tuyau n'a pas d'ouverture correspondant, il n'y a pas victoire

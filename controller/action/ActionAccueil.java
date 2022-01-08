@@ -8,10 +8,10 @@ import javax.swing.JOptionPane;
 import javax.swing.KeyStroke;
 import projetIG.Plombier;
 
-public class ActionRetourAccueil extends AbstractAction {
+public class ActionAccueil extends AbstractAction {
     private final Plombier panelPlumber;
 
-    public ActionRetourAccueil(Plombier panelPlumber) {
+    public ActionAccueil(Plombier panelPlumber) {
         this.panelPlumber = panelPlumber;
         
         this.putValue(Action.NAME, "Accueil");
@@ -24,8 +24,7 @@ public class ActionRetourAccueil extends AbstractAction {
     @Override
     public void actionPerformed(ActionEvent e) {
         
-        int clicBouton = Plombier.fenetreConfirmation(
-                ActionRetourAccueil.this.panelPlumber.getFrameParent(),
+        int clicBouton = Plombier.fenetreConfirmation(ActionAccueil.this.panelPlumber.getFrameParent(),
                 "Retour à l'accueil",
                 "Etes-vous sûr de vouloir retourner à l'accueil ? La partie en cours sera perdue.");
         

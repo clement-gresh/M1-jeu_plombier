@@ -5,13 +5,13 @@ import javax.swing.JMenuBar;
 import projetIG.Plombier;
 import projetIG.controller.action.ActionAnnuler;
 import projetIG.controller.action.ActionQuitter;
-import projetIG.controller.action.ActionRecommencerNiveau;
+import projetIG.controller.action.ActionRecommencer;
 import projetIG.controller.action.ActionRetablir;
-import projetIG.controller.action.ActionRetourAccueil;
+import projetIG.controller.action.ActionAccueil;
 
 public class MyMenuBar extends JMenuBar {
 
-    public MyMenuBar(Plombier panelPlombier, ActionRetourAccueil actionRetourAccueil, ActionRecommencerNiveau actionRecommencer,
+    public MyMenuBar(Plombier panelPlombier, ActionAccueil actionRetourAccueil, ActionRecommencer actionRecommencer,
                      ActionAnnuler actionAnnuler, ActionRetablir actionRetablir) {
         
         //Creation du menu Jeu

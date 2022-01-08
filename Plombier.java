@@ -18,12 +18,12 @@ import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
 import projetIG.controller.AnnulerManager;
 import projetIG.controller.action.ActionAnnuler;
-import projetIG.controller.action.ActionRecommencerNiveau;
+import projetIG.controller.action.ActionRecommencer;
 import projetIG.controller.action.ActionRetablir;
-import projetIG.controller.action.ActionRetourAccueil;
+import projetIG.controller.action.ActionAccueil;
 import projetIG.view.PanelBanques;
 import projetIG.view.PanelNiveaux;
-import projetIG.view.PanelFenetreJeu;
+import projetIG.view.PanelJeu;
 import projetIG.view.menu.MyPopupMenu;
 
 public class Plombier extends JPanel {
@@ -39,11 +39,11 @@ public class Plombier extends JPanel {
     private final MyPopupMenu popupMenu;
     private final PanelBanques panelBanques = new PanelBanques(this);
     private PanelNiveaux panelNiveaux;
-    private PanelFenetreJeu plateau;
+    private PanelJeu plateau;
     private int numeroBanque;
     private int numeroNiveau;
-    private final ActionRetourAccueil actionRetourAccueil;
-    private final ActionRecommencerNiveau actionRecommencer;
+    private final ActionAccueil actionRetourAccueil;
+    private final ActionRecommencer actionRecommencer;
     
     public Plombier(JFrame frameParent, String chemin) {
         //Demande de confirmation lors de la fermeture de la fenêtre
@@ -63,8 +63,8 @@ public class Plombier extends JPanel {
         this.annulerManager = new AnnulerManager(this);
         
         //Creation des actions des menus
-        this.actionRetourAccueil = new ActionRetourAccueil(this);
-        this.actionRecommencer = new ActionRecommencerNiveau(this);
+        this.actionRetourAccueil = new ActionAccueil(this);
+        this.actionRecommencer = new ActionRecommencer(this);
         ActionAnnuler actionAnnuler = annulerManager.getAnnuler();
         ActionRetablir actionRetablir = annulerManager.getRetablir();
         
@@ -119,7 +119,7 @@ public class Plombier extends JPanel {
         this.setNumeroBanque(numeroBanque);
         this.setNumeroNiveau(numeroNiveau);
         
-        PanelFenetreJeu panelFenetreJeu = new PanelFenetreJeu(this, this.cheminFichier(numeroBanque, numeroNiveau));
+        PanelJeu panelFenetreJeu = new PanelJeu(this, this.cheminFichier(numeroBanque, numeroNiveau));
         this.setPlateau(panelFenetreJeu);
         
         
@@ -219,7 +219,7 @@ public class Plombier extends JPanel {
         return panelNiveaux;
     }
 
-    public PanelFenetreJeu getPlateau() {
+    public PanelJeu getPlateau() {
         return plateau;
     }
 
@@ -237,7 +237,7 @@ public class Plombier extends JPanel {
         this.panelNiveaux = panelNiveaux;
     }
 
-    public void setPlateau(PanelFenetreJeu plateau) {
+    public void setPlateau(PanelJeu plateau) {
         this.plateau = plateau;
     }
 

@@ -9,10 +9,10 @@ import javax.swing.JOptionPane;
 import javax.swing.KeyStroke;
 import projetIG.Plombier;
 
-public class ActionRecommencerNiveau extends AbstractAction {
+public class ActionRecommencer extends AbstractAction {
     private final Plombier panelPlumber;
 
-    public ActionRecommencerNiveau(Plombier panelPlumber) {
+    public ActionRecommencer(Plombier panelPlumber) {
         this.panelPlumber = panelPlumber;
         
         this.putValue(Action.NAME, "Recommencer");
@@ -27,8 +27,7 @@ public class ActionRecommencerNiveau extends AbstractAction {
     @Override
     public void actionPerformed(ActionEvent e) {
         
-        int clicBouton = Plombier.fenetreConfirmation(
-                ActionRecommencerNiveau.this.panelPlumber.getFrameParent(),
+        int clicBouton = Plombier.fenetreConfirmation(ActionRecommencer.this.panelPlumber.getFrameParent(),
                 "Recommencer le niveau",
                 "Etes-vous sûr de vouloir recommencer le niveau ? La configuration en cours sera perdue.");
         

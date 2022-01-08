@@ -1,5 +1,6 @@
 package projetIG.view;
 
+import java.awt.BorderLayout;
 import static java.awt.Color.BLACK;
 import static java.awt.Color.WHITE;
 import java.awt.Dimension;
@@ -14,7 +15,10 @@ import java.io.IOException;
 import java.util.ArrayList;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
-import javax.swing.JComponent;
+import javax.swing.JPanel;
+import projetIG.Plombier;
+import projetIG.controller.CouleurVictoireController;
+import projetIG.controller.DragDropController;
 import projetIG.model.enumeration.Couleur;
 import static projetIG.model.enumeration.Couleur.BLANC;
 import static projetIG.model.enumeration.Couleur.NOIR;
@@ -24,45 +28,76 @@ import projetIG.model.enumeration.TypeTuyau;
 import projetIG.model.niveau.Niveau;
 import projetIG.model.niveau.TuyauPlateau;
 import projetIG.model.niveau.TuyauReserve;
-import static projetIG.view.PanelFenetreJeu.NBR_CASES_RESERVE_LARGEUR;
 import static projetIG.model.enumeration.Dir.N;
 import static projetIG.model.enumeration.Dir.O;
 import static projetIG.model.enumeration.Dir.S;
+import projetIG.model.niveau.ParserNiveau;
 
-public class FenetreJeu extends JComponent {   
+public class PanelJeu extends JPanel {
     // Attributs statiques
+    public static final int NBR_CASES_RESERVE_LARGEUR = 2;
+    public static final int NBR_CASES_RESERVE_HAUTEUR = 6; 
+    
     public static final int CASE = 6;
     public static final int MARRON = 0;
     public static final int COIN = 3;
     public static final int BORDURE = 4;
     public static final int FIXE = 5;
-            
-    // Attributs
-    protected PanelFenetreJeu panelParent;
+    
+    
+    
+    // Attributs non-statiques
+    protected Plombier panelPlombier;
     protected Niveau niveauCourant;
     protected BufferedImage pipes = new BufferedImage(820, 960, BufferedImage.TYPE_INT_ARGB);
     protected BufferedImage imageArrierePlan;
+    
+    protected int nbrCasesTotalLargeur;
+    protected int nbrCasesTotalHauteur;
     protected int taillePixelLargeur;
-    protected int taillePixelHauteur;
+    protected int taillePixelHauteur = 700;
     protected int largeurCase;
     protected int hauteurCase;
+    
+    protected DragDropController dragDrop;
+    protected CouleurVictoireController couleurController;
     protected int xImageDD = 0;
     protected int yImageDD = 0;
     protected ImageIcon imageDD = new ImageIcon();
 
     
     // Constructeur
-    public FenetreJeu(PanelFenetreJeu panelParent, Niveau niveau, int taillePixelLargeur, int taillePixelHauteur) {
-        this.panelParent = panelParent;
-        this.niveauCourant = niveau;
-        this.taillePixelLargeur = taillePixelLargeur;
-        this.taillePixelHauteur = taillePixelHauteur;
+    public PanelJeu(Plombier panelPlombier, String cheminNiveau) {
+        this.panelPlombier = panelPlombier;
+        
+        //Creation du niveau
+        this.niveauCourant = ParserNiveau.parserNiveau(cheminNiveau);
+        
+        // Calcul de la taille de la fenetre de jeu (en cases et en pixels)
+        this.nbrCasesTotalLargeur = this.niveauCourant.getNbrCasesPlateauLargeur() + NBR_CASES_RESERVE_LARGEUR;
+        this.nbrCasesTotalHauteur = Integer.max(this.niveauCourant.getNbrCasesPlateauHauteur(), NBR_CASES_RESERVE_HAUTEUR);
+        this.taillePixelLargeur = (int) (this.taillePixelHauteur * this.nbrCasesTotalLargeur / this.nbrCasesTotalHauteur);
+        
+        this.setPreferredSize(new Dimension(this.taillePixelLargeur, this.taillePixelHauteur)); // largeur, hauteur
+        this.setLayout(new BorderLayout(10, 10));
+        
+              
+        //Ajout du controller Drag&Drop sur la fenetre de jeu
+        dragDrop = new DragDropController(this);
+        this.addMouseListener(dragDrop);
+        this.addMouseMotionListener(dragDrop);
+        
+        
+        //Ajout du controller Couleurs & Victoire sur la fenetre de jeu
+        couleurController = new CouleurVictoireController(this, this.niveauCourant);
+        
+        this.addMouseListener(couleurController);
+        
+        
         
         this.imageArrierePlan = new BufferedImage(taillePixelLargeur,
                                                   taillePixelHauteur,
                                                   BufferedImage.TYPE_INT_ARGB);
-        
-        this.setPreferredSize(new Dimension(taillePixelLargeur, taillePixelHauteur)); // largeur, hauteur
         
         // On recupere le gif contenant les images des tuyaux
         try { this.pipes = ImageIO.read(new File("src/main/java/projetIG/view/image/pipes.gif")); }
@@ -70,8 +105,8 @@ public class FenetreJeu extends JComponent {
         
         
         // On determine la taille d'une case en pixel
-        this.largeurCase = (int)  (taillePixelLargeur / this.panelParent.getNbrCasesTotalLargeur());
-        this.hauteurCase = (int)  (taillePixelHauteur / this.panelParent.getNbrCasesTotalHauteur());
+        this.largeurCase = (int)  (taillePixelLargeur / this.nbrCasesTotalLargeur);
+        this.hauteurCase = (int)  (taillePixelHauteur / this.nbrCasesTotalHauteur);
         
         
         // On construit l'image d'arriere plan
@@ -88,8 +123,8 @@ public class FenetreJeu extends JComponent {
         graphics2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
                                     RenderingHints.VALUE_ANTIALIAS_ON);
         
-        graphics2D.drawImage(this.imageArrierePlan, 0, 0, this.panelParent.getWidth(),
-                             this.panelParent.getHeight(), this);
+        graphics2D.drawImage(this.imageArrierePlan, 0, 0, this.panelPlombier.getWidth(),
+                             this.panelPlombier.getHeight(), this);
         
         reserve(graphics2D);
         
@@ -216,7 +251,7 @@ public class FenetreJeu extends JComponent {
     // CONSTRUCTION DE LA RESERVE
     private void reserve(Graphics2D graphics2D){
         // Abscisse de la ligne verticale separant le plateau de la reserve
-        int abscisseReserve = this.panelParent.getWidth() - NBR_CASES_RESERVE_LARGEUR * this.largeurCase;
+        int abscisseReserve = this.panelPlombier.getWidth() - NBR_CASES_RESERVE_LARGEUR * this.largeurCase;
         
         int colonneReserve = 0;
         int ligneReserve = 0;
@@ -336,8 +371,8 @@ public class FenetreJeu extends JComponent {
     
     
     // GETTERS
-    public PanelFenetreJeu getPanelParent() {
-        return panelParent;
+    public Plombier getPanelPlombier() {
+        return panelPlombier;
     }
 
     public Niveau getNiveauCourant() {
@@ -348,6 +383,30 @@ public class FenetreJeu extends JComponent {
         return pipes;
     }
 
+    public int getNbrCasesTotalLargeur() {
+        return nbrCasesTotalLargeur;
+    }
+
+    public int getNbrCasesTotalHauteur() {
+        return nbrCasesTotalHauteur;
+    }
+
+    public int getTaillePixelLargeur() {
+        return taillePixelLargeur;
+    }
+
+    public void setTaillePixelLargeur(int taillePixelLargeur) {
+        this.taillePixelLargeur = taillePixelLargeur;
+    }
+
+    public int getTaillePixelHauteur() {
+        return taillePixelHauteur;
+    }
+
+    public void setTaillePixelHauteur(int taillePixelHauteur) {
+        this.taillePixelHauteur = taillePixelHauteur;
+    }
+
     public int getLargeurCase() {
         return largeurCase;
     }
@@ -355,6 +414,15 @@ public class FenetreJeu extends JComponent {
     public int getHauteurCase() {
         return hauteurCase;
     }
+
+    public DragDropController getDragDrop() {
+        return dragDrop;
+    }
+
+    public CouleurVictoireController getCouleurController() {
+        return couleurController;
+    }
+    
 
     
     // SETTERS

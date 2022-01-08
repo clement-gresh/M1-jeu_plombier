@@ -7,10 +7,10 @@ import javax.swing.undo.CannotUndoException;
 import projetIG.model.niveau.Niveau;
 import projetIG.model.niveau.Tuyau;
 import projetIG.model.niveau.TuyauPlateau;
-import projetIG.view.FenetreJeu;
+import projetIG.view.PanelJeu;
 
-public class DeplacementRePlaAnnulable extends AbstractUndoableEdit {
-    private final FenetreJeu fenetreJeu;
+public class RvPAnnulable extends AbstractUndoableEdit {
+    private final PanelJeu fenetreJeu;
     private final Niveau niveau;
     private final Tuyau tuyau;
     private final int ligneReserve;
@@ -18,7 +18,7 @@ public class DeplacementRePlaAnnulable extends AbstractUndoableEdit {
     private final int lignePlateau;
     private final int colonnePlateau;
 
-    public DeplacementRePlaAnnulable(FenetreJeu fenetreJeu, Niveau niveau, Tuyau tuyau,
+    public RvPAnnulable(PanelJeu fenetreJeu, Niveau niveau, Tuyau tuyau,
             int ligneReserve, int colonneReserve, int lignePlateau, int colonnePlateau) {
         this.fenetreJeu = fenetreJeu;
         this.niveau = niveau;
@@ -39,9 +39,9 @@ public class DeplacementRePlaAnnulable extends AbstractUndoableEdit {
         niveau.getPlateauCourant().get(this.lignePlateau).set(colonnePlateau, new TuyauPlateau(tuyau));
         niveau.getTuyauxReserve().get(ligneReserve).get(colonneReserve).diminuerNombre();
         
-        fenetreJeu.getPanelParent().getCouleurController().majCouleurs();
-        fenetreJeu.paintImmediately(0, 0, this.fenetreJeu.getPanelParent().getTaillePixelLargeur(),
-                                          this.fenetreJeu.getPanelParent().getTaillePixelHauteur());
+        fenetreJeu.getCouleurController().majCouleurs();
+        fenetreJeu.paintImmediately(0, 0, this.fenetreJeu.getTaillePixelLargeur(),
+                                          this.fenetreJeu.getTaillePixelHauteur());
         //fenetreJeu.getPanelParent().getCo
     }
 
@@ -55,9 +55,9 @@ public class DeplacementRePlaAnnulable extends AbstractUndoableEdit {
         niveau.getPlateauCourant().get(this.lignePlateau).set(colonnePlateau, null);
         niveau.getTuyauxReserve().get(ligneReserve).get(colonneReserve).augmenterNombre();
         
-        fenetreJeu.getPanelParent().getCouleurController().majCouleurs();
-        fenetreJeu.paintImmediately(0, 0, this.fenetreJeu.getPanelParent().getTaillePixelLargeur(),
-                                          this.fenetreJeu.getPanelParent().getTaillePixelHauteur());
+        fenetreJeu.getCouleurController().majCouleurs();
+        fenetreJeu.paintImmediately(0, 0, this.fenetreJeu.getTaillePixelLargeur(),
+                                          this.fenetreJeu.getTaillePixelHauteur());
     }
     
     

@@ -17,8 +17,7 @@ import static projetIG.model.enumeration.TypeTuyau.OVER;
 import static projetIG.model.enumeration.TypeTuyau.SOURCE;
 import projetIG.model.niveau.Niveau;
 import projetIG.model.niveau.TuyauPlateau;
-import projetIG.view.FenetreJeu;
-import projetIG.view.PanelFenetreJeu;
+import projetIG.view.PanelJeu;
 import static projetIG.model.enumeration.Dir.N;
 import static projetIG.model.enumeration.Dir.E;
 import static projetIG.model.enumeration.Dir.S;
@@ -26,14 +25,12 @@ import static projetIG.model.enumeration.Dir.O;
 import static projetIG.model.enumeration.TypeTuyau.AJOUT;
 
 public class CouleurVictoireController extends MouseAdapter {
-    protected PanelFenetreJeu panelCourant;
-    protected FenetreJeu fenetreJeu;
+    protected PanelJeu fenetreJeu;
     protected Niveau niveauCourant;
     
     protected boolean victoire;
 
-    public CouleurVictoireController(PanelFenetreJeu panelCourant, FenetreJeu fenetreJeu, Niveau niveauCourant) {
-        this.panelCourant = panelCourant;
+    public CouleurVictoireController(PanelJeu fenetreJeu, Niveau niveauCourant) {
         this.fenetreJeu = fenetreJeu;
         this.niveauCourant = niveauCourant;
     }
@@ -98,27 +95,27 @@ public class CouleurVictoireController extends MouseAdapter {
         
         if(victoire) {
             // On met a jour la vue avant d'afficher une fenetre de dialogue
-            this.fenetreJeu.paintImmediately(0, 0, this.fenetreJeu.getPanelParent().getTaillePixelLargeur(),
-                                             this.fenetreJeu.getPanelParent().getTaillePixelHauteur());
+            this.fenetreJeu.paintImmediately(0, 0, this.fenetreJeu.getTaillePixelLargeur(),
+                                             this.fenetreJeu.getTaillePixelHauteur());
             
-            int numeroBanque = this.panelCourant.getPanelPlumber().getNumeroBanque();
-            int numeroNiveau = this.panelCourant.getPanelPlumber().getNumeroNiveau();
+            int numeroBanque = this.fenetreJeu.getPanelPlombier().getNumeroBanque();
+            int numeroNiveau = this.fenetreJeu.getPanelPlombier().getNumeroNiveau();
             
             
             // Passer au niveau suivant s'il existe
-            if(this.panelCourant.getPanelPlumber().isThereNextLevel()){
+            if(this.fenetreJeu.getPanelPlombier().isThereNextLevel()){
                 Plombier.pressAlt();
-                this.panelCourant.getPanelPlumber().getFrameParent().setAlwaysOnTop(true);
+                this.fenetreJeu.getPanelPlombier().getFrameParent().setAlwaysOnTop(true);
                 
-                int clickButton = JOptionPane.showConfirmDialog(this.panelCourant, 
+                int clickButton = JOptionPane.showConfirmDialog(this.fenetreJeu, 
                                             "VICTOIRE ! Passer au niveau suivant ?", 
                                             "Victoire", YES_NO_OPTION);
         
                 if(clickButton == YES_OPTION) {
-                    this.panelCourant.getPanelPlumber().afficherNiveau(numeroBanque, numeroNiveau + 1);
+                    this.fenetreJeu.getPanelPlombier().afficherNiveau(numeroBanque, numeroNiveau + 1);
                 }
                 
-                this.panelCourant.getPanelPlumber().getFrameParent().setAlwaysOnTop(false);
+                this.fenetreJeu.getPanelPlombier().getFrameParent().setAlwaysOnTop(false);
                 Plombier.releaseAlt();
             }
             
@@ -126,17 +123,17 @@ public class CouleurVictoireController extends MouseAdapter {
             // Revenir à l'accueil sinon
             else {
                 Plombier.pressAlt();
-                this.panelCourant.getPanelPlumber().getFrameParent().setAlwaysOnTop(true);
+                this.fenetreJeu.getPanelPlombier().getFrameParent().setAlwaysOnTop(true);
                 
-                int clickButton = JOptionPane.showConfirmDialog(this.panelCourant, 
+                int clickButton = JOptionPane.showConfirmDialog(this.fenetreJeu, 
                 "VICTOIRE ! Revenir à l'accueil ?", 
                 "Victoire", YES_NO_OPTION);
         
                 if(clickButton == YES_OPTION) {
-                    this.panelCourant.getPanelPlumber().afficherPnlBanques();
+                    this.fenetreJeu.getPanelPlombier().afficherPnlBanques();
                 }
                 
-                this.panelCourant.getPanelPlumber().getFrameParent().setAlwaysOnTop(false);
+                this.fenetreJeu.getPanelPlombier().getFrameParent().setAlwaysOnTop(false);
                 Plombier.releaseAlt();
             }
         }

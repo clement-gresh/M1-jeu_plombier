@@ -4,13 +4,13 @@ import javax.swing.JPopupMenu;
 import projetIG.Plombier;
 import projetIG.controller.action.ActionAnnuler;
 import projetIG.controller.action.ActionQuitter;
-import projetIG.controller.action.ActionRecommencerNiveau;
+import projetIG.controller.action.ActionRecommencer;
 import projetIG.controller.action.ActionRetablir;
-import projetIG.controller.action.ActionRetourAccueil;
+import projetIG.controller.action.ActionAccueil;
 
 public class MyPopupMenu extends JPopupMenu {
 
-    public MyPopupMenu(Plombier panelPlombier, ActionRetourAccueil actionRetourAccueil, ActionRecommencerNiveau actionRecommencer,
+    public MyPopupMenu(Plombier panelPlombier, ActionAccueil actionRetourAccueil, ActionRecommencer actionRecommencer,
                        ActionAnnuler actionAnnuler, ActionRetablir actionRetablir) {
         
         // Ajout des elements du menu

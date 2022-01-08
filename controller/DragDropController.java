@@ -7,9 +7,9 @@ import java.awt.image.BufferedImage;
 import java.util.ArrayList;
 import javax.swing.ImageIcon;
 import javax.swing.SwingUtilities;
-import projetIG.controller.annulerRetablir.DeplacementPlaPlaAnnulable;
-import projetIG.controller.annulerRetablir.DeplacementPlaReAnnulable;
-import projetIG.controller.annulerRetablir.DeplacementRePlaAnnulable;
+import projetIG.controller.annulerRetablir.PvPAnnulable;
+import projetIG.controller.annulerRetablir.PvRAnnulable;
+import projetIG.controller.annulerRetablir.RvPAnnulable;
 import projetIG.model.enumeration.Couleur;
 import static projetIG.model.enumeration.Dir.N;
 import projetIG.model.enumeration.TypeTuyau;
@@ -17,7 +17,7 @@ import projetIG.model.niveau.Niveau;
 import projetIG.model.niveau.Tuyau;
 import projetIG.model.niveau.TuyauPlateau;
 import projetIG.model.niveau.TuyauReserve;
-import projetIG.view.FenetreJeu;
+import projetIG.view.PanelJeu;
 import projetIG.view.ModificationsImage;
 
 public class DragDropController extends MouseAdapter {
@@ -28,7 +28,7 @@ public class DragDropController extends MouseAdapter {
     public static final int PAS_DE_TEMPS = 2; // Represente le temps d'affichage en ms entre 2 images lors d'un mouvement
     
     
-    protected FenetreJeu fenetreJeu;
+    protected PanelJeu fenetreJeu;
     protected int hauteurCase;
     protected int largeurCase;
     protected int nbrCasesTotalHauteur;
@@ -47,9 +47,9 @@ public class DragDropController extends MouseAdapter {
     protected int colonneArrive;
     
 
-    public DragDropController(FenetreJeu fenetreJeu) {
+    public DragDropController(PanelJeu fenetreJeu) {
         this.fenetreJeu = fenetreJeu;
-        this.annulerManager = fenetreJeu.getPanelParent().getPanelPlumber().getAnnulerManager();
+        this.annulerManager = fenetreJeu.getPanelPlombier().getAnnulerManager();
         this.niveau = fenetreJeu.getNiveauCourant();
     }
     
@@ -60,8 +60,8 @@ public class DragDropController extends MouseAdapter {
             this.hauteurCase = this.fenetreJeu.getHauteurCase();
             this.largeurCase = this.fenetreJeu.getLargeurCase();
             
-            this.nbrCasesTotalHauteur = this.fenetreJeu.getPanelParent().getNbrCasesTotalHauteur();
-            this.nbrCasesTotalLargeur = this.fenetreJeu.getPanelParent().getNbrCasesTotalLargeur();
+            this.nbrCasesTotalHauteur = this.fenetreJeu.getNbrCasesTotalHauteur();
+            this.nbrCasesTotalLargeur = this.fenetreJeu.getNbrCasesTotalLargeur();
             
             this.nbrCasesPlateauHauteur = this.fenetreJeu.getNiveauCourant().getNbrCasesPlateauHauteur();
             this.nbrCasesPlateauLargeur = this.fenetreJeu.getNiveauCourant().getNbrCasesPlateauLargeur();
@@ -270,8 +270,8 @@ public class DragDropController extends MouseAdapter {
             
             this.fenetreJeu.setXImageDD(departX);
             this.fenetreJeu.setYImageDD(departY);
-            this.fenetreJeu.paintImmediately(0, 0, this.fenetreJeu.getPanelParent().getTaillePixelLargeur(),
-                                                  this.fenetreJeu.getPanelParent().getTaillePixelHauteur());
+            this.fenetreJeu.paintImmediately(0, 0, this.fenetreJeu.getTaillePixelLargeur(),
+                                                  this.fenetreJeu.getTaillePixelHauteur());
         }
     }
     
@@ -284,16 +284,16 @@ public class DragDropController extends MouseAdapter {
             System.out.println("Depart : " + this.zoneDepart + " ligne " + this.ligneDepart + ", colonne " + this.colonneDepart);
             System.out.println("Arrivee  : " + this.zoneArrive + "  ligne " + this.ligneArrive + ", colonne " + this.colonneArrive);
             */
-            this.annulerManager.addEdit(new DeplacementPlaReAnnulable(fenetreJeu, niveau,
+            this.annulerManager.addEdit(new PvRAnnulable(fenetreJeu, niveau,
                     tuyauDeplace, ligneDepart, colonneDepart, ligneArrive, colonneArrive));
         }
         else if(this.zoneDepart == RESERVE && this.zoneArrive == PLATEAU){
-            this.annulerManager.addEdit(new DeplacementRePlaAnnulable(fenetreJeu, niveau,
+            this.annulerManager.addEdit(new RvPAnnulable(fenetreJeu, niveau,
                     tuyauDeplace, ligneDepart, colonneDepart, ligneArrive, colonneArrive));
         }
         else if(this.zoneDepart == PLATEAU && this.zoneArrive == PLATEAU){
             
-            this.annulerManager.addEdit(new DeplacementPlaPlaAnnulable(fenetreJeu, niveau,
+            this.annulerManager.addEdit(new PvPAnnulable(fenetreJeu, niveau,
                     tuyauDeplace, ligneDepart, colonneDepart, ligneArrive, colonneArrive));
         }
     }

@@ -7,10 +7,10 @@ import javax.swing.undo.CannotUndoException;
 import projetIG.model.niveau.Niveau;
 import projetIG.model.niveau.Tuyau;
 import projetIG.model.niveau.TuyauPlateau;
-import projetIG.view.FenetreJeu;
+import projetIG.view.PanelJeu;
 
-public class DeplacementPlaPlaAnnulable extends AbstractUndoableEdit {
-    private final FenetreJeu fenetreJeu;
+public class PvPAnnulable extends AbstractUndoableEdit {
+    private final PanelJeu fenetreJeu;
     private final Niveau niveau;
     private final Tuyau tuyau;
     private final int ligneDepart;
@@ -18,7 +18,7 @@ public class DeplacementPlaPlaAnnulable extends AbstractUndoableEdit {
     private final int ligneArrivee;
     private final int colonneArrivee;
 
-    public DeplacementPlaPlaAnnulable(FenetreJeu fenetreJeu, Niveau niveau, Tuyau tuyau,
+    public PvPAnnulable(PanelJeu fenetreJeu, Niveau niveau, Tuyau tuyau,
             int ligneDepart, int colonneDepart, int ligneArrivee, int colonneArrivee) {
         this.fenetreJeu = fenetreJeu;
         this.niveau = niveau;
@@ -37,9 +37,9 @@ public class DeplacementPlaPlaAnnulable extends AbstractUndoableEdit {
         niveau.getPlateauCourant().get(this.ligneDepart).set(colonneDepart, null);
         niveau.getPlateauCourant().get(this.ligneArrivee).set(colonneArrivee, new TuyauPlateau(tuyau));
         
-        fenetreJeu.getPanelParent().getCouleurController().majCouleurs();
-        fenetreJeu.paintImmediately(0, 0, this.fenetreJeu.getPanelParent().getTaillePixelLargeur(),
-                                          this.fenetreJeu.getPanelParent().getTaillePixelHauteur());
+        fenetreJeu.getCouleurController().majCouleurs();
+        fenetreJeu.paintImmediately(0, 0, this.fenetreJeu.getTaillePixelLargeur(),
+                                          this.fenetreJeu.getTaillePixelHauteur());
     }
 
     @Override
@@ -50,9 +50,9 @@ public class DeplacementPlaPlaAnnulable extends AbstractUndoableEdit {
         niveau.getPlateauCourant().get(this.ligneArrivee).set(colonneArrivee, null);
         niveau.getPlateauCourant().get(this.ligneDepart).set(colonneDepart, new TuyauPlateau(tuyau));
         
-        fenetreJeu.getPanelParent().getCouleurController().majCouleurs();
-        fenetreJeu.paintImmediately(0, 0, this.fenetreJeu.getPanelParent().getTaillePixelLargeur(),
-                                          this.fenetreJeu.getPanelParent().getTaillePixelHauteur());
+        fenetreJeu.getCouleurController().majCouleurs();
+        fenetreJeu.paintImmediately(0, 0, this.fenetreJeu.getTaillePixelLargeur(),
+                                          this.fenetreJeu.getTaillePixelHauteur());
     }
     
     

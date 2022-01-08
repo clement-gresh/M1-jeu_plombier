@@ -24,19 +24,13 @@ public class ActionRetourAccueil extends AbstractAction {
     @Override
     public void actionPerformed(ActionEvent e) {
         
-        Plombier.pressAlt();
-        ActionRetourAccueil.this.panelPlumber.getFrameParent().setAlwaysOnTop(true);
+        int clicBouton = Plombier.fenetreConfirmation(
+                ActionRetourAccueil.this.panelPlumber.getFrameParent(),
+                "Retour à l'accueil",
+                "Etes-vous sûr de vouloir retourner à l'accueil ? La partie en cours sera perdue.");
         
-        int clickButton = JOptionPane.showConfirmDialog(this.panelPlumber, 
-                "Etes-vous sûr de vouloir retourner à l'accueil ? La partie en cours sera perdue.", 
-                "Retour à l'accueil", JOptionPane.YES_NO_OPTION);
-        
-        if(clickButton == JOptionPane.YES_OPTION) {
-            this.panelPlumber.afficherAccueil1();
+        if(clicBouton == JOptionPane.YES_OPTION) {
+            this.panelPlumber.afficherPnlBanques();
         }
-        
-        ActionRetourAccueil.this.panelPlumber.getFrameParent().setAlwaysOnTop(false);
-        Plombier.releaseAlt();
     }
-    
 }

@@ -136,7 +136,7 @@ public class CouleurVictoireController extends MouseAdapter {
                 "Victoire", YES_NO_OPTION);
         
                 if(clickButton == YES_OPTION) {
-                    this.panelCourant.getPanelPlumber().afficherAccueil1();
+                    this.panelCourant.getPanelPlumber().afficherPnlBanques();
                 }
                 
                 this.panelCourant.getPanelPlumber().getFrameParent().setAlwaysOnTop(false);

@@ -27,20 +27,14 @@ public class ActionRecommencerNiveau extends AbstractAction {
     @Override
     public void actionPerformed(ActionEvent e) {
         
-        Plombier.pressAlt();
-        ActionRecommencerNiveau.this.panelPlumber.getFrameParent().setAlwaysOnTop(true);
+        int clicBouton = Plombier.fenetreConfirmation(
+                ActionRecommencerNiveau.this.panelPlumber.getFrameParent(),
+                "Recommencer le niveau",
+                "Etes-vous sûr de vouloir recommencer le niveau ? La configuration en cours sera perdue.");
         
-        int clickButton = JOptionPane.showConfirmDialog(this.panelPlumber, 
-                "Etes-vous sûr de vouloir recommencer le niveau ? La configuration en cours sera perdue.", 
-                "Recommencer le niveau", JOptionPane.YES_NO_OPTION);
-        
-        if(clickButton == JOptionPane.YES_OPTION) {
+        if(clicBouton == JOptionPane.YES_OPTION) {
             this.panelPlumber.afficherNiveau(this.panelPlumber.getNumeroBanque(), this.panelPlumber.getNumeroNiveau());
         }
-        
-        
-        ActionRecommencerNiveau.this.panelPlumber.getFrameParent().setAlwaysOnTop(false);
-        Plombier.releaseAlt();
     }
     
 }

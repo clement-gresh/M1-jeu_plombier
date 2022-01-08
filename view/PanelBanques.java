@@ -14,7 +14,7 @@ public class PanelBanques extends AbstractAccueil {
             int numeroBanque = i;
             
             bouton.addActionListener(
-                    (event) -> PanelBanques.this.panelParent.afficherAccueil2(numeroBanque)
+                    (event) -> PanelBanques.this.panelParent.afficherPnlNiveaux(numeroBanque)
             );
         }
     }

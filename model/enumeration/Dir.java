@@ -21,8 +21,8 @@ public enum Dir {
         return ouvertureModele;
     }
     
-    static public int nvlLigne(Dir dir){
-        switch (dir){
+    public int ligne(){
+        switch (this){
                 case N :
                     return -1;
                 case S :
@@ -33,8 +33,8 @@ public enum Dir {
     }
     
     
-    static public int nvlColonne(Dir dir){
-        switch (dir){
+    public int colonne(){
+        switch (this){
                 case E :
                     return +1;
                 case O :

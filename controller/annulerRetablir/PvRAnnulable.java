@@ -1,61 +1,34 @@
 package projetIG.controller.annulerRetablir;
 
-import javax.swing.undo.AbstractUndoableEdit;
 import javax.swing.undo.CannotRedoException;
 import javax.swing.undo.CannotUndoException;
+import static projetIG.controller.DragDropController.PLATEAU;
+import static projetIG.controller.DragDropController.RESERVE;
 import projetIG.model.niveau.Niveau;
 import projetIG.model.niveau.Tuyau;
-import projetIG.model.niveau.TuyauPlateau;
 import projetIG.view.PanelJeu;
 
-public class PvRAnnulable extends AbstractUndoableEdit {
-    private final PanelJeu fenetreJeu;
-    private final Niveau niveau;
-    private final Tuyau tuyau;
-    private final int lignePlateau;
-    private final int colonnePlateau;
-    private final int ligneReserve;
-    private final int colonneReserve;
+public class PvRAnnulable extends AbstractAnnulable {
 
-    public PvRAnnulable(PanelJeu fenetreJeu, Niveau niveau, Tuyau tuyau, int lignePlateau,
-                                     int colonnePlateau, int ligneReserve, int colonneReserve) {
-        this.fenetreJeu = fenetreJeu;
-        this.niveau = niveau;
-        this.tuyau = tuyau;
-        this.lignePlateau = lignePlateau;
-        this.colonnePlateau = colonnePlateau;
-        this.ligneReserve = ligneReserve;
-        this.colonneReserve = colonneReserve;
-    }
-
-    @Override
-    public boolean canRedo() {
-        return true;
+    public PvRAnnulable(PanelJeu fenetreJeu, Niveau niveau, Tuyau tuyau,
+                        int lDepart, int cDepart, int lArrivee, int cArrivee) {
+        super(fenetreJeu, niveau, tuyau, lDepart, cDepart, lArrivee, cArrivee);
     }
 
     @Override
     public void redo() throws CannotRedoException {
-        niveau.getPlateauCourant().get(this.lignePlateau).set(colonnePlateau, null);
-        niveau.getTuyauxReserve().get(ligneReserve).get(colonneReserve).augmenterNombre();
-        fenetreJeu.getNiveauCourant().majCouleurs();
-        fenetreJeu.paintImmediately(0, 0, this.fenetreJeu.getTaillePixelLargeur(),
-                                          this.fenetreJeu.getTaillePixelHauteur());
-        //fenetreJeu.getPanelParent().getCo
-    }
-
-    @Override
-    public boolean canUndo() {
-        return true;
+        super.enleverTuyau(lDepart, cDepart, PLATEAU);
+        super.ajouterTuyau(lArrivee, cArrivee, RESERVE);
+        
+        super.maj();
     }
 
     @Override
     public void undo() throws CannotUndoException {
-        niveau.getPlateauCourant().get(this.lignePlateau).set(colonnePlateau, new TuyauPlateau(tuyau));
-        niveau.getTuyauxReserve().get(ligneReserve).get(colonneReserve).diminuerNombre();
+        super.ajouterTuyau(lDepart, cDepart, PLATEAU);
+        super.enleverTuyau(lArrivee, cArrivee, RESERVE);
         
-        fenetreJeu.getNiveauCourant().majCouleurs();
-        fenetreJeu.paintImmediately(0, 0, this.fenetreJeu.getTaillePixelLargeur(),
-                                          this.fenetreJeu.getTaillePixelHauteur());
+        super.maj();
     }
     
     

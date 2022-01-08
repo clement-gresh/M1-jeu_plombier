@@ -25,16 +25,13 @@ import static projetIG.model.enumeration.Dir.S;
 import static projetIG.model.enumeration.Dir.O;
 
 public abstract class ParserNiveau {
-    private static final int AUCUN = -1;
-    
     // Enregistre la hauteur et la largeur du plateau,
     // initialise le plateau avec les sources et tuyaux inamovibles
     // et initialise la reserve avec les tuyaux restants
     static public Niveau parserNiveau(String file){
         File fichierNiveau = new File(file);
         
-        ArrayList<ArrayList<TuyauPlateau>> tuyauxPlateau = new ArrayList<>();
-        tuyauxPlateau.add(new ArrayList<>());
+        TuyauPlateau[][] tuyauxPlateau;
         
         ArrayList<ArrayList<TuyauReserve>> tuyauxReserve = new ArrayList<>();
         tuyauxReserve.add(new ArrayList<>(Arrays.asList(new TuyauReserve(CROSS, N),
@@ -53,17 +50,17 @@ public abstract class ParserNiveau {
         try {
             Scanner scanner = new Scanner(fichierNiveau);
             
-            int nbrCasesPlateauHauteur = scanner.nextInt();
-            int nbrCasesPlateauLargeur = scanner.nextInt();
+            int hauteur = scanner.nextInt();
+            int largeur = scanner.nextInt();
+            
+            tuyauxPlateau = new TuyauPlateau[hauteur][largeur];
             
             int colonne = 0;
             int ligne = 0;
             
             while(scanner.hasNext()){
-                // Si on arrive au bout de la ligne, on en cree un nouvelle
-                // et on revient a la premiere colonne
-                if(colonne == nbrCasesPlateauLargeur) {
-                    tuyauxPlateau.add(new ArrayList<>());
+                // Si on arrive au bout de la ligne, on passe a la suivante
+                if(colonne == largeur) {
                     ligne = ligne + 1;
                     colonne = 0;
                 }
@@ -92,11 +89,11 @@ public abstract class ParserNiveau {
                         Couleur couleur = (typeTuyau == SOURCE) ?
                                 couleurTuyau(casePlateau.substring(0, 1))
                                 : BLANC;
-                        tuyauxPlateau.get(ligne).add(new TuyauPlateau(typeTuyau, rotation, true, couleur));
+                        tuyauxPlateau[ligne][colonne] = new TuyauPlateau(typeTuyau, rotation, true, couleur);
                     }
 
                     else {
-                        tuyauxPlateau.get(ligne).add(null);
+                        tuyauxPlateau[ligne][colonne] = null;
 
                         // CONSTRUCTION DE LA RESERVE
                         boolean tuyauTrouve = false;
@@ -114,7 +111,7 @@ public abstract class ParserNiveau {
                     }
                 }
                 
-                else { tuyauxPlateau.get(ligne).add(null); }
+                else { tuyauxPlateau[ligne][colonne] = null; }
                 
                 colonne = colonne+1;
             }
@@ -141,13 +138,13 @@ public abstract class ParserNiveau {
             //fin debug
             
             
-            return new Niveau(nbrCasesPlateauHauteur, nbrCasesPlateauLargeur, tuyauxPlateau, tuyauxReserve);
+            return new Niveau(hauteur, largeur, tuyauxPlateau, tuyauxReserve);
         }
         
         catch (Exception exception) {
             System.err.println("Exception scanner sur le niveau (Niveau.java) " + exception.getMessage());
             
-            return new Niveau(0, 0, new ArrayList<>(), new ArrayList<>());
+            return new Niveau(0, 0, new TuyauPlateau[0][0], new ArrayList<>());
         }
     }
     

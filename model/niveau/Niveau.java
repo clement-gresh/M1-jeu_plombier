@@ -15,21 +15,21 @@ import static projetIG.model.enumeration.TypeTuyau.OVER;
 import static projetIG.model.enumeration.TypeTuyau.SOURCE;
 
 public class Niveau {
-    protected int nbrCasesPlateauHauteur;
-    protected int nbrCasesPlateauLargeur;
-    protected ArrayList<ArrayList<TuyauPlateau>> plateauCourant = new ArrayList<>();
-    protected ArrayList<ArrayList<TuyauReserve>> tuyauxReserve = new ArrayList<>();
+    protected int hauteur;
+    protected int largeur;
+    protected TuyauPlateau[][] plateau;
+    protected ArrayList<ArrayList<TuyauReserve>> reserve = new ArrayList<>();
     protected boolean victoire = false;
 
     // Constructeur
-    public Niveau(int nbrCasesPlateauHauteur, int nbrCasesPlateauLargeur,
-            ArrayList<ArrayList<TuyauPlateau>> plateauCourant,
-            ArrayList<ArrayList<TuyauReserve>> tuyauxReserve) {
+    public Niveau(int hauteur, int largeur,
+            TuyauPlateau[][] plateau,
+            ArrayList<ArrayList<TuyauReserve>> reserve) {
         
-        this.nbrCasesPlateauHauteur = nbrCasesPlateauHauteur;
-        this.nbrCasesPlateauLargeur = nbrCasesPlateauLargeur;
-        this.plateauCourant = plateauCourant;
-        this.tuyauxReserve = tuyauxReserve;
+        this.hauteur = hauteur;
+        this.largeur = largeur;
+        this.plateau = plateau;
+        this.reserve = reserve;
     }
     
     
@@ -39,42 +39,42 @@ public class Niveau {
         
         // Pour tous les tuyaux, on indique qu'ils n'ont pas ete visites 
         // et que (sauf pour les sources) ils sont blancs
-        for(ArrayList<TuyauPlateau> lignePlateau : this.plateauCourant) {
-            for(TuyauPlateau tuyauPlateau : lignePlateau) {
-                if(tuyauPlateau != null) {
-                    for(int i = 0; i < tuyauPlateau.getDejaVisite().size(); i++){
-                        tuyauPlateau.setDejaVisite(i, false);
+        for(int l = 0; l < this.hauteur; l++) {
+            for(int c = 0; c < this.largeur; c++) {
+                
+                TuyauPlateau tuyau = plateau[l][c];
+                
+                if(tuyau != null) {
+                    for(int i = 0; i < tuyau.getDejaVisite().size(); i++){
+                        tuyau.setDejaVisite(i, false);
 
-                        if(tuyauPlateau.getNom() != SOURCE) tuyauPlateau.setCouleur(i, BLANC);
+                        if(tuyau.getNom() != SOURCE) tuyau.setCouleur(i, BLANC);
                     }
                 }
             }
         }
         
-        int colonne = 0;
-        int ligne = 0;
         
         // On parcourt les tuyaux en partant des sources (qui n'ont pas encore ete visitee)
-        for(ArrayList<TuyauPlateau> lignePlateau : this.plateauCourant) {
-            for(TuyauPlateau tuyauSource : lignePlateau) {
-                if(tuyauSource != null
-                        && tuyauSource.getNom() == SOURCE
-                        && !tuyauSource.getDejaVisite().get(0)) {
+        for(int l = 0; l < this.hauteur; l++) {
+            for(int c = 0; c < this.largeur; c++) {
+                
+                TuyauPlateau tuyau = plateau[l][c];
+                
+                if(tuyau != null
+                        && tuyau.getNom() == SOURCE
+                        && !tuyau.getDejaVisite().get(0)) {
                     
-                    tuyauSource.setDejaVisite(0, true);
+                   tuyau.setDejaVisite(0, true);
                     
                     // On determine l'ouverture de la source a partir de celle du modele
-                    Dir ouvertureModel = TypeTuyau.ouvertures.get(SOURCE.ordinal()).get(0).get(0);
-                    Dir ouvertureSource = ouvertureModel.rotation(tuyauSource.getRotation(), AJOUT);
+                    Dir dirModel = TypeTuyau.ouvertures.get(SOURCE.ordinal()).get(0).get(0);
+                    Dir dirSource = dirModel.rotation(tuyau.getRotation(), AJOUT);
                     
                     // On applique le traitement a la case a laquelle la source est connectee
-                    connexionCaseSuivante(ligne, colonne, ouvertureSource,
-                                          tuyauSource.getCouleur().get(0));
+                    connexionCaseSuivante(l, c, dirSource, tuyau.getCouleur().get(0));
                 }
-                colonne = colonne + 1;
             }
-            colonne = 0;
-            ligne = ligne + 1;
         }
         return this.victoire;
     }
@@ -82,22 +82,22 @@ public class Niveau {
     
     // Fonction recursive qui trouve les cases auxquelles sont connectees les tuyaux du plateau pour mettre a jour
     // les couleurs et determiner s'il y a victoire ou non
-    private void connexionCaseSuivante(int ligne, int colonne, Dir ouvertureTuyauEntrant, Couleur couleur){
+    private void connexionCaseSuivante(int ligne, int colonne, Dir entree, Couleur couleur){
         
-        int ligneSortie = ligne + Dir.nvlLigne(ouvertureTuyauEntrant);
-        int colonneSortie = colonne + Dir.nvlColonne(ouvertureTuyauEntrant);
+        int l = ligne + entree.ligne();
+        int c = colonne + entree.colonne();
         
-        TuyauPlateau tuyauPlateau = this.plateauCourant.get(ligneSortie).get(colonneSortie);
+        TuyauPlateau tuyau = this.plateau[l][c];
         
         // Si le tuyau donne sur une case vide, il n'y a pas victoire
-        if(tuyauPlateau == null) this.victoire = false;
+        if(tuyau == null) this.victoire = false;
         
         else{
-            // On determine par l'ouverture d'entree
-            Dir ouvertureEntree = ouvertureTuyauEntrant.rotation(S, AJOUT);
+            // On determine la direction d'entree
+            Dir dirEntree = entree.rotation(S, AJOUT);
             
             // Si le tuyau n'a pas d'ouverture correspondant, il n'y a pas victoire
-            if( !tuyauPlateau.getNom().aOuverture(ouvertureEntree, tuyauPlateau.getRotation()) ){
+            if( !tuyau.getNom().aOuverture(dirEntree, tuyau.getRotation()) ){
                 this.victoire = false;
             }
             
@@ -107,68 +107,66 @@ public class Niveau {
             // - ET (la composante du tuyau n'a pas deja ete visite 
             //       OU est peinte avec une couleur differente de celle actuellement utilisee)
             else if(
-                    ((tuyauPlateau.getNom() == OVER
-                        && (ouvertureEntree == N || ouvertureEntree == S)
-                        && tuyauPlateau.getCouleur().get(1) != NOIR
-                        && (!tuyauPlateau.getDejaVisite().get(1)
-                            || tuyauPlateau.getCouleur().get(1) != couleur)
+                    ((tuyau.getNom() == OVER
+                        && (dirEntree == N || dirEntree == S)
+                        && tuyau.getCouleur().get(1) != NOIR
+                        && (!tuyau.getDejaVisite().get(1)
+                            || tuyau.getCouleur().get(1) != couleur)
                         )
 
                     ||
 
                     // Composante E-W d'un OVER
-                    (tuyauPlateau.getNom() == OVER
-                        && (ouvertureEntree == E || ouvertureEntree == O)
-                        && tuyauPlateau.getCouleur().get(0) != NOIR
-                        && (!tuyauPlateau.getDejaVisite().get(0)
-                            || tuyauPlateau.getCouleur().get(0) != couleur)
+                    (tuyau.getNom() == OVER
+                        && (dirEntree == E || dirEntree == O)
+                        && tuyau.getCouleur().get(0) != NOIR
+                        && (!tuyau.getDejaVisite().get(0)
+                            || tuyau.getCouleur().get(0) != couleur)
                         )
 
                     ||
 
                     // Tuyaux autres que OVER
-                    (tuyauPlateau.getNom() != OVER
-                        && tuyauPlateau.getCouleur().get(0) != NOIR
-                        && (!tuyauPlateau.getDejaVisite().get(0)
-                            || tuyauPlateau.getCouleur().get(0) != couleur)
+                    (tuyau.getNom() != OVER
+                        && tuyau.getCouleur().get(0) != NOIR
+                        && (!tuyau.getDejaVisite().get(0)
+                            || tuyau.getCouleur().get(0) != couleur)
                         )
                 )
             ){
                 
                 // Si on arrive a une source et qu'elle est de couleur differente, la couleur courante devient noire
-                if(tuyauPlateau.getNom() == SOURCE){
-                    tuyauPlateau.setDejaVisite(0, true);
+                if(tuyau.getNom() == SOURCE){
+                    tuyau.setDejaVisite(0, true);
                     
-                    if(couleur != NOIR && tuyauPlateau.getCouleur().get(0) != couleur){
+                    if(couleur != NOIR && tuyau.getCouleur().get(0) != couleur){
                         couleur = NOIR;
                         this.victoire = false;
-                        connexionCaseSuivante(ligneSortie, colonneSortie, ouvertureEntree, couleur);
+                        connexionCaseSuivante(l, c, dirEntree, couleur);
                     }
                 }
                 
                 // Sinon on met a jour la couleur du tuyau avec la couleur courante
                 else {
                     // Composante N-S d'un OVER
-                    if(tuyauPlateau.getNom() == OVER
-                        && (ouvertureEntree == N || ouvertureEntree == S)){
+                    if(tuyau.getNom() == OVER
+                        && (dirEntree == N || dirEntree == S)){
 
-                        tuyauPlateau.setCouleur(1, couleur);
-                        tuyauPlateau.setDejaVisite(1, true);
+                        tuyau.setCouleur(1, couleur);
+                        tuyau.setDejaVisite(1, true);
                     }
                     
                     // Autres tuyaux (y compris composante E-O d'un over)
                     else {
-                        tuyauPlateau.setCouleur(0, couleur);
-                        tuyauPlateau.setDejaVisite(0, Boolean.TRUE);
+                        tuyau.setCouleur(0, couleur);
+                        tuyau.setDejaVisite(0, Boolean.TRUE);
                     }
                     
                     // On applique le meme traitement a toutes les cases auxquelles le tuyau est connecte
                     // (i.e. toutes celles sur lesquelles il a une ouverture, sauf pour l'ouverture d'entree)
-                    for(Dir orientationSortie : 
-                            tuyauPlateau.getNom().dirSorties(
-                                    ouvertureEntree, tuyauPlateau.getRotation())){
+                    for(Dir dirSortie : tuyau.getNom().dirSorties(dirEntree, tuyau.getRotation())){
                         
-                        connexionCaseSuivante(ligneSortie, colonneSortie, orientationSortie, couleur);
+                        connexionCaseSuivante(l, c, dirSortie, couleur);
                     }
                 }
             }
@@ -177,19 +175,19 @@ public class Niveau {
     
     
     //Getters
-    public int getNbrCasesPlateauHauteur() {
-        return nbrCasesPlateauHauteur;
+    public int getHauteur() {
+        return hauteur;
     }
 
-    public int getNbrCasesPlateauLargeur() {
-        return nbrCasesPlateauLargeur;
+    public int getLargeur() {
+        return largeur;
     }
-    public ArrayList<ArrayList<TuyauPlateau>> getPlateauCourant() {
-        return plateauCourant;
+    public TuyauPlateau[][] getPlateau() {
+        return plateau;
     }
 
-    public ArrayList<ArrayList<TuyauReserve>> getTuyauxReserve() {
-        return tuyauxReserve;
+    public ArrayList<ArrayList<TuyauReserve>> getReserve() {
+        return reserve;
     }
     
 }

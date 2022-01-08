@@ -16,6 +16,7 @@ import java.io.IOException;
 import java.util.ArrayList;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
+import static javax.swing.JOptionPane.YES_OPTION;
 import javax.swing.JPanel;
 import projetIG.Plombier;
 import projetIG.controller.VictoireController;
@@ -75,8 +76,8 @@ public class PanelJeu extends JPanel {
         this.niveauCourant = ParserNiveau.parserNiveau(cheminNiveau);
         
         // Calcul de la taille de la fenetre de jeu (en cases et en pixels)
-        this.nbrCasesTotalLargeur = this.niveauCourant.getNbrCasesPlateauLargeur() + NBR_CASES_RESERVE_LARGEUR;
-        this.nbrCasesTotalHauteur = Integer.max(this.niveauCourant.getNbrCasesPlateauHauteur(), NBR_CASES_RESERVE_HAUTEUR);
+        this.nbrCasesTotalLargeur = this.niveauCourant.getLargeur() + NBR_CASES_RESERVE_LARGEUR;
+        this.nbrCasesTotalHauteur = Integer.max(this.niveauCourant.getHauteur(), NBR_CASES_RESERVE_HAUTEUR);
         this.taillePixelLargeur = (int) (this.taillePixelHauteur * this.nbrCasesTotalLargeur / this.nbrCasesTotalHauteur);
         
         this.setPreferredSize(new Dimension(this.taillePixelLargeur, this.taillePixelHauteur)); // largeur, hauteur
@@ -152,11 +153,11 @@ public class PanelJeu extends JPanel {
         
         // PLATEAU
         // On affiche les coins, bordures et background des cases
-        int nbrCasesPlateauLargeur = this.niveauCourant.getNbrCasesPlateauLargeur();
-        int nbrCasesPlateauHauteur = this.niveauCourant.getNbrCasesPlateauHauteur();
+        int nbrCasesPlateauLargeur = this.niveauCourant.getLargeur();
+        int nbrCasesPlateauHauteur = this.niveauCourant.getHauteur();
         
-        for(int lignePlateau = 0; lignePlateau < this.niveauCourant.getNbrCasesPlateauHauteur(); lignePlateau ++){
-            for(int colonnePlateau = 0; colonnePlateau < this.niveauCourant.getNbrCasesPlateauLargeur(); colonnePlateau ++){
+        for(int lignePlateau = 0; lignePlateau < this.niveauCourant.getHauteur(); lignePlateau ++){
+            for(int colonnePlateau = 0; colonnePlateau < this.niveauCourant.getLargeur(); colonnePlateau ++){
                 
                 BufferedImage imgTemp = this.pipes.getSubimage(
                         this.typeCase(lignePlateau, colonnePlateau, nbrCasesPlateauLargeur, nbrCasesPlateauHauteur) 
@@ -186,7 +187,7 @@ public class PanelJeu extends JPanel {
         int ligneReserve = 0;
         
         
-        for(ArrayList<TuyauReserve> ligne : this.niveauCourant.getTuyauxReserve()) {
+        for(ArrayList<TuyauReserve> ligne : this.niveauCourant.getReserve()) {
             for(TuyauReserve tuyauReserve : ligne) {
                 
                 // On ajoute le background de la case dans la reserve (i.e. un carre marron fonce)
@@ -257,7 +258,7 @@ public class PanelJeu extends JPanel {
         int colonneReserve = 0;
         int ligneReserve = 0;
         
-        for(ArrayList<TuyauReserve> ligne : this.niveauCourant.getTuyauxReserve()) {
+        for(ArrayList<TuyauReserve> ligne : this.niveauCourant.getReserve()) {
             for(TuyauReserve tuyauReserve : ligne) {
                 
                 // On affiche en bas a gauche de chaque case le nombre de tuyaux correspondant disponibles
@@ -285,38 +286,37 @@ public class PanelJeu extends JPanel {
     
     // AJOUT DES TUYAUX AU PLATEAU
     private void tuyauxPlateau(Graphics2D graphics2D){
-        int colonnePlateau = 0;
-        int lignePlateau = 0;
         
-        for(ArrayList<TuyauPlateau> ligne : this.niveauCourant.getPlateauCourant()) {
-            for(TuyauPlateau tuyauPlateau : ligne) {
-                if(tuyauPlateau != null) {
+        for(int l = 0; l < this.niveauCourant.getHauteur(); l++) {
+            for(int c = 0; c < this.niveauCourant.getLargeur(); c++) {
+            
+                TuyauPlateau tuyau = this.niveauCourant.getPlateau()[l][c];
+                
+                if(tuyau != null) {
                     BufferedImage imgTemp;
 
                     // On ajoute l'indicateur pour les tuyaux inamovibles
-                    if(tuyauPlateau.isInamovible() && tuyauPlateau.getNom() != TypeTuyau.SOURCE){
+                    if(tuyau.isInamovible() && tuyau.getNom() != TypeTuyau.SOURCE){
                         imgTemp = this.pipes.getSubimage(FIXE * (120 + 20),
                                             Couleur.PAS_UNE_COULEUR.ordinal() * (120 + 20),
                                             120, 120);
 
                         // On affiche l'image sur le graphique a l'endroit et la taille voulue
                         graphics2D.drawImage(imgTemp,
-                            this.largeurCase * colonnePlateau,
-                            this.hauteurCase * lignePlateau,
+                            this.largeurCase * c,
+                            this.hauteurCase * l,
                             this.largeurCase, this.hauteurCase, this);
                     }
 
                     // On recupere l'image correspondant au tuyau
-                    imgTemp = this.pipes.getSubimage(
-                                    tuyauPlateau.getNom().ordinal() * (120 + 20),
-                                    tuyauPlateau.getCouleur().get(0).ordinal() * (120 + 20),
+                    imgTemp = this.pipes.getSubimage(tuyau.getNom().ordinal() * (120 + 20),
+                                    tuyau.getCouleur().get(0).ordinal() * (120 + 20),
                                     120, 120);
 
 
-                    if(tuyauPlateau.getNom() == TypeTuyau.OVER){
-                        BufferedImage imgTemp2 = this.pipes.getSubimage(
-                                TypeTuyau.LINE.ordinal() * (120 + 20),
-                                tuyauPlateau.getCouleur().get(1).ordinal() * (120 + 20),
+                    if(tuyau.getNom() == TypeTuyau.OVER){
+                        BufferedImage imgTemp2 = this.pipes.getSubimage(TypeTuyau.LINE.ordinal() * (120 + 20),
+                                tuyau.getCouleur().get(1).ordinal() * (120 + 20),
                                 120, 120);
 
                         imgTemp = ModificationsImage.combiner(imgTemp2, imgTemp);
@@ -324,23 +324,17 @@ public class PanelJeu extends JPanel {
 
 
                     // On pivote l'image si necessaire
-                    if(tuyauPlateau.getRotation() != N) 
-                        imgTemp = ModificationsImage.pivoter(imgTemp, tuyauPlateau.getRotation().ordinal());
+                    if(tuyau.getRotation() != N) 
+                        imgTemp = ModificationsImage.pivoter(imgTemp, tuyau.getRotation().ordinal());
 
                     // On affiche l'image sur le graphique a l'endroit et la taille voulue
                     graphics2D.drawImage(imgTemp,
-                        this.largeurCase * colonnePlateau, this.hauteurCase * lignePlateau,
+                        this.largeurCase * c, this.hauteurCase * l,
                         this.largeurCase, this.hauteurCase, this);
                 }
-                
-                colonnePlateau = colonnePlateau + 1;
             }
-            
-            colonnePlateau = 0;
-            lignePlateau = lignePlateau + 1;
         }
     }
-    
     
     
     private void tuyauReserve(Graphics2D graphics2D, TuyauReserve tuyauReserve, Couleur couleur,
@@ -368,6 +362,33 @@ public class PanelJeu extends JPanel {
                     this.largeurCase, this.hauteurCase, this);
     }
     
+    
+    public void victoire(){
+        // On met a jour la vue avant d'afficher une fenetre de dialogue
+        this.paintImmediately(0, 0, taillePixelLargeur, taillePixelHauteur);
+
+
+        // Passer au niveau suivant s'il existe
+        if(this.panelPlombier.isThereNextLevel()){
+            
+            int numeroBanque = this.panelPlombier.getNumeroBanque();
+            int numeroNiveau = this.panelPlombier.getNumeroNiveau();
+
+            int clicBouton = Plombier.fenetreConfirmation(this.panelPlombier.getFrameParent(),
+                                         "Victoire", "VICTOIRE ! Passer au niveau suivant ?");
+
+            if(clicBouton == YES_OPTION) this.panelPlombier.afficherNiveau(numeroBanque, numeroNiveau + 1);
+        }
+
+
+        // Revenir à l'accueil sinon
+        else {
+            int clicBouton = Plombier.fenetreConfirmation(this.panelPlombier.getFrameParent(),
+                                         "Victoire", "VICTOIRE ! Revenir à l'accueil ?");
+
+            if(clicBouton == YES_OPTION) this.panelPlombier.afficherPnlBanques();
+        }
+    }
     
     
     

@@ -19,8 +19,8 @@ import projetIG.controller.action.ActionAnnuler;
 import projetIG.controller.action.ActionRecommencerNiveau;
 import projetIG.controller.action.ActionRetablir;
 import projetIG.controller.action.ActionRetourAccueil;
-import projetIG.view.Accueil1;
-import projetIG.view.Accueil2;
+import projetIG.view.PanelBanques;
+import projetIG.view.PanelNiveaux;
 import projetIG.view.PanelFenetreJeu;
 import projetIG.view.menu.MyPopupMenu;
 
@@ -34,8 +34,8 @@ public class Plombier extends JPanel {
     private final JFrame frameParent;
     private final AnnulerManager annulerManager;
     private final MyPopupMenu popupMenu;
-    private final Accueil1 accueil1 = new Accueil1(this);
-    private Accueil2 accueil2;
+    private final PanelBanques accueil1 = new PanelBanques(this);
+    private PanelNiveaux accueil2;
     private PanelFenetreJeu plateau;
     private int numeroBanque;
     private int numeroNiveau;
@@ -109,7 +109,7 @@ public class Plombier extends JPanel {
     public void afficherAccueil2(int numeroBanque){
         this.setNumeroBanque(numeroBanque);
         
-        Accueil2 panelAccueil2 = new Accueil2(this, numeroBanque);
+        PanelNiveaux panelAccueil2 = new PanelNiveaux(this, numeroBanque);
         this.setAccueil2(panelAccueil2);
             
         this.afficher(this.accueil2, RETOUR_ACCUEIL_DESACTIVE, RECOMMENCER_NIVEAU_DESACTIVE);
@@ -204,11 +204,11 @@ public class Plombier extends JPanel {
         return annulerManager;
     }
 
-    public Accueil1 getAccueil1() {
+    public PanelBanques getAccueil1() {
         return accueil1;
     }
 
-    public Accueil2 getAccueil2() {
+    public PanelNiveaux getAccueil2() {
         return accueil2;
     }
 
@@ -226,7 +226,7 @@ public class Plombier extends JPanel {
     
 
     // SETTERS
-    public void setAccueil2(Accueil2 accueil2) {
+    public void setAccueil2(PanelNiveaux accueil2) {
         this.accueil2 = accueil2;
     }
 

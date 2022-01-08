@@ -39,7 +39,7 @@ public class RvPAnnulable extends AbstractUndoableEdit {
         niveau.getPlateauCourant().get(this.lignePlateau).set(colonnePlateau, new TuyauPlateau(tuyau));
         niveau.getTuyauxReserve().get(ligneReserve).get(colonneReserve).diminuerNombre();
         
-        fenetreJeu.getCouleurController().majCouleurs();
+        fenetreJeu.getNiveauCourant().majCouleurs();
         fenetreJeu.paintImmediately(0, 0, this.fenetreJeu.getTaillePixelLargeur(),
                                           this.fenetreJeu.getTaillePixelHauteur());
         //fenetreJeu.getPanelParent().getCo
@@ -55,7 +55,7 @@ public class RvPAnnulable extends AbstractUndoableEdit {
         niveau.getPlateauCourant().get(this.lignePlateau).set(colonnePlateau, null);
         niveau.getTuyauxReserve().get(ligneReserve).get(colonneReserve).augmenterNombre();
         
-        fenetreJeu.getCouleurController().majCouleurs();
+        fenetreJeu.getNiveauCourant().majCouleurs();
         fenetreJeu.paintImmediately(0, 0, this.fenetreJeu.getTaillePixelLargeur(),
                                           this.fenetreJeu.getTaillePixelHauteur());
     }

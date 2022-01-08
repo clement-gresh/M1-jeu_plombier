@@ -18,7 +18,7 @@ import projetIG.model.niveau.Tuyau;
 import projetIG.model.niveau.TuyauPlateau;
 import projetIG.model.niveau.TuyauReserve;
 import projetIG.view.PanelJeu;
-import projetIG.view.ModificationsImage;
+import projetIG.view.image.ModificationsImage;
 
 public class DragDropController extends MouseAdapter {
     public static final int AUCUNE = 0;

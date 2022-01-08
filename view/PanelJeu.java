@@ -1,5 +1,6 @@
 package projetIG.view;
 
+import projetIG.view.image.ModificationsImage;
 import java.awt.BorderLayout;
 import static java.awt.Color.BLACK;
 import static java.awt.Color.WHITE;
@@ -17,7 +18,7 @@ import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JPanel;
 import projetIG.Plombier;
-import projetIG.controller.CouleurVictoireController;
+import projetIG.controller.VictoireController;
 import projetIG.controller.DragDropController;
 import projetIG.model.enumeration.Couleur;
 import static projetIG.model.enumeration.Couleur.BLANC;
@@ -60,7 +61,7 @@ public class PanelJeu extends JPanel {
     protected int hauteurCase;
     
     protected DragDropController dragDrop;
-    protected CouleurVictoireController couleurController;
+    protected VictoireController couleurController;
     protected int xImageDD = 0;
     protected int yImageDD = 0;
     protected ImageIcon imageDD = new ImageIcon();
@@ -89,7 +90,7 @@ public class PanelJeu extends JPanel {
         
         
         //Ajout du controller Couleurs & Victoire sur la fenetre de jeu
-        couleurController = new CouleurVictoireController(this, this.niveauCourant);
+        couleurController = new VictoireController(this, this.niveauCourant);
         
         this.addMouseListener(couleurController);
         
@@ -419,7 +420,7 @@ public class PanelJeu extends JPanel {
         return dragDrop;
     }
 
-    public CouleurVictoireController getCouleurController() {
+    public VictoireController getCouleurController() {
         return couleurController;
     }
     

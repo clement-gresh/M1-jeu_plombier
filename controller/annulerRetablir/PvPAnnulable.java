@@ -37,7 +37,7 @@ public class PvPAnnulable extends AbstractUndoableEdit {
         niveau.getPlateauCourant().get(this.ligneDepart).set(colonneDepart, null);
         niveau.getPlateauCourant().get(this.ligneArrivee).set(colonneArrivee, new TuyauPlateau(tuyau));
         
-        fenetreJeu.getCouleurController().majCouleurs();
+        fenetreJeu.getNiveauCourant().majCouleurs();
         fenetreJeu.paintImmediately(0, 0, this.fenetreJeu.getTaillePixelLargeur(),
                                           this.fenetreJeu.getTaillePixelHauteur());
     }
@@ -50,7 +50,7 @@ public class PvPAnnulable extends AbstractUndoableEdit {
         niveau.getPlateauCourant().get(this.ligneArrivee).set(colonneArrivee, null);
         niveau.getPlateauCourant().get(this.ligneDepart).set(colonneDepart, new TuyauPlateau(tuyau));
         
-        fenetreJeu.getCouleurController().majCouleurs();
+        fenetreJeu.getNiveauCourant().majCouleurs();
         fenetreJeu.paintImmediately(0, 0, this.fenetreJeu.getTaillePixelLargeur(),
                                           this.fenetreJeu.getTaillePixelHauteur());
     }

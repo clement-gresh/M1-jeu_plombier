@@ -10,8 +10,8 @@ import javax.swing.SwingUtilities;
 import projetIG.controller.annulerRetablir.DeplacementPlaPlaAnnulable;
 import projetIG.controller.annulerRetablir.DeplacementPlaReAnnulable;
 import projetIG.controller.annulerRetablir.DeplacementRePlaAnnulable;
-import projetIG.model.enumeration.CouleurTuyau;
-import projetIG.model.enumeration.Rotation;
+import projetIG.model.enumeration.Couleur;
+import static projetIG.model.enumeration.Dir.N;
 import projetIG.model.enumeration.TypeTuyau;
 import projetIG.model.niveau.Niveau;
 import projetIG.model.niveau.Tuyau;
@@ -112,19 +112,17 @@ public class DragDropController extends MouseAdapter {
             
             // On recupere l'image du tuyau deplace
             if(this.deplacementTuyau){
-                buffTuyauDD = this.fenetreJeu.getPipes().getSubimage(
-                        this.tuyauDeplace.getNom().ordinal() * (120 + 20),
-                        CouleurTuyau.BLANC.ordinal() * (120 + 20),
+                buffTuyauDD = this.fenetreJeu.getPipes().getSubimage(this.tuyauDeplace.getNom().ordinal() * (120 + 20),
+                        Couleur.BLANC.ordinal() * (120 + 20),
                         120, 120);
                 
-                if(this.tuyauDeplace.getRotation() != Rotation.PAS_DE_ROTATION){
+                if(this.tuyauDeplace.getRotation() != N){
                     buffTuyauDD = ModificationsImage.pivoter(buffTuyauDD, tuyauDeplace.getRotation().ordinal());
                 }
                 
                 else if(this.tuyauDeplace.getNom().equals(TypeTuyau.OVER)){
-                    BufferedImage partieVerticale = this.fenetreJeu.getPipes().getSubimage(
-                        (this.tuyauDeplace.getNom().ordinal() - 1) * (120 + 20),
-                        CouleurTuyau.BLANC.ordinal() * (120 + 20), 120, 120);
+                    BufferedImage partieVerticale = this.fenetreJeu.getPipes().getSubimage((this.tuyauDeplace.getNom().ordinal() - 1) * (120 + 20),
+                        Couleur.BLANC.ordinal() * (120 + 20), 120, 120);
                 
                     buffTuyauDD = ModificationsImage.combiner(partieVerticale, buffTuyauDD);
                 }

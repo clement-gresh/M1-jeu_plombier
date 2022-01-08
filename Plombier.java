@@ -4,7 +4,6 @@ import java.awt.AWTException;
 import projetIG.view.menu.MyMenuBar;
 import java.awt.BorderLayout;
 import java.awt.Robot;
-import java.awt.event.KeyAdapter;
 import java.awt.event.KeyEvent;
 import java.awt.event.MouseAdapter;
 import java.awt.event.MouseEvent;
@@ -28,13 +27,14 @@ import projetIG.view.PanelFenetreJeu;
 import projetIG.view.menu.MyPopupMenu;
 
 public class Plombier extends JPanel {
-    public static final int PAS_NIVEAU = -1;
-    public static final boolean RETOUR_ACC_ACT = true;
-    public static final boolean RETOUR_ACC_DES = false;
-    public static final boolean RE_NIVEAU_ACT = true;
-    public static final boolean RE_NIVEAU_DES = false;
+    public static final int AUCUN_NIVEAU = -1;
+    public static final boolean ACCUEIL_ACT = true;
+    public static final boolean ACCUEIL_DES = false;
+    public static final boolean RECOMMENCER_ACT = true;
+    public static final boolean RECOMMENCER_DES = false;
     
     private final JFrame frameParent;
+    private final String chemin;
     private final AnnulerManager annulerManager;
     private final MyPopupMenu popupMenu;
     private final PanelBanques panelBanques = new PanelBanques(this);
@@ -45,9 +45,10 @@ public class Plombier extends JPanel {
     private final ActionRetourAccueil actionRetourAccueil;
     private final ActionRecommencerNiveau actionRecommencer;
     
-    public Plombier(JFrame frameParent) {
+    public Plombier(JFrame frameParent, String chemin) {
         //Demande de confirmation lors de la fermeture de la fenêtre
         this.frameParent = frameParent;
+        this.chemin = chemin;
         this.frameParent.addWindowListener(new WindowAdapter() {
             @Override
             public void windowClosing(WindowEvent e) {
@@ -94,18 +95,13 @@ public class Plombier extends JPanel {
     // METHODES
     // Renvoie le chemin vers la banque de niveau (si numeroNiveau = PAS_DE_NIVEAU) ou vers le niveau
     public String cheminFichier(int numeroBanque, int numeroNiveau){
-        if(numeroNiveau <= 0) {
-            return "src/main/java/projetIG/model/niveau/banque" + numeroBanque;
-        }
-        else{
-            return "src/main/java/projetIG/model/niveau/banque" + numeroBanque 
-                        + "/level" + numeroNiveau + ".p";
-        }
+        if(numeroNiveau <= 0) { return this.chemin + numeroBanque; }
+        else{ return this.chemin + numeroBanque + "/level" + numeroNiveau + ".p"; }
     }
     
     // Affiche l'accueil permettant de choisir la banque de niveaux
     public void afficherPnlBanques(){
-        this.afficher(this.panelBanques, RETOUR_ACC_DES, RE_NIVEAU_DES);
+        this.afficher(this.panelBanques, ACCUEIL_DES, RECOMMENCER_DES);
     }
     
     // Cree et affiche l'accueil permettant de choisir le niveau
@@ -115,7 +111,7 @@ public class Plombier extends JPanel {
         PanelNiveaux panelAccueil2 = new PanelNiveaux(this, numeroBanque);
         this.setPanelNiveaux(panelAccueil2);
             
-        this.afficher(this.panelNiveaux, RETOUR_ACC_DES, RE_NIVEAU_DES);
+        this.afficher(this.panelNiveaux, ACCUEIL_DES, RECOMMENCER_DES);
     }
     
     // Cree le niveau et affiche le plateau correspondant
@@ -137,7 +133,7 @@ public class Plombier extends JPanel {
             }
         });
 
-        this.afficher(this.plateau, RETOUR_ACC_ACT, RE_NIVEAU_ACT);
+        this.afficher(this.plateau, ACCUEIL_ACT, RECOMMENCER_ACT);
     }
     
     // Affiche le panel selectionne et met a jour les boutons du menu
@@ -158,7 +154,7 @@ public class Plombier extends JPanel {
     
     // Determine s'il y a un niveau suivant dans la banque de niveau
     public boolean isThereNextLevel(){
-        File banque = new File(this.cheminFichier(this.numeroBanque, PAS_NIVEAU));
+        File banque = new File(this.cheminFichier(this.numeroBanque, AUCUN_NIVEAU));
         
         return (this.numeroNiveau < banque.list().length);
     }
@@ -171,6 +167,7 @@ public class Plombier extends JPanel {
         if(clicBouton == JOptionPane.YES_OPTION) { this.frameParent.dispose(); }
     }
     
+    // Ouvre une fenetre de confirmation de type YES/NO
     static public int fenetreConfirmation(JFrame frame, String titre, String texte){
         Plombier.pressAlt();
         frame.setAlwaysOnTop(true);

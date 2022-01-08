@@ -9,7 +9,7 @@ public class Main {
         JFrame frame = new JFrame("Plumber");
         frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
         
-        Plombier plumber = new Plombier(frame);
+        Plombier plumber = new Plombier(frame, "src/main/java/projetIG/model/niveau/banque");
         frame.getContentPane().add(plumber);
         
         frame.pack();

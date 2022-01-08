@@ -1,6 +1,6 @@
 package projetIG.model.enumeration;
 
-public enum CouleurTuyau {
+public enum Couleur {
     BLANC,
     ROUGE,
     VERT,

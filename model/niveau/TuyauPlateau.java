@@ -1,8 +1,8 @@
 package projetIG.model.niveau;
 
 import java.util.ArrayList;
-import projetIG.model.enumeration.CouleurTuyau;
-import projetIG.model.enumeration.Rotation;
+import projetIG.model.enumeration.Couleur;
+import projetIG.model.enumeration.Dir;
 import projetIG.model.enumeration.TypeTuyau;
 
 public class TuyauPlateau extends Tuyau {
@@ -11,7 +11,7 @@ public class TuyauPlateau extends Tuyau {
     
     
     // CONSTRUCTEURS
-    public TuyauPlateau(TypeTuyau typeTuyau, Rotation rotation, boolean inamovible, CouleurTuyau couleur) {
+    public TuyauPlateau(TypeTuyau typeTuyau, Dir rotation, boolean inamovible, Couleur couleur) {
         super(typeTuyau, rotation);
         this.inamovible = inamovible;
         
@@ -27,8 +27,8 @@ public class TuyauPlateau extends Tuyau {
     public TuyauPlateau(Tuyau tuyau) {
         super(tuyau);
         
-        this.couleur.add(CouleurTuyau.BLANC);
-        if(tuyau.getNom() == TypeTuyau.OVER) this.couleur.add(CouleurTuyau.BLANC);
+        this.couleur.add(Couleur.BLANC);
+        if(tuyau.getNom() == TypeTuyau.OVER) this.couleur.add(Couleur.BLANC);
         
         this.dejaVisite.add(false);
         if(this.nom == TypeTuyau.OVER) this.dejaVisite.add(false);

@@ -1,18 +1,18 @@
 package projetIG.model.niveau;
 
 import java.util.ArrayList;
-import projetIG.model.enumeration.CouleurTuyau;
-import projetIG.model.enumeration.Rotation;
+import projetIG.model.enumeration.Couleur;
+import projetIG.model.enumeration.Dir;
 import projetIG.model.enumeration.TypeTuyau;
 
 public class Tuyau {
     protected TypeTuyau nom;
-    protected Rotation rotation;
-    protected ArrayList<CouleurTuyau> couleur = new ArrayList<>();
+    protected Dir rotation;
+    protected ArrayList<Couleur> couleur = new ArrayList<>();
     
     
     // CONSTRUCTEURS
-    public Tuyau(TypeTuyau typeTuyau, Rotation rotation) {
+    public Tuyau(TypeTuyau typeTuyau, Dir rotation) {
         this.nom = typeTuyau;
         this.rotation = rotation;
     }
@@ -28,16 +28,16 @@ public class Tuyau {
         return nom;
     }
 
-    public Rotation getRotation() {
+    public Dir getRotation() {
         return rotation;
     }
     
-    public ArrayList<CouleurTuyau> getCouleur() {
+    public ArrayList<Couleur> getCouleur() {
         return couleur;
     }
 
     // SETTERS
-    public void setCouleur(int index, CouleurTuyau couleur) {
+    public void setCouleur(int index, Couleur couleur) {
         this.couleur.set(index, couleur);
     }
 }

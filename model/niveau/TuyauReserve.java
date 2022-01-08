@@ -1,17 +1,17 @@
 package projetIG.model.niveau;
 
-import projetIG.model.enumeration.CouleurTuyau;
-import projetIG.model.enumeration.Rotation;
+import projetIG.model.enumeration.Couleur;
+import projetIG.model.enumeration.Dir;
 import projetIG.model.enumeration.TypeTuyau;
 
 public class TuyauReserve extends Tuyau {
     protected int nombre = 0;  // Nombre de tuyaux disponibles dans la reserve
 
-    public TuyauReserve(TypeTuyau typeTuyau, Rotation rotation) {
+    public TuyauReserve(TypeTuyau typeTuyau, Dir rotation) {
         super(typeTuyau, rotation);
         
-        this.couleur.add(CouleurTuyau.BLANC);
-        if(this.nom == TypeTuyau.OVER) this.couleur.add(CouleurTuyau.BLANC);
+        this.couleur.add(Couleur.BLANC);
+        if(this.nom == TypeTuyau.OVER) this.couleur.add(Couleur.BLANC);
     }
     
     

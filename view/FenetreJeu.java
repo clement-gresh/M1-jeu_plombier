@@ -1,9 +1,10 @@
 package projetIG.view;
 
-import java.awt.Color;
 import static java.awt.Color.BLACK;
+import static java.awt.Color.WHITE;
 import java.awt.Dimension;
 import java.awt.Font;
+import static java.awt.Font.BOLD;
 import java.awt.Graphics;
 import java.awt.Graphics2D;
 import java.awt.RenderingHints;
@@ -14,21 +15,28 @@ import java.util.ArrayList;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
 import javax.swing.JComponent;
-import projetIG.model.enumeration.CouleurTuyau;
-import static projetIG.model.enumeration.CouleurTuyau.NOIR;
-import projetIG.model.enumeration.Rotation;
-import static projetIG.model.enumeration.Rotation.PAS_DE_ROTATION;
-import projetIG.model.enumeration.TypeCase;
-import static projetIG.model.enumeration.TypeCase.MARRON_FONCE;
+import projetIG.model.enumeration.Couleur;
+import static projetIG.model.enumeration.Couleur.BLANC;
+import static projetIG.model.enumeration.Couleur.NOIR;
+import projetIG.model.enumeration.Dir;
+import static projetIG.model.enumeration.Dir.E;
 import projetIG.model.enumeration.TypeTuyau;
-import static projetIG.model.enumeration.TypeTuyau.NOT_A_PIPE;
 import projetIG.model.niveau.Niveau;
 import projetIG.model.niveau.TuyauPlateau;
 import projetIG.model.niveau.TuyauReserve;
 import static projetIG.view.PanelFenetreJeu.NBR_CASES_RESERVE_LARGEUR;
+import static projetIG.model.enumeration.Dir.N;
+import static projetIG.model.enumeration.Dir.O;
+import static projetIG.model.enumeration.Dir.S;
 
 public class FenetreJeu extends JComponent {   
-    
+    // Attributs statiques
+    public static final int CASE = 6;
+    public static final int MARRON = 0;
+    public static final int COIN = 3;
+    public static final int BORDURE = 4;
+    public static final int FIXE = 5;
+            
     // Attributs
     protected PanelFenetreJeu panelParent;
     protected Niveau niveauCourant;
@@ -67,7 +75,7 @@ public class FenetreJeu extends JComponent {
         
         
         // On construit l'image d'arriere plan
-        construireArrierePlan();
+        arrierePlan();
         
         repaint();
     }
@@ -83,9 +91,9 @@ public class FenetreJeu extends JComponent {
         graphics2D.drawImage(this.imageArrierePlan, 0, 0, this.panelParent.getWidth(),
                              this.panelParent.getHeight(), this);
         
-        construireReserve(graphics2D);
+        reserve(graphics2D);
         
-        afficherTuyauxPlateau(graphics2D);
+        tuyauxPlateau(graphics2D);
         
         // On ajoute l'image Drag&Drop
         this.imageDD.paintIcon(this, graphics2D, this.xImageDD, this.yImageDD);
@@ -95,7 +103,7 @@ public class FenetreJeu extends JComponent {
     
     
     // CONSTRUCTION DE L'IMAGE DE FOND
-    private void construireArrierePlan(){
+    private void arrierePlan(){
         
         Graphics2D graphics2D = (Graphics2D) this.imageArrierePlan.getGraphics();
         graphics2D.setRenderingHint(RenderingHints.KEY_ANTIALIASING,
@@ -115,14 +123,14 @@ public class FenetreJeu extends JComponent {
             for(int colonnePlateau = 0; colonnePlateau < this.niveauCourant.getNbrCasesPlateauLargeur(); colonnePlateau ++){
                 
                 BufferedImage imgTemp = this.pipes.getSubimage(
-                        TypeCase.typeCase(lignePlateau, colonnePlateau, nbrCasesPlateauLargeur, nbrCasesPlateauHauteur) 
+                        this.typeCase(lignePlateau, colonnePlateau, nbrCasesPlateauLargeur, nbrCasesPlateauHauteur) 
                             * (120 + 20),
                         6 * (120 + 20),
                         120, 120);
                 
-                Rotation nombreRotation = Rotation.nombreRotationsCase( lignePlateau, colonnePlateau, 
+                Dir nombreRotation = this.nbrRotations( lignePlateau, colonnePlateau, 
                                                                         nbrCasesPlateauLargeur, nbrCasesPlateauHauteur);
-                if(nombreRotation != PAS_DE_ROTATION) 
+                if(nombreRotation != N) 
                     imgTemp = ModificationsImage.pivoter(imgTemp, nombreRotation.ordinal());
                 
                 graphics2D.drawImage(imgTemp,
@@ -146,9 +154,8 @@ public class FenetreJeu extends JComponent {
             for(TuyauReserve tuyauReserve : ligne) {
                 
                 // On ajoute le background de la case dans la reserve (i.e. un carre marron fonce)
-                BufferedImage image = this.pipes.getSubimage(
-                         MARRON_FONCE.ordinal() * (120 + 20),
-                         NOT_A_PIPE.ordinal() * (120 + 20), 120, 120);
+                BufferedImage image = this.pipes.getSubimage(MARRON * (120 + 20),
+                         CASE * (120 + 20), 120, 120);
 
                 graphics2D.drawImage(image,
                             abscisseReserve + this.largeurCase * colonneReserve,
@@ -157,7 +164,7 @@ public class FenetreJeu extends JComponent {
                 
                 
                 // On ajoute les tuyaux en noir
-                dessinerTuyauReserve(graphics2D, tuyauReserve, NOIR,
+                tuyauReserve(graphics2D, tuyauReserve, NOIR,
                                      abscisseReserve, colonneReserve, ligneReserve);
                 
                 colonneReserve = colonneReserve + 1;
@@ -169,8 +176,45 @@ public class FenetreJeu extends JComponent {
     }
     
     
+    
+    // Determine si une case du plateau est un COIN, une BORDURE ou une CASE quelconque
+    private int typeCase(int ligne, int colonne, int nbrCasesLargeur, int nbrCasesHauteur){
+        
+        if((ligne == 0 || ligne == nbrCasesHauteur - 1) 
+            && (colonne==0 || colonne == nbrCasesLargeur - 1)){
+            return COIN;
+        }
+
+        else if((ligne == 0 || ligne == nbrCasesHauteur - 1) 
+            || (colonne==0 || colonne == nbrCasesLargeur - 1)){
+            return BORDURE;
+        }
+
+        else return MARRON;
+    }
+    
+    
+    // Determine le nombre de rotations necessaires de l'image pour un COIN, une BORDURE ou une CASE quelconque
+    private Dir nbrRotations(int ligne, int colonne, int nbrCasesLargeur, int nbrCasesHauteur){
+        
+        // Pour les coins du plateau
+        if(ligne == 0 && colonne == 0) return N;
+        else if(ligne == 0 && colonne == nbrCasesLargeur - 1) return E;
+        else if(ligne == nbrCasesHauteur - 1 && colonne == 0) return O;
+        else if(ligne == nbrCasesHauteur - 1 && colonne == nbrCasesLargeur - 1) return S;
+        
+        // Pour les bords du plateau
+        else if(ligne == 0) return N;
+        else if(ligne == nbrCasesHauteur - 1) return S;
+        else if(colonne == 0) return O;
+        else if(colonne == nbrCasesLargeur - 1) return E;
+        
+        //Pour les autres cases du plateau
+        else return N;
+    }
+    
     // CONSTRUCTION DE LA RESERVE
-    private void construireReserve(Graphics2D graphics2D){
+    private void reserve(Graphics2D graphics2D){
         // Abscisse de la ligne verticale separant le plateau de la reserve
         int abscisseReserve = this.panelParent.getWidth() - NBR_CASES_RESERVE_LARGEUR * this.largeurCase;
         
@@ -181,16 +225,16 @@ public class FenetreJeu extends JComponent {
             for(TuyauReserve tuyauReserve : ligne) {
                 
                 // On affiche en bas a gauche de chaque case le nombre de tuyaux correspondant disponibles
-                Font font = new Font("Arial", Font.BOLD, 15);
+                Font font = new Font("Arial", BOLD, 15);
                 graphics2D.setFont(font);
-                graphics2D.setColor(Color.WHITE);
+                graphics2D.setColor(WHITE);
 
                 graphics2D.drawString(String.valueOf(tuyauReserve.getNombre()),
                             abscisseReserve + this.largeurCase * colonneReserve + 5,
                             this.hauteurCase * (ligneReserve + 1) - 5);
 
                 if(tuyauReserve.getNombre() > 0){
-                    dessinerTuyauReserve(graphics2D, tuyauReserve, CouleurTuyau.BLANC,
+                    tuyauReserve(graphics2D, tuyauReserve, BLANC,
                                          abscisseReserve, colonneReserve, ligneReserve);
                 }
 
@@ -204,7 +248,7 @@ public class FenetreJeu extends JComponent {
     
     
     // AJOUT DES TUYAUX AU PLATEAU
-    private void afficherTuyauxPlateau(Graphics2D graphics2D){
+    private void tuyauxPlateau(Graphics2D graphics2D){
         int colonnePlateau = 0;
         int lignePlateau = 0;
         
@@ -215,9 +259,8 @@ public class FenetreJeu extends JComponent {
 
                     // On ajoute l'indicateur pour les tuyaux inamovibles
                     if(tuyauPlateau.isInamovible() && tuyauPlateau.getNom() != TypeTuyau.SOURCE){
-                        imgTemp = this.pipes.getSubimage(
-                                            TypeCase.FIXE.ordinal() * (120 + 20),
-                                            CouleurTuyau.PAS_UNE_COULEUR.ordinal() * (120 + 20),
+                        imgTemp = this.pipes.getSubimage(FIXE * (120 + 20),
+                                            Couleur.PAS_UNE_COULEUR.ordinal() * (120 + 20),
                                             120, 120);
 
                         // On affiche l'image sur le graphique a l'endroit et la taille voulue
@@ -245,7 +288,7 @@ public class FenetreJeu extends JComponent {
 
 
                     // On pivote l'image si necessaire
-                    if(tuyauPlateau.getRotation() != Rotation.PAS_DE_ROTATION) 
+                    if(tuyauPlateau.getRotation() != N) 
                         imgTemp = ModificationsImage.pivoter(imgTemp, tuyauPlateau.getRotation().ordinal());
 
                     // On affiche l'image sur le graphique a l'endroit et la taille voulue
@@ -264,7 +307,7 @@ public class FenetreJeu extends JComponent {
     
     
     
-    private void dessinerTuyauReserve(Graphics2D graphics2D, TuyauReserve tuyauReserve, CouleurTuyau couleur,
+    private void tuyauReserve(Graphics2D graphics2D, TuyauReserve tuyauReserve, Couleur couleur,
                                         int abscisseReserve, int colonneReserve, int ligneReserve){
         
         BufferedImage image = this.pipes.getSubimage(
@@ -279,7 +322,7 @@ public class FenetreJeu extends JComponent {
             image = ModificationsImage.combiner(partieVerticale, image);
         }
 
-        if(tuyauReserve.getRotation() != Rotation.PAS_DE_ROTATION)
+        if(tuyauReserve.getRotation() != N)
                 image = ModificationsImage.pivoter(image, tuyauReserve.getRotation().ordinal());
 
 

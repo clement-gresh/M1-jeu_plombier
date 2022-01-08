@@ -8,36 +8,35 @@ public enum TypeTuyau {
     OVER,
     TURN,
     FORK,
-    CROSS,
-    NOT_A_PIPE;
+    CROSS;
     
-    static public final boolean AJOUTER_ROTATION = true;
-    static public final boolean SOUSTRAIRE_ROTATION = false;
+    static public final boolean AJOUT = true;
+    static public final boolean SOUSTRAIRE = false;
     
-    static public final ArrayList<ArrayList<ArrayList<Ouverture>>> ouvertures = new ArrayList<>();
+    static public final ArrayList<ArrayList<ArrayList<Dir>>> ouvertures = new ArrayList<>();
     
     
     // Initialisation de l'ArrayList ouvertures
     static {
-        Ouverture[][][] ouverturesTableau = {
-            {{Ouverture.NORTH}},
-            {{Ouverture.NORTH, Ouverture.SOUTH}},
-            {{Ouverture.NORTH, Ouverture.SOUTH}, {Ouverture.EAST, Ouverture.WEST}},
-            {{Ouverture.NORTH, Ouverture.EAST}},
-            {{Ouverture.NORTH, Ouverture.EAST, Ouverture.SOUTH}},
-            {{Ouverture.NORTH, Ouverture.EAST, Ouverture.SOUTH, Ouverture.WEST}}
+        Dir[][][] ouverturesTableau = {
+            {{Dir.N}},
+            {{Dir.N, Dir.S}},
+            {{Dir.N, Dir.S}, {Dir.E, Dir.O}},
+            {{Dir.N, Dir.E}},
+            {{Dir.N, Dir.E, Dir.S}},
+            {{Dir.N, Dir.E, Dir.S, Dir.O}}
         };
         
         int i = 0;
         int j = 0;
         
-        for(Ouverture[][] array1 : ouverturesTableau){
+        for(Dir[][] array1 : ouverturesTableau){
             ouvertures.add(new ArrayList<>());
             
-            for(Ouverture[] array2 : array1){
+            for(Dir[] array2 : array1){
                 ouvertures.get(i).add(new ArrayList<>());
                 
-                for(Ouverture ouverture : array2){
+                for(Dir ouverture : array2){
                     ouvertures.get(i).get(j).add(ouverture);
                 }
                 j = j + 1;
@@ -45,18 +44,16 @@ public enum TypeTuyau {
             i = i + 1;
             j = 0;
         }
-        
-        System.out.println("ouvertures : " + ouvertures);
     }
     
     
     
     // Renvoie vrai si l'ouverture est trouvée parmi les ouvertures du tuyau
-    static public boolean aUneOuverture(TypeTuyau tuyau, Ouverture ouverture, Rotation rotation){
-        Ouverture ouvertureModele = ouvertureAvecRotation(ouverture, rotation, SOUSTRAIRE_ROTATION);
+    public boolean aOuverture(Dir ouverture, Dir rotation){
+        Dir ouvertureModele = ouverture.rotation(rotation, SOUSTRAIRE);
         
         // On détermine si le modèle de tuyau a une ouverture
-        for(ArrayList<Ouverture> tableauOuverture : ouvertures.get(tuyau.ordinal())){
+        for(ArrayList<Dir> tableauOuverture : ouvertures.get(this.ordinal())){
             if(tableauOuverture.contains(ouvertureModele)) return true;
         }
         return false;
@@ -64,17 +61,17 @@ public enum TypeTuyau {
     
     
     // Renvoie la liste des ouvertures connectees, autres que l'ouverture d'entree
-    static public ArrayList<Ouverture> ouverturesConnectees(TypeTuyau tuyau, Ouverture ouvertureEntree, Rotation rotation){
-        Ouverture ouvertureModele = ouvertureAvecRotation(ouvertureEntree, rotation, SOUSTRAIRE_ROTATION);
+    public ArrayList<Dir> dirSorties(Dir ouvertureEntree, Dir rotation){
+        Dir ouvertureModele = ouvertureEntree.rotation(rotation, SOUSTRAIRE);
         
-        ArrayList<Ouverture> ouverturesConnectees = new ArrayList<>();
+        ArrayList<Dir> ouverturesConnectees = new ArrayList<>();
         
-        for(ArrayList<Ouverture> tableauOuvertures : ouvertures.get(tuyau.ordinal())){
+        for(ArrayList<Dir> tableauOuvertures : ouvertures.get(this.ordinal())){
             if(tableauOuvertures.contains(ouvertureModele)) {
                 
-                for(Ouverture ouvertureSortie : tableauOuvertures){
+                for(Dir ouvertureSortie : tableauOuvertures){
                     if(ouvertureSortie != ouvertureModele){
-                        ouverturesConnectees.add(ouvertureAvecRotation(ouvertureSortie, rotation, AJOUTER_ROTATION));
+                        ouverturesConnectees.add(ouvertureSortie.rotation(rotation, AJOUT));
                     }
                 }
                 break;
@@ -82,20 +79,5 @@ public enum TypeTuyau {
         }
         
         return ouverturesConnectees;
-    }
-    
-    
-    public static Ouverture ouvertureAvecRotation(Ouverture ouverture, Rotation rotation, boolean ajouterRotation){
-        
-        int taille = Ouverture.values().length;
-        
-        int ordinalOuverture = (ajouterRotation)
-                ? (ouverture.ordinal() + rotation.ordinal()) % taille
-                : ((ouverture.ordinal() - rotation.ordinal()) % taille + taille) % taille;
-                  // Utilise la formule (a % b + b ) % b pour obtenir un modulo positif
-        
-        Ouverture ouvertureModele = Ouverture.values()[ordinalOuverture];
-        
-        return ouvertureModele;
     }
 }

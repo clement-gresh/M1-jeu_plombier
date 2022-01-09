@@ -9,13 +9,13 @@ import javax.swing.KeyStroke;
 import projetIG.Plombier;
 
 public class ActionQuitter extends AbstractAction {
-    private final Plombier panelPlombier;
+    private final Plombier plombier;
 
-    public ActionQuitter(Plombier panelPlombier, String cheminImg) {
-        this.panelPlombier = panelPlombier;
+    public ActionQuitter(Plombier plombier, String cheminImg) {
+        this.plombier = plombier;
         this.putValue(Action.NAME, "Quitter");
         this.putValue(Action.SMALL_ICON, new ImageIcon(
-                cheminImg + "icone/exit.png"));
+                cheminImg + "/icone/exit.png"));
         this.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_W);
         this.putValue(Action.SHORT_DESCRIPTION, "Quitter le jeu (Ctrl + W)");
         this.putValue(Action.ACCELERATOR_KEY, 
@@ -24,6 +24,6 @@ public class ActionQuitter extends AbstractAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        ActionQuitter.this.panelPlombier.confirmClose();
+        ActionQuitter.this.plombier.confirmClose();
     }
 }

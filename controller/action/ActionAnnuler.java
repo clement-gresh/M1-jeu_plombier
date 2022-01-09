@@ -15,7 +15,7 @@ public class ActionAnnuler extends AbstractAction {
         this.manager = manager;
         this.putValue(Action.NAME, "Annuler");
         this.putValue(Action.SMALL_ICON, new ImageIcon(
-                cheminImg + "icone/undo.png"));
+                cheminImg + "/icone/undo.png"));
         this.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_Z);
         this.putValue(Action.SHORT_DESCRIPTION,
                 "Annuler la dernière action (Ctrl + Z)");

@@ -9,14 +9,13 @@ import javax.swing.KeyStroke;
 import projetIG.controller.AnnulerManager;
 
 public class ActionRetablir extends AbstractAction {
-    private final AnnulerManager annulerManager;
+    private final AnnulerManager manager;
 
-    public ActionRetablir(AnnulerManager annulerManager, String cheminImg) {
-        this.annulerManager = annulerManager;
-        
+    public ActionRetablir(AnnulerManager manager, String cheminImg) {
+        this.manager = manager;
         this.putValue(Action.NAME, "Rétablir");
         this.putValue(Action.SMALL_ICON, new ImageIcon(
-                cheminImg + "icone/redo.png"));
+                cheminImg + "/icone/redo.png"));
         this.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_Y);
         this.putValue(Action.SHORT_DESCRIPTION,
                 "Rétablir la dernière action annulée (Ctrl + Y)");
@@ -26,7 +25,7 @@ public class ActionRetablir extends AbstractAction {
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        ActionRetablir.this.annulerManager.redo();
+        ActionRetablir.this.manager.redo();
     }
     
 }

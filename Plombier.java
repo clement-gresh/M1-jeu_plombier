@@ -71,7 +71,7 @@ public class Plombier extends JPanel {
     private void menus(){
         // Creation du manager et des actions
         this.annulerManager = new AnnulerManager(this, cheminImg);
-        this.actionAccueil = new ActionAccueil(this);
+        this.actionAccueil = new ActionAccueil(this, cheminImg);
         this.actionRecommencer = new ActionRecommencer(this, cheminImg);
         this.actionQuitter = new ActionQuitter(this, cheminImg);
         ActionAnnuler actionAnnuler = annulerManager.getAnnuler();

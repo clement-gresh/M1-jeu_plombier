@@ -7,7 +7,7 @@ import static projetIG.controller.DragDropController.PLATEAU;
 import static projetIG.controller.DragDropController.RESERVE;
 import projetIG.model.niveau.Niveau;
 import projetIG.model.niveau.Tuyau;
-import projetIG.model.niveau.TuyauPlateau;
+import projetIG.model.niveau.TuyauP;
 import projetIG.view.PanelJeu;
 
 public class RvPAnnulable extends AbstractAnnulable {

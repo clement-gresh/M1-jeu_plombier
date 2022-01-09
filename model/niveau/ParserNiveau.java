@@ -22,33 +22,32 @@ import static projetIG.model.enumeration.Dir.S;
 import static projetIG.model.enumeration.Dir.O;
 
 public abstract class ParserNiveau {
-    public static final int LARGEUR_RESERVE = 2;
-    public static final int HAUTEUR_RESERVE = 6; 
+    public static final int L_RESERVE = 2;
+    public static final int H_RESERVE = 6; 
     
     // Enregistre la hauteur et la largeur du plateau,
     // initialise le plateau avec les sources et tuyaux inamovibles
     // et initialise la reserve avec les tuyaux restants
-    static public Niveau parserNiveau(String file){
+    static public Niveau parser(String file){
         File fichierNiveau = new File(file);
-        
-        TuyauPlateau[][] plateau;
-        
-        TuyauReserve[][] reserve = {{new TuyauReserve(CROSS, N), new TuyauReserve(OVER, N)},
-                                    {new TuyauReserve(LINE, N), new TuyauReserve(LINE, E)},
-                                    {new TuyauReserve(TURN, E), new TuyauReserve(TURN, S)},
-                                    {new TuyauReserve(TURN, N), new TuyauReserve(TURN, O)},
-                                    {new TuyauReserve(FORK, N), new TuyauReserve(FORK, E)},
-                                    {new TuyauReserve(FORK, O), new TuyauReserve(FORK, S)}
+        TuyauP[][] plateau;
+        TuyauR[][] reserve = {{new TuyauR(CROSS, N),
+                                     new TuyauR(OVER, N)},
+                                    {new TuyauR(LINE, N),
+                                     new TuyauR(LINE, E)},
+                                    {new TuyauR(TURN, E),
+                                     new TuyauR(TURN, S)},
+                                    {new TuyauR(TURN, N),
+                                     new TuyauR(TURN, O)},
+                                    {new TuyauR(FORK, N),
+                                     new TuyauR(FORK, E)},
+                                    {new TuyauR(FORK, O),
+                                     new TuyauR(FORK, S)}
         };
-        
-        try {
-            Scanner scanner = new Scanner(fichierNiveau);
-            
+        try (Scanner scanner = new Scanner(fichierNiveau)) {
             int hauteur = scanner.nextInt();
             int largeur = scanner.nextInt();
-            
-            plateau = new TuyauPlateau[hauteur][largeur];
-            
+            plateau = new TuyauP[hauteur][largeur];
             int colonne = 0;
             int ligne = 0;
             
@@ -58,47 +57,43 @@ public abstract class ParserNiveau {
                     ligne = ligne + 1;
                     colonne = 0;
                 }
-                
-                String casePlateau = scanner.next();
-                
+                String caseP = scanner.next();
                 TypeTuyau type;
                 boolean fixe = false;
                 Dir rotation;
                 
                 // Determine s'il s'agit d'un tuyau fixe
-                if(casePlateau.startsWith("*")){
+                if(caseP.startsWith("*")){
                     fixe = true;
-                    casePlateau = casePlateau.substring(1);
+                    caseP = caseP.substring(1);
                 }
                 
-                // S'il s'agit bien d'un tuyau, on determine ses caracteristiques
-                if(!casePlateau.startsWith(".") && !casePlateau.startsWith("X")) {
-                    
-                    type = typeTuyau(casePlateau.substring(0, 1));
-                    int nbrRotations = Integer.parseInt(casePlateau.substring(1, 2));
+                // S'il s'agit d'un tuyau, on determine ses caracteristiques
+                if(!caseP.startsWith(".") && !caseP.startsWith("X")) {
+                    type = type(caseP.substring(0, 1));
+                    int nbrRotations = Integer.parseInt(caseP.substring(1, 2));
                     rotation = Dir.values()[nbrRotations];
 
                     // CONSTRUCTION DU PLATEAU
                     // (sources et tuyaux inamovibles)
                     if(type == SOURCE || fixe){
                         Couleur couleur = (type == SOURCE) ?
-                                couleurTuyau(casePlateau.substring(0, 1)) : BLANC;
-                        plateau[ligne][colonne] = new TuyauPlateau(type, rotation, true, couleur);
+                                couleur(caseP.substring(0, 1)) : BLANC;
+                        plateau[ligne][colonne] =
+                               new TuyauP(type, rotation, true, couleur);
                     }
-
                     else {
                         plateau[ligne][colonne] = null;
 
                         // CONSTRUCTION DE LA RESERVE
                         boolean tuyauTrouve = false;
                         
-                        for(int l = 0; l < HAUTEUR_RESERVE; l++){
-                            for(int c = 0; c < LARGEUR_RESERVE; c++){
-                                
+                        for(int l = 0; l < H_RESERVE; l++){
+                            for(int c = 0; c < L_RESERVE; c++){
                                 if( reserve[l][c].getNom() == type
-                                        && reserve[l][c].getRotation() == rotation){
-                                    
-                                    reserve[l][c].augmenterNombre();
+                                        && reserve[l][c].getRotation() 
+                                           == rotation){
+                                    reserve[l][c].augmenter();
                                     tuyauTrouve = true;
                                     break;
                                 }
@@ -107,27 +102,19 @@ public abstract class ParserNiveau {
                         }
                     }
                 }
-                
                 else { plateau[ligne][colonne] = null; }
-                
                 colonne = colonne+1;
             }
-                        
-            scanner.close();
-            
-            
             return new Niveau(hauteur, largeur, plateau, reserve);
         }
-        
         catch (Exception exception) {
-            System.err.println("Exception scanner sur le niveau (Niveau.java) " + exception.getMessage());
-            
-            return new Niveau(0, 0, new TuyauPlateau[0][0], new TuyauReserve[0][0]);
+            System.err.println("Exception scanner sur le niveau (Niveau.java) "
+                    + exception.getMessage());
+            return new Niveau(0, 0, new TuyauP[0][0], new TuyauR[0][0]);
         }
     }
     
-    
-    static public TypeTuyau typeTuyau(String s){
+    static public TypeTuyau type(String s){
          return switch (s){
                 case "R" -> SOURCE;
                 case "G" -> SOURCE;
@@ -141,8 +128,7 @@ public abstract class ParserNiveau {
         };
     }
     
-    
-    static public Couleur couleurTuyau(String s){
+    static public Couleur couleur(String s){
             return switch (s){
                     case "R" -> ROUGE;
                     case "G" -> VERT;

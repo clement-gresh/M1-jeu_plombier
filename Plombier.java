@@ -1,7 +1,7 @@
 package projetIG;
 
 import java.awt.AWTException;
-import projetIG.view.menu.MyMenuBar;
+import projetIG.view.menu.BarreMenu;
 import java.awt.BorderLayout;
 import java.awt.Robot;
 import java.awt.event.KeyEvent;
@@ -24,7 +24,7 @@ import projetIG.controller.action.ActionAccueil;
 import projetIG.view.PanelBanques;
 import projetIG.view.PanelNiveaux;
 import projetIG.view.PanelJeu;
-import projetIG.view.menu.MyPopupMenu;
+import projetIG.view.menu.MenuPopup;
 
 public class Plombier extends JPanel {
     public static final boolean ACCUEIL_ACT = true;
@@ -35,8 +35,9 @@ public class Plombier extends JPanel {
     
     private final JFrame frame;
     private final String chemin;
+    private final String cheminImg;
     private final AnnulerManager annulerManager;
-    private final MyPopupMenu popupMenu;
+    private final MenuPopup popupMenu;
     private final PanelBanques panelBanques = new PanelBanques(this);
     private PanelNiveaux panelNiveaux;
     private PanelJeu plateau;
@@ -45,11 +46,11 @@ public class Plombier extends JPanel {
     private final ActionAccueil actionAccueil;
     private final ActionRecommencer actionRecommencer;
     
-    public Plombier(JFrame frame, String chemin) {
+    public Plombier(JFrame frame, String chemin, String cheminImg) {
         this.frame = frame;
         this.chemin = chemin;
+        this.cheminImg = cheminImg;
         this.setLayout(new BorderLayout());
-        
         //Demande de confirmation lors de la fermeture de la fenêtre
         this.frame.addWindowListener(new WindowAdapter() {
             @Override
@@ -57,10 +58,8 @@ public class Plombier extends JPanel {
                 Plombier.this.confirmClose();
             }
         });
-        
         //Ajout du manager pour Annuler/Retablir
         this.annulerManager = new AnnulerManager(this);
-        
         //Creation des actions des menus
         this.actionAccueil = new ActionAccueil(this);
         this.actionRecommencer = new ActionRecommencer(this);
@@ -68,22 +67,20 @@ public class Plombier extends JPanel {
         ActionRetablir actionRetablir = annulerManager.getRetablir();
         
         //Ajout de la barre de menu
-        this.frame.setJMenuBar(new MyMenuBar(this, actionAccueil, actionRecommencer,
-                                             actionAnnuler, actionRetablir));
-        
+        this.frame.setJMenuBar(new BarreMenu(this, actionAccueil,
+                            actionRecommencer, actionAnnuler, actionRetablir));
         //Ajout du menu contextuel (clic-droit) a la fenetre
-        this.popupMenu = new MyPopupMenu(this, actionAccueil, actionRecommencer,
+        this.popupMenu = new MenuPopup(this, actionAccueil, actionRecommencer,
                                          actionAnnuler, actionRetablir);
-        
         this.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent event) {
                 if(SwingUtilities.isRightMouseButton(event)) {
-                    Plombier.this.popupMenu.show(event.getComponent(), event.getX(), event.getY());
+                    Plombier.this.popupMenu.show(event.getComponent(),
+                                                 event.getX(), event.getY());
                 }
             }
         });
-        
         //Ajout de l'accueil
         this.afficherPnlBanques();
     }
@@ -93,7 +90,8 @@ public class Plombier extends JPanel {
     // Renvoie le chemin vers la banque de niveau ou vers le niveau
     public String chemin(int numeroBanque, int numeroNiveau){
         if(numeroNiveau <= 0) { return this.chemin + numeroBanque; }
-        else{ return this.chemin + numeroBanque + "/level" + numeroNiveau + ".p"; }
+        else{ return this.chemin + numeroBanque + "/level" 
+                                 + numeroNiveau + ".p"; }
     }
     
     // Affiche l'accueil permettant de choisir la banque de niveaux
@@ -104,10 +102,8 @@ public class Plombier extends JPanel {
     // Cree et affiche l'accueil permettant de choisir le niveau
     public void afficherPnlNiveaux(int numBanque){
         this.setNumBanque(numBanque);
-        
         PanelNiveaux panelAccueil2 = new PanelNiveaux(this, numBanque);
         this.setPanelNiveaux(panelAccueil2);
-            
         this.afficher(this.panelNiveaux, ACCUEIL_DES, RECOMMENCER_DES);
     }
     
@@ -115,21 +111,20 @@ public class Plombier extends JPanel {
     public void afficherNiveau(int numBanque, int numNiveau){
         this.setNumBanque(numBanque);
         this.setNumNiveau(numNiveau);
-        
-        PanelJeu panelJeu = new PanelJeu(this, this.chemin(numBanque, numNiveau));
+        PanelJeu panelJeu = new PanelJeu(this, this.chemin(numBanque,numNiveau),
+                                         this.cheminImg);
         this.setPlateau(panelJeu);
-        
         
         //Ajout du menu contextuel (clic-droit) au plateau
         panelJeu.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent event) {
                 if(SwingUtilities.isRightMouseButton(event)) {
-                    Plombier.this.popupMenu.show(event.getComponent(), event.getX(), event.getY());
+                    Plombier.this.popupMenu.show(event.getComponent(),
+                                                 event.getX(), event.getY());
                 }
             }
         });
-
         this.afficher(this.plateau, ACCUEIL_ACT, RECOMMENCER_ACT);
     }
     
@@ -149,14 +144,13 @@ public class Plombier extends JPanel {
     // Determine s'il y a un niveau suivant dans la banque de niveau
     public boolean isThereNextLevel(){
         File banque = new File(this.chemin(this.numBanque, AUCUN_NIVEAU));
-        
         return (this.numNiveau < banque.list().length);
     }
     
     // Demande confirmation avant la cloture de la frame
     public void confirmClose() {
-        int clicBouton = Plombier.confirmation(this.frame, "Quitter", "Etes vous sur de vouloir quitter le jeu ?");
-        
+        int clicBouton = Plombier.confirmation(this.frame, "Quitter",
+                         "Etes vous sur de vouloir quitter le jeu ?");
         if(clicBouton == JOptionPane.YES_OPTION) { this.frame.dispose(); }
     }
     
@@ -164,13 +158,10 @@ public class Plombier extends JPanel {
     static public int confirmation(JFrame frame, String titre, String texte){
         Plombier.pressAlt();
         frame.setAlwaysOnTop(true);
-        
         int clicBouton = JOptionPane.showConfirmDialog(frame, 
                 texte, titre, YES_NO_OPTION, WARNING_MESSAGE);
-        
         frame.setAlwaysOnTop(false);
         Plombier.releaseAlt();
-        
         return clicBouton;
     }
     
@@ -216,11 +207,11 @@ public class Plombier extends JPanel {
         return plateau;
     }
 
-    public int getNumeroBanque() {
+    public int getNumBanque() {
         return numBanque;
     }
 
-    public int getNumeroNiveau() {
+    public int getNumNiveau() {
         return numNiveau;
     }
     

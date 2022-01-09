@@ -32,7 +32,7 @@ public class ActionRecommencer extends AbstractAction {
                 "Etes-vous sûr de vouloir recommencer le niveau ? La configuration en cours sera perdue.");
         
         if(clicBouton == JOptionPane.YES_OPTION) {
-            this.panelPlumber.afficherNiveau(this.panelPlumber.getNumeroBanque(), this.panelPlumber.getNumeroNiveau());
+            this.panelPlumber.afficherNiveau(this.panelPlumber.getNumBanque(), this.panelPlumber.getNumNiveau());
         }
     }
     

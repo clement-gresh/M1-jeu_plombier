@@ -2,13 +2,11 @@
 package projetIG.controller.annulerRetablir;
 
 import javax.swing.undo.AbstractUndoableEdit;
-import javax.swing.undo.CannotRedoException;
-import javax.swing.undo.CannotUndoException;
 import static projetIG.controller.DragDropController.PLATEAU;
 import static projetIG.controller.DragDropController.RESERVE;
 import projetIG.model.niveau.Niveau;
 import projetIG.model.niveau.Tuyau;
-import projetIG.model.niveau.TuyauPlateau;
+import projetIG.model.niveau.TuyauP;
 import projetIG.view.PanelJeu;
 
 public class AbstractAnnulable extends AbstractUndoableEdit {
@@ -22,7 +20,7 @@ public class AbstractAnnulable extends AbstractUndoableEdit {
     protected final int cArrivee;
 
     public AbstractAnnulable(PanelJeu fenetreJeu, Niveau niveau, Tuyau tuyau,
-                            int lDepart, int cDepart, int lArrivee, int cArrivee) {
+                        int lDepart, int cDepart, int lArrivee, int cArrivee) {
         this.fenetreJeu = fenetreJeu;
         this.niveau = niveau;
         this.tuyau = tuyau;
@@ -40,17 +38,17 @@ public class AbstractAnnulable extends AbstractUndoableEdit {
 
     protected void enleverTuyau(int l, int c, int zone){
         if(zone == PLATEAU) niveau.getPlateau()[l][c] = null;
-        else if(zone == RESERVE) niveau.getReserve()[l][c].diminuerNombre();
+        else if(zone == RESERVE) niveau.getReserve()[l][c].diminuer();
     }
     
     protected void ajouterTuyau(int l, int c, int zone){
-        if(zone == PLATEAU) niveau.getPlateau()[l][c] = new TuyauPlateau(tuyau);
-        else if(zone == RESERVE) niveau.getReserve()[l][c].augmenterNombre();
+        if(zone == PLATEAU) niveau.getPlateau()[l][c] = new TuyauP(tuyau);
+        else if(zone == RESERVE) niveau.getReserve()[l][c].augmenter();
     }
     
     protected void maj(){
-        fenetreJeu.getNiveau().majCouleurs();
-        fenetreJeu.paintImmediately(0, 0, this.fenetreJeu.getPixelsLargeur(),
-                                          this.fenetreJeu.getPixelsHauteur());
+        niveau.majCouleurs();
+        fenetreJeu.paintImmediately(0, 0, this.fenetreJeu.getPixelsL(),
+                                          this.fenetreJeu.getPixelsH());
     }
 }

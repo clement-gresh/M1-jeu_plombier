@@ -12,10 +12,9 @@ public class AnnulerManager extends UndoManager {
     private final ActionAnnuler annuler;
     private final ActionRetablir retablir;
 
-    public AnnulerManager(Plombier panelPlumber) {
+    public AnnulerManager(Plombier plombier) {
         this.annuler = new ActionAnnuler(this);
         this.retablir = new ActionRetablir(this);
-        
         this.annuler.setEnabled(false);
         this.retablir.setEnabled(false);
     }

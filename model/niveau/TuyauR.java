@@ -4,10 +4,10 @@ import projetIG.model.enumeration.Couleur;
 import projetIG.model.enumeration.Dir;
 import projetIG.model.enumeration.TypeTuyau;
 
-public class TuyauReserve extends Tuyau {
+public class TuyauR extends Tuyau {
     private int nombre = 0;  // Nombre de tuyaux disponibles dans la reserve
 
-    public TuyauReserve(TypeTuyau typeTuyau, Dir rotation) {
+    public TuyauR(TypeTuyau typeTuyau, Dir rotation) {
         super(typeTuyau, rotation);
         
         this.couleur.add(Couleur.BLANC);
@@ -16,11 +16,11 @@ public class TuyauReserve extends Tuyau {
     
     
     // METHODES
-    public void augmenterNombre() {
+    public void augmenter() {
         this.nombre = this.nombre + 1;
     }
     
-    public void diminuerNombre() {
+    public void diminuer() {
         this.nombre = this.nombre - 1;
     }
 

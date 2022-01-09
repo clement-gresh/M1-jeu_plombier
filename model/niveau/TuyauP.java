@@ -5,13 +5,13 @@ import projetIG.model.enumeration.Couleur;
 import projetIG.model.enumeration.Dir;
 import projetIG.model.enumeration.TypeTuyau;
 
-public class TuyauPlateau extends Tuyau {
+public class TuyauP extends Tuyau {
     private boolean fixe = false;
     private final ArrayList<Boolean> visite = new ArrayList<>();
     
     
     // CONSTRUCTEURS
-    public TuyauPlateau(TypeTuyau typeTuyau, Dir rotation, boolean fixe, Couleur couleur) {
+    public TuyauP(TypeTuyau typeTuyau, Dir rotation, boolean fixe, Couleur couleur) {
         super(typeTuyau, rotation);
         this.fixe = fixe;
         
@@ -24,7 +24,7 @@ public class TuyauPlateau extends Tuyau {
     }
     
     
-    public TuyauPlateau(Tuyau tuyau) {
+    public TuyauP(Tuyau tuyau) {
         super(tuyau);
         
         this.couleur.add(Couleur.BLANC);

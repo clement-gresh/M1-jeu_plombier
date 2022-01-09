@@ -221,7 +221,7 @@ public class PanelJeu extends JPanel {
                 if(tuyau != null) {
                     BufferedImage img;
                     // On ajoute l'indicateur des tuyaux inamovibles
-                    if(tuyau.isFixe() && tuyau.getNom() != TypeTuyau.SOURCE){
+                    if(tuyau.isFixe() && tuyau.getType() != TypeTuyau.SOURCE){
                         img = this.pipes.getSubimage(FIXE * (120 + 20),
                                                  6 * (120 + 20), 120, 120);
                         // On affiche l'image sur le graphique
@@ -230,11 +230,11 @@ public class PanelJeu extends JPanel {
                     }
                     // On recupere l'image correspondant au tuyau
                     img = this.pipes.getSubimage(
-                               tuyau.getNom().ordinal() * (120 + 20),
+                               tuyau.getType().ordinal() * (120 + 20),
                                tuyau.getCouleur().get(0).ordinal() * (120 + 20),
                                120, 120);
 
-                    if(tuyau.getNom() == TypeTuyau.OVER){
+                    if(tuyau.getType() == TypeTuyau.OVER){
                         BufferedImage img2 = this.pipes.getSubimage(
                                TypeTuyau.LINE.ordinal() * (120 + 20),
                                tuyau.getCouleur().get(1).ordinal() * (120 + 20),
@@ -256,12 +256,12 @@ public class PanelJeu extends JPanel {
     private void afficherTuyauR(Graphics2D g2D, TuyauR tuyau, Couleur couleur,
                                 int colonneR, int ligneR){
         BufferedImage img = this.pipes.getSubimage(
-                                    tuyau.getNom().ordinal() * (120 + 20),
+                                    tuyau.getType().ordinal() * (120 + 20),
                                     couleur.ordinal() * (120 + 20), 120, 120);
 
-        if(tuyau.getNom() == TypeTuyau.OVER){
+        if(tuyau.getType() == TypeTuyau.OVER){
             BufferedImage partieVerticale = this.pipes.getSubimage(
-                                    (tuyau.getNom().ordinal() - 1) * (120 + 20),
+                                    (tuyau.getType().ordinal() - 1) * (120 + 20),
                                     couleur.ordinal() * (120 + 20), 120, 120
             );
             img = ImageUtils.combiner(partieVerticale, img);

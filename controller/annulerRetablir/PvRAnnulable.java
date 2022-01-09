@@ -9,7 +9,6 @@ import projetIG.model.niveau.Tuyau;
 import projetIG.view.PanelJeu;
 
 public class PvRAnnulable extends AbstractAnnulable {
-
     public PvRAnnulable(PanelJeu fenetreJeu, Niveau niveau, Tuyau tuyau,
                         int lDepart, int cDepart, int lArrivee, int cArrivee) {
         super(fenetreJeu, niveau, tuyau, lDepart, cDepart, lArrivee, cArrivee);
@@ -19,7 +18,6 @@ public class PvRAnnulable extends AbstractAnnulable {
     public void redo() throws CannotRedoException {
         super.enleverTuyau(lDepart, cDepart, PLATEAU);
         super.ajouterTuyau(lArrivee, cArrivee, RESERVE);
-        
         super.maj();
     }
 
@@ -27,10 +25,6 @@ public class PvRAnnulable extends AbstractAnnulable {
     public void undo() throws CannotUndoException {
         super.ajouterTuyau(lDepart, cDepart, PLATEAU);
         super.enleverTuyau(lArrivee, cArrivee, RESERVE);
-        
         super.maj();
     }
-    
-    
-    
 }

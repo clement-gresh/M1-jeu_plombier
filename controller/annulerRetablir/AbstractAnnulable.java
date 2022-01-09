@@ -10,7 +10,6 @@ import projetIG.model.niveau.TuyauP;
 import projetIG.view.PanelJeu;
 
 public class AbstractAnnulable extends AbstractUndoableEdit {
-    
     protected final PanelJeu fenetreJeu;
     protected final Niveau niveau;
     protected final Tuyau tuyau;
@@ -47,8 +46,9 @@ public class AbstractAnnulable extends AbstractUndoableEdit {
     }
     
     protected void maj(){
-        niveau.majCouleurs();
+        boolean victoire = niveau.majCouleurs();
         fenetreJeu.paintImmediately(0, 0, this.fenetreJeu.getPixelsL(),
                                           this.fenetreJeu.getPixelsH());
+        if(victoire) this.fenetreJeu.victoire();
     }
 }

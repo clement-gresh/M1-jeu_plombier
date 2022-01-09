@@ -41,7 +41,7 @@ public class Niveau {
                 if(tuyau != null) {
                     for(int i = 0; i < tuyau.getVisite().size(); i++){
                         tuyau.setVisite(i, false);
-                        if(tuyau.getNom() != SOURCE) tuyau.setCouleur(i, BLANC);
+                        if(tuyau.getType() != SOURCE) tuyau.setCouleur(i, BLANC);
                     }
                 }
             }
@@ -52,7 +52,7 @@ public class Niveau {
                 TuyauP tuyau = plateau[l][c];
                 
                 if(tuyau != null
-                        && tuyau.getNom() == SOURCE
+                        && tuyau.getType() == SOURCE
                         && !tuyau.getVisite().get(0)) {
                     tuyau.setVisite(0, true);
                     // On determine l'ouverture de la source a partir du modele
@@ -85,7 +85,7 @@ public class Niveau {
             Dir dirEntree = entree.rotation(S, AJOUT);
             
             // Si le tuyau n'a pas d'ouverture correspondant, pas de victoire
-            if( !tuyau.getNom().aOuverture(dirEntree, tuyau.getRotation()) ){
+            if( !tuyau.getType().aOuverture(dirEntree, tuyau.getRotation()) ){
                 this.victoire = false;
             }
             // On execute cette partie du code si :
@@ -95,7 +95,7 @@ public class Niveau {
             //       OU est peinte avec une couleur differente de celle
             //          actuellement utilisee)
             else if(
-                    ((tuyau.getNom() == OVER
+                    ((tuyau.getType() == OVER
                         && (dirEntree == N || dirEntree == S)
                         && tuyau.getCouleur().get(1) != NOIR
                         && (!tuyau.getVisite().get(1)
@@ -103,7 +103,7 @@ public class Niveau {
                         )
                     ||
                     // Composante E-W d'un OVER
-                    (tuyau.getNom() == OVER
+                    (tuyau.getType() == OVER
                         && (dirEntree == E || dirEntree == O)
                         && tuyau.getCouleur().get(0) != NOIR
                         && (!tuyau.getVisite().get(0)
@@ -111,7 +111,7 @@ public class Niveau {
                         )
                     ||
                     // Tuyaux autres que OVER
-                    (tuyau.getNom() != OVER
+                    (tuyau.getType() != OVER
                         && tuyau.getCouleur().get(0) != NOIR
                         && (!tuyau.getVisite().get(0)
                             || tuyau.getCouleur().get(0) != couleur)
@@ -120,7 +120,7 @@ public class Niveau {
             ){
                 // Si on arrive a une source et qu'elle est de couleur
                 // differente, la couleur courante devient noire
-                if(tuyau.getNom() == SOURCE){
+                if(tuyau.getType() == SOURCE){
                     tuyau.setVisite(0, true);
                     
                     if(couleur != NOIR && tuyau.getCouleur().get(0) != couleur){
@@ -132,7 +132,7 @@ public class Niveau {
                 // Sinon on met a jour le tuyau avec la couleur courante
                 else {
                     // Composante N-S d'un OVER
-                    if(tuyau.getNom() == OVER
+                    if(tuyau.getType() == OVER
                         && (dirEntree == N || dirEntree == S)){
                         tuyau.setCouleur(1, couleur);
                         tuyau.setVisite(1, true);
@@ -144,7 +144,7 @@ public class Niveau {
                     }
                     // On applique le meme traitement a toutes les autres cases
                     // auxquelles le tuyau est connecte
-                    for(Dir dirSortie : tuyau.getNom()
+                    for(Dir dirSortie : tuyau.getType()
                                   .dirSorties(dirEntree, tuyau.getRotation())){
                         connexionCaseSuivante(l, c, dirSortie, couleur);
                     }

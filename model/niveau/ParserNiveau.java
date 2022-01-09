@@ -90,7 +90,7 @@ public abstract class ParserNiveau {
                         
                         for(int l = 0; l < H_RESERVE; l++){
                             for(int c = 0; c < L_RESERVE; c++){
-                                if( reserve[l][c].getNom() == type
+                                if( reserve[l][c].getType() == type
                                         && reserve[l][c].getRotation() 
                                            == rotation){
                                     reserve[l][c].augmenter();

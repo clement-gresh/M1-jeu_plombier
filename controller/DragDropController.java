@@ -90,7 +90,7 @@ public class DragDropController extends MouseAdapter {
                 TuyauR tuyauR = this.reserve[lDepart][cDepart];
 
                 if(tuyauR.getNombre() > 0) {
-                    type = tuyauR.getNom();
+                    type = tuyauR.getType();
                     rotation = tuyauR.getRotation();
                     tuyauR.diminuer();
                     this.deplacement = true;
@@ -104,7 +104,7 @@ public class DragDropController extends MouseAdapter {
                 TuyauP tuyauP = this.plateau[lDepart][cDepart];
                 
                 if(tuyauP != null && !tuyauP.isFixe()){
-                    type = tuyauP.getNom();
+                    type = tuyauP.getType();
                     rotation = tuyauP.getRotation();
                     this.deplacement = true;
                     this.tuyauDeplace = tuyauP;
@@ -207,7 +207,7 @@ public class DragDropController extends MouseAdapter {
             for(c = 0; c < L_RESERVE; c++){
                 tuyauR = this.reserve[l][c];
                 
-                if(tuyauR.getNom() == this.tuyauDeplace.getNom() 
+                if(tuyauR.getType() == this.tuyauDeplace.getType() 
                         && tuyauR.getRotation()
                         == this.tuyauDeplace.getRotation()){ 
                     tuyauTrouve = true;
@@ -224,9 +224,7 @@ public class DragDropController extends MouseAdapter {
         rectiligne(x, y, tuyauX, tuyauY);
         tuyauR.augmenter();
         this.arrivee = RESERVE;
-    }
-    
-          
+    } 
     
     // Deplacement rectiligne du tuyau entre 2 points
     private void rectiligne(int departX, int departY,
@@ -255,7 +253,6 @@ public class DragDropController extends MouseAdapter {
         }
     }
     
-    
     private void ajouterAnnulable(){
         if(this.depart == PLATEAU && this.arrivee == RESERVE){
             this.annulerManager.addEdit(new PvRAnnulable(fenetreJeu, niveau,
@@ -266,7 +263,7 @@ public class DragDropController extends MouseAdapter {
                         tuyauDeplace, lDepart, cDepart, lArrivee, cArrivee));
         }
         else if(this.depart == PLATEAU && this.arrivee == PLATEAU
-                && cDepart != cArrivee && lDepart != lArrivee){
+                && (cDepart != cArrivee || lDepart != lArrivee)){
             this.annulerManager.addEdit(new PvPAnnulable(fenetreJeu, niveau,
                         tuyauDeplace, lDepart, cDepart, lArrivee, cArrivee));
         }

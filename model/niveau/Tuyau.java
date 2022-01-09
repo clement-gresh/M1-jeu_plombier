@@ -6,26 +6,24 @@ import projetIG.model.enumeration.Dir;
 import projetIG.model.enumeration.TypeTuyau;
 
 public class Tuyau {
-    protected TypeTuyau nom;
+    protected TypeTuyau type;
     protected Dir rotation;
     protected ArrayList<Couleur> couleur = new ArrayList<>();
     
-    
     // CONSTRUCTEURS
-    public Tuyau(TypeTuyau typeTuyau, Dir rotation) {
-        this.nom = typeTuyau;
+    public Tuyau(TypeTuyau type, Dir rotation) {
+        this.type = type;
         this.rotation = rotation;
     }
     
     public Tuyau(Tuyau tuyau) {
-        this.nom = tuyau.getNom();
+        this.type = tuyau.getType();
         this.rotation = tuyau.getRotation();
     }
-
     
     // GETTERS
-    public TypeTuyau getNom() {
-        return nom;
+    public TypeTuyau getType() {
+        return type;
     }
 
     public Dir getRotation() {

@@ -8,7 +8,6 @@ import java.awt.image.BufferedImage;
 
 public abstract class ImageUtils {
     
-    
     public static BufferedImage pivoter(BufferedImage img, int rotation) {
         int largeur = img.getWidth();
         int hauteur = img.getHeight();
@@ -21,7 +20,6 @@ public abstract class ImageUtils {
         g2d.dispose();
         return imgPivotee;
     }
-    
     
     public static BufferedImage combiner(BufferedImage img1,BufferedImage img2){
         int largeur = img1.getWidth();

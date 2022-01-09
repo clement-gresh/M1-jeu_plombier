@@ -24,7 +24,7 @@ public class ActionAccueil extends AbstractAction {
     @Override
     public void actionPerformed(ActionEvent e) {
         
-        int clicBouton = Plombier.fenetreConfirmation(ActionAccueil.this.panelPlumber.getFrameParent(),
+        int clicBouton = Plombier.confirmation(ActionAccueil.this.panelPlumber.getFrame(),
                 "Retour à l'accueil",
                 "Etes-vous sûr de vouloir retourner à l'accueil ? La partie en cours sera perdue.");
         

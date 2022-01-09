@@ -9,7 +9,7 @@ public class PanelBanques extends AbstractAccueil {
     public PanelBanques(Plombier panelParent) {
         super(panelParent);
         
-        // Ajout d'un bouton par banque de niveau
+        // Ajout d'un bouton par banque de niveaux
         for(int i = 1; i <= NOMBRE_BANQUES; i++){
             JButton bouton = this.creerBouton("Banque n° " + i);
             int numeroBanque = i;

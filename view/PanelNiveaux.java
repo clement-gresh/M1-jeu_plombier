@@ -14,7 +14,7 @@ public class PanelNiveaux extends AbstractAccueil {
         this.numeroBanque = numeroBanque;
         
         // Ajout d'un bouton par fichier de niveau se trouvant dans le dossier
-        File banque = new File( panelParent.cheminFichier(numeroBanque, Plombier.AUCUN_NIVEAU) );
+        File banque = new File( panelParent.chemin(numeroBanque, Plombier.AUCUN_NIVEAU) );
         
         for(int i = 1; i <= banque.list().length; i++){
             JButton bouton = this.creerBouton("Niveau n° " + i);

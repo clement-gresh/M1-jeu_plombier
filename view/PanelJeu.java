@@ -270,9 +270,9 @@ public class PanelJeu extends JPanel {
                     BufferedImage imgTemp;
 
                     // On ajoute l'indicateur pour les tuyaux inamovibles
-                    if(tuyau.isInamovible() && tuyau.getNom() != TypeTuyau.SOURCE){
+                    if(tuyau.isFixe() && tuyau.getNom() != TypeTuyau.SOURCE){
                         imgTemp = this.pipes.getSubimage(FIXE * (120 + 20),
-                                            Couleur.PAS_UNE_COULEUR.ordinal() * (120 + 20),
+                                            6 * (120 + 20),
                                             120, 120);
 
                         // On affiche l'image sur le graphique a l'endroit et la taille voulue
@@ -348,7 +348,7 @@ public class PanelJeu extends JPanel {
             int numeroBanque = this.plombier.getNumeroBanque();
             int numeroNiveau = this.plombier.getNumeroNiveau();
 
-            int clicBouton = Plombier.fenetreConfirmation(this.plombier.getFrameParent(),
+            int clicBouton = Plombier.confirmation(this.plombier.getFrame(),
                                          "Victoire", "VICTOIRE ! Passer au niveau suivant ?");
 
             if(clicBouton == YES_OPTION) this.plombier.afficherNiveau(numeroBanque, numeroNiveau + 1);
@@ -357,7 +357,7 @@ public class PanelJeu extends JPanel {
 
         // Revenir à l'accueil sinon
         else {
-            int clicBouton = Plombier.fenetreConfirmation(this.plombier.getFrameParent(),
+            int clicBouton = Plombier.confirmation(this.plombier.getFrame(),
                                          "Victoire", "VICTOIRE ! Revenir à l'accueil ?");
 
             if(clicBouton == YES_OPTION) this.plombier.afficherPnlBanques();

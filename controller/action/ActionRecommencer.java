@@ -27,7 +27,7 @@ public class ActionRecommencer extends AbstractAction {
     @Override
     public void actionPerformed(ActionEvent e) {
         
-        int clicBouton = Plombier.fenetreConfirmation(ActionRecommencer.this.panelPlumber.getFrameParent(),
+        int clicBouton = Plombier.confirmation(ActionRecommencer.this.panelPlumber.getFrame(),
                 "Recommencer le niveau",
                 "Etes-vous sûr de vouloir recommencer le niveau ? La configuration en cours sera perdue.");
         

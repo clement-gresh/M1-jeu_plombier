@@ -1,16 +1,16 @@
 package projetIG;
 
 import javax.swing.JFrame;
-import javax.swing.WindowConstants;
+import static javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE;
 
 public class Main {
 
     public static void main(String[] args) {
         JFrame frame = new JFrame("Plumber");
-        frame.setDefaultCloseOperation(WindowConstants.DO_NOTHING_ON_CLOSE);
+        frame.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         
-        Plombier plumber = new Plombier(frame, "src/main/java/projetIG/model/niveau/banque");
-        frame.getContentPane().add(plumber);
+        Plombier plombier = new Plombier(frame, "src/main/java/projetIG/model/niveau/banque");
+        frame.getContentPane().add(plombier);
         
         frame.pack();
         frame.setResizable(false);

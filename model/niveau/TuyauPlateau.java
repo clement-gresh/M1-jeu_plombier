@@ -6,21 +6,21 @@ import projetIG.model.enumeration.Dir;
 import projetIG.model.enumeration.TypeTuyau;
 
 public class TuyauPlateau extends Tuyau {
-    protected boolean inamovible = false;
-    protected ArrayList<Boolean> dejaVisite = new ArrayList<>();
+    private boolean fixe = false;
+    private final ArrayList<Boolean> visite = new ArrayList<>();
     
     
     // CONSTRUCTEURS
-    public TuyauPlateau(TypeTuyau typeTuyau, Dir rotation, boolean inamovible, Couleur couleur) {
+    public TuyauPlateau(TypeTuyau typeTuyau, Dir rotation, boolean fixe, Couleur couleur) {
         super(typeTuyau, rotation);
-        this.inamovible = inamovible;
+        this.fixe = fixe;
         
         
         this.couleur.add(couleur);
         if(this.nom == TypeTuyau.OVER) this.couleur.add(couleur);
         
-        this.dejaVisite.add(Boolean.FALSE);
-        if(this.nom == TypeTuyau.OVER) this.dejaVisite.add(Boolean.FALSE);
+        this.visite.add(Boolean.FALSE);
+        if(this.nom == TypeTuyau.OVER) this.visite.add(Boolean.FALSE);
     }
     
     
@@ -30,24 +30,24 @@ public class TuyauPlateau extends Tuyau {
         this.couleur.add(Couleur.BLANC);
         if(tuyau.getNom() == TypeTuyau.OVER) this.couleur.add(Couleur.BLANC);
         
-        this.dejaVisite.add(false);
-        if(this.nom == TypeTuyau.OVER) this.dejaVisite.add(false);
+        this.visite.add(false);
+        if(this.nom == TypeTuyau.OVER) this.visite.add(false);
     }
     
     
     
     // GETTERS
-    public boolean isInamovible() {
-        return inamovible;
+    public boolean isFixe() {
+        return fixe;
     }
 
-    public ArrayList<Boolean> getDejaVisite() {
-        return dejaVisite;
+    public ArrayList<Boolean> getVisite() {
+        return visite;
     }
     
     
     // SETTERS
-    public void setDejaVisite(int index, Boolean dejaVisite) {
-        this.dejaVisite.set(index, dejaVisite);
+    public void setVisite(int index, Boolean dejaVisite) {
+        this.visite.set(index, dejaVisite);
     }
 }

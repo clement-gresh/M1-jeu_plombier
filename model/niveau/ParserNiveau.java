@@ -1,13 +1,11 @@
 package projetIG.model.niveau;
 
 import java.io.File;
-import java.util.ArrayList;
 import java.util.Scanner;
 import projetIG.model.enumeration.Couleur;
 import static projetIG.model.enumeration.Couleur.BLANC;
 import static projetIG.model.enumeration.Couleur.BLEU;
 import static projetIG.model.enumeration.Couleur.JAUNE;
-import static projetIG.model.enumeration.Couleur.PAS_UNE_COULEUR;
 import static projetIG.model.enumeration.Couleur.ROUGE;
 import static projetIG.model.enumeration.Couleur.VERT;
 import projetIG.model.enumeration.Dir;
@@ -63,29 +61,29 @@ public abstract class ParserNiveau {
                 
                 String casePlateau = scanner.next();
                 
-                TypeTuyau typeTuyau;
-                boolean inamovible = false;
+                TypeTuyau type;
+                boolean fixe = false;
                 Dir rotation;
                 
+                // Determine s'il s'agit d'un tuyau fixe
                 if(casePlateau.startsWith("*")){
-                    inamovible = true;
+                    fixe = true;
                     casePlateau = casePlateau.substring(1);
                 }
                 
-                
+                // S'il s'agit bien d'un tuyau, on determine ses caracteristiques
                 if(!casePlateau.startsWith(".") && !casePlateau.startsWith("X")) {
                     
-                    typeTuyau = typeTuyau(casePlateau.substring(0, 1));
+                    type = typeTuyau(casePlateau.substring(0, 1));
                     int nbrRotations = Integer.parseInt(casePlateau.substring(1, 2));
                     rotation = Dir.values()[nbrRotations];
 
                     // CONSTRUCTION DU PLATEAU
                     // (sources et tuyaux inamovibles)
-                    if(typeTuyau == SOURCE || inamovible){
-                        Couleur couleur = (typeTuyau == SOURCE) ?
-                                couleurTuyau(casePlateau.substring(0, 1))
-                                : BLANC;
-                        plateau[ligne][colonne] = new TuyauPlateau(typeTuyau, rotation, true, couleur);
+                    if(type == SOURCE || fixe){
+                        Couleur couleur = (type == SOURCE) ?
+                                couleurTuyau(casePlateau.substring(0, 1)) : BLANC;
+                        plateau[ligne][colonne] = new TuyauPlateau(type, rotation, true, couleur);
                     }
 
                     else {
@@ -97,7 +95,7 @@ public abstract class ParserNiveau {
                         for(int l = 0; l < HAUTEUR_RESERVE; l++){
                             for(int c = 0; c < LARGEUR_RESERVE; c++){
                                 
-                                if( reserve[l][c].getNom() == typeTuyau
+                                if( reserve[l][c].getNom() == type
                                         && reserve[l][c].getRotation() == rotation){
                                     
                                     reserve[l][c].augmenterNombre();
@@ -130,41 +128,26 @@ public abstract class ParserNiveau {
     
     
     static public TypeTuyau typeTuyau(String s){
-        switch (s){
-                case "R":
-                        return SOURCE;
-                case "G":
-                        return SOURCE;
-                case "B":
-                        return SOURCE;
-                case "Y":
-                        return SOURCE;
-                case "L":
-                        return LINE;
-                case "O":
-                        return OVER;
-                case "T":
-                        return TURN;
-                case "F":
-                        return FORK;
-                default:
-                        return CROSS;
-        }
+         return switch (s){
+                case "R" -> SOURCE;
+                case "G" -> SOURCE;
+                case "B" -> SOURCE;
+                case "Y" -> SOURCE;
+                case "L" -> LINE;
+                case "O" -> OVER;
+                case "T" -> TURN;
+                case "F" ->FORK;
+                default -> CROSS;
+        };
     }
     
     
     static public Couleur couleurTuyau(String s){
-            switch (s){
-                    case "R":
-                        return ROUGE;
-                    case "G":
-                        return VERT;
-                    case "B":
-                        return BLEU;
-                    case "Y":
-                        return JAUNE;
-                    default:
-                        return PAS_UNE_COULEUR;
-        }
+            return switch (s){
+                    case "R" -> ROUGE;
+                    case "G" -> VERT;
+                    case "B" -> BLEU;
+                    default -> JAUNE;
+        };
     }
 }

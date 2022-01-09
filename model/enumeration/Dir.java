@@ -6,42 +6,35 @@ public enum Dir {
     S,
     O;
     
-    
+    // Renvoie la direction apres ajout ou soustraction d'une rotation
     public Dir rotation(Dir rotation, boolean ajout){
-        
         int taille = Dir.values().length;
         
-        int ordinalOuverture = (ajout)
+        int ordinal = (ajout)
                 ? (this.ordinal() + rotation.ordinal()) % taille
                 : ((this.ordinal() - rotation.ordinal()) % taille + taille) % taille;
                   // Utilise la formule (a % b + b ) % b pour obtenir un modulo positif
         
-        Dir ouvertureModele = Dir.values()[ordinalOuverture];
-        
-        return ouvertureModele;
+        return Dir.values()[ordinal];
     }
     
+    // Donne la composante ligne du deplacement sur le plateau lors d'un deplacement dans la direction donnee
     public int ligne(){
-        switch (this){
-                case N :
-                    return -1;
-                case S :
-                    return +1;
-                default :
-                    return 0;
-        }
+        return switch (this){
+                case N -> -1;
+                case S -> +1;
+                default -> 0;
+        };
     }
     
     
+    // Donne la composante colonne du deplacement sur le plateau lors d'un deplacement dans la direction donnee
     public int colonne(){
-        switch (this){
-                case E :
-                    return +1;
-                case O :
-                    return -1;
-                default :
-                    return 0;
-        }
+        return switch (this){
+                case E -> +1;
+                case O -> -1;
+                default -> 0;
+        };
     }
 }
 

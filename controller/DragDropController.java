@@ -101,7 +101,7 @@ public class DragDropController extends MouseAdapter {
                 
                 TuyauPlateau tuyauPlateau = this.fenetreJeu.getNiveau().getPlateau()[lDepart][cDepart];
                 
-                if(tuyauPlateau != null && !tuyauPlateau.isInamovible()){
+                if(tuyauPlateau != null && !tuyauPlateau.isFixe()){
                     this.deplacement = true;
                     this.tuyauDeplace = tuyauPlateau;
                     this.depart = PLATEAU;
@@ -247,9 +247,6 @@ public class DragDropController extends MouseAdapter {
         
         int distance = (int) Math.sqrt(Math.pow(distanceX,2) + Math.pow(distanceY,2));
         int iterations = (int) (distance / this.PIXELS);
-        
-        //System.out.println("distance X : " + distanceX + ", distance Y : " + distanceY 
-        //        + ", distance totale : " + distance + ", nombre d'iterations : " + iterations); // debug
         
         for(int i = 0; i < iterations; i++ ) {
             // HACK Linux (sleep) : force la communication entre la MV et le serveur X a chaque rafraichissement

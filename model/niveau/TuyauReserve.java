@@ -5,7 +5,7 @@ import projetIG.model.enumeration.Dir;
 import projetIG.model.enumeration.TypeTuyau;
 
 public class TuyauReserve extends Tuyau {
-    protected int nombre = 0;  // Nombre de tuyaux disponibles dans la reserve
+    private int nombre = 0;  // Nombre de tuyaux disponibles dans la reserve
 
     public TuyauReserve(TypeTuyau typeTuyau, Dir rotation) {
         super(typeTuyau, rotation);

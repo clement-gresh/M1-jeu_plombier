@@ -28,24 +28,26 @@ public enum TypeTuyau {
         Dir dirModele = dir.rotation(rotation, SOUSTRAIRE);
         
         // On détermine si le modèle de tuyau a une ouverture
-        for(Dir[] tableau : ouvertures[this.ordinal()]){
-            for(int i = 0; i < tableau.length; i++){
-                if(tableau[i] == dirModele) return true;
+        for(Dir[] directions : ouvertures[this.ordinal()]){
+            for(int i = 0; i < directions.length; i++){
+                if(directions[i] == dirModele) return true;
             }
         }
         return false;
     }
     
     
-    // Renvoie la liste des ouvertures connectees, autres que l'ouverture d'entree
+    // Renvoie la liste des ouvertures connectees à l'ouverture d'entree
     public Dir[] dirSorties(Dir dirEntree, Dir rotation){
+        
+        // On determine la direction correspondante sur le modele
         Dir dirModele = dirEntree.rotation(rotation, SOUSTRAIRE);
         
         for(Dir[] directions : ouvertures[this.ordinal()]){
             for(int i = 0; i < directions.length; i++){
                 if(directions[i] == dirModele) {
                     
-                    // On enleve l'ouverture d'entree et on applique la rotation du tuyaux aux autres
+                    // On enleve l'ouverture d'entree et on applique la rotation aux ouvertures restantes
                     ArrayList<Dir> dirConnectees = new ArrayList<>(Arrays.asList(directions));
                     dirConnectees.remove(i);
                     

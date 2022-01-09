@@ -88,7 +88,7 @@ public class PanelJeu extends JPanel {
         this.addMouseListener(victoireController);
         
         // On recupere le gif contenant les images des tuyaux
-        try { this.pipes = ImageIO.read(new File(cheminImg)); }
+        try { this.pipes = ImageIO.read(new File(cheminImg + "pipes.gif")); }
         catch (IOException exception) { System.err.println("Erreur importation"
                                    + "pipes.gif : " + exception.getMessage());}
         // On determine la taille d'une case en pixel
@@ -129,9 +129,9 @@ public class PanelJeu extends JPanel {
         // On affiche les coins, bordures et background des cases
         for(int l = 0; l < casesPlateauH; l ++){
             for(int c = 0; c < casesPlateauL; c ++){
-                BufferedImage img = this.pipes.getSubimage(this.typeCase(l, c)
+                BufferedImage img = this.pipes.getSubimage(typeCase(l, c)
                                * (120 + 20), H_RESERVE * (120 + 20), 120, 120);
-                Dir rotation = this.rotations(l, c);
+                Dir rotation = rotations(l, c);
                 if(rotation != N)
                     img = ImageUtils.pivoter(img, rotation.ordinal());
                 g2D.drawImage(img, this.caseL * c, this.caseH * l,

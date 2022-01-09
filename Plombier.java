@@ -21,6 +21,7 @@ import projetIG.controller.action.ActionAnnuler;
 import projetIG.controller.action.ActionRecommencer;
 import projetIG.controller.action.ActionRetablir;
 import projetIG.controller.action.ActionAccueil;
+import projetIG.controller.action.ActionQuitter;
 import projetIG.view.PanelBanques;
 import projetIG.view.PanelNiveaux;
 import projetIG.view.PanelJeu;
@@ -36,21 +37,25 @@ public class Plombier extends JPanel {
     private final JFrame frame;
     private final String chemin;
     private final String cheminImg;
-    private final AnnulerManager annulerManager;
-    private final MenuPopup popupMenu;
+    private AnnulerManager annulerManager;
+    private MenuPopup popupMenu;
     private final PanelBanques panelBanques = new PanelBanques(this);
     private PanelNiveaux panelNiveaux;
     private PanelJeu plateau;
     private int numBanque;
     private int numNiveau;
-    private final ActionAccueil actionAccueil;
-    private final ActionRecommencer actionRecommencer;
+    private ActionQuitter actionQuitter;
+    private ActionAccueil actionAccueil;
+    private ActionRecommencer actionRecommencer;
     
     public Plombier(JFrame frame, String chemin, String cheminImg) {
         this.frame = frame;
         this.chemin = chemin;
         this.cheminImg = cheminImg;
         this.setLayout(new BorderLayout());
+        menus();
+        afficherPnlBanques();
+        
         //Demande de confirmation lors de la fermeture de la fenêtre
         this.frame.addWindowListener(new WindowAdapter() {
             @Override
@@ -58,20 +63,27 @@ public class Plombier extends JPanel {
                 Plombier.this.confirmClose();
             }
         });
-        //Ajout du manager pour Annuler/Retablir
-        this.annulerManager = new AnnulerManager(this);
-        //Creation des actions des menus
+    }
+    
+    
+    // METHODES
+    // Cree les menus et le undo/redo manager
+    private void menus(){
+        // Creation du manager et des actions
+        this.annulerManager = new AnnulerManager(this, cheminImg);
         this.actionAccueil = new ActionAccueil(this);
-        this.actionRecommencer = new ActionRecommencer(this);
+        this.actionRecommencer = new ActionRecommencer(this, cheminImg);
+        this.actionQuitter = new ActionQuitter(this, cheminImg);
         ActionAnnuler actionAnnuler = annulerManager.getAnnuler();
         ActionRetablir actionRetablir = annulerManager.getRetablir();
         
         //Ajout de la barre de menu
-        this.frame.setJMenuBar(new BarreMenu(this, actionAccueil,
-                            actionRecommencer, actionAnnuler, actionRetablir));
-        //Ajout du menu contextuel (clic-droit) a la fenetre
-        this.popupMenu = new MenuPopup(this, actionAccueil, actionRecommencer,
-                                         actionAnnuler, actionRetablir);
+        this.frame.setJMenuBar(new BarreMenu(actionAccueil, actionRecommencer,
+                                actionQuitter, actionAnnuler, actionRetablir));
+        
+        //Ajout du menu contextuel (clic-droit)
+        this.popupMenu = new MenuPopup(actionAccueil, actionRecommencer,
+                                actionQuitter, actionAnnuler, actionRetablir);
         this.addMouseListener(new MouseAdapter() {
             @Override
             public void mousePressed(MouseEvent event) {
@@ -81,12 +93,8 @@ public class Plombier extends JPanel {
                 }
             }
         });
-        //Ajout de l'accueil
-        this.afficherPnlBanques();
     }
     
-    
-    // METHODES
     // Renvoie le chemin vers la banque de niveau ou vers le niveau
     public String chemin(int numeroBanque, int numeroNiveau){
         if(numeroNiveau <= 0) { return this.chemin + numeroBanque; }
@@ -101,19 +109,19 @@ public class Plombier extends JPanel {
     
     // Cree et affiche l'accueil permettant de choisir le niveau
     public void afficherPnlNiveaux(int numBanque){
-        this.setNumBanque(numBanque);
+        this.numBanque = numBanque;
         PanelNiveaux panelAccueil2 = new PanelNiveaux(this, numBanque);
-        this.setPanelNiveaux(panelAccueil2);
+        this.panelNiveaux = panelAccueil2;
         this.afficher(this.panelNiveaux, ACCUEIL_DES, RECOMMENCER_DES);
     }
     
     // Cree le niveau et affiche le plateau correspondant
     public void afficherNiveau(int numBanque, int numNiveau){
-        this.setNumBanque(numBanque);
-        this.setNumNiveau(numNiveau);
+        this.numBanque = numBanque;
+        this.numNiveau = numNiveau;
         PanelJeu panelJeu = new PanelJeu(this, this.chemin(numBanque,numNiveau),
                                          this.cheminImg);
-        this.setPlateau(panelJeu);
+        this.plateau = panelJeu;
         
         //Ajout du menu contextuel (clic-droit) au plateau
         panelJeu.addMouseListener(new MouseAdapter() {
@@ -213,23 +221,5 @@ public class Plombier extends JPanel {
 
     public int getNumNiveau() {
         return numNiveau;
-    }
-    
-
-    // SETTERS
-    public void setPanelNiveaux(PanelNiveaux panelNiveaux) {
-        this.panelNiveaux = panelNiveaux;
-    }
-
-    public void setPlateau(PanelJeu plateau) {
-        this.plateau = plateau;
-    }
-
-    public void setNumBanque(int numBanque) {
-        this.numBanque = numBanque;
-    }
-
-    public void setNumNiveau(int numNiveau) {
-        this.numNiveau = numNiveau;
     }
 }

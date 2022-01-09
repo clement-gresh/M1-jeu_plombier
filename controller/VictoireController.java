@@ -8,18 +8,17 @@ import projetIG.view.PanelJeu;
 
 public class VictoireController extends MouseAdapter {
     protected PanelJeu fenetreJeu;
-    protected Niveau niveauCourant;
+    protected Niveau niveau;
 
-    public VictoireController(PanelJeu fenetreJeu, Niveau niveauCourant) {
+    public VictoireController(PanelJeu fenetreJeu, Niveau niveau) {
         this.fenetreJeu = fenetreJeu;
-        this.niveauCourant = niveauCourant;
+        this.niveau = niveau;
     }
     
     @Override
     public void mousePressed(MouseEvent event) {
         if(SwingUtilities.isLeftMouseButton(event)){
-            boolean victoire = this.niveauCourant.majCouleurs();
-            
+            boolean victoire = this.niveau.majCouleurs();
             if(victoire) this.fenetreJeu.victoire();
         }
     }
@@ -27,8 +26,7 @@ public class VictoireController extends MouseAdapter {
     @Override
     public void mouseReleased(MouseEvent event) {
         if(SwingUtilities.isLeftMouseButton(event)){
-            boolean victoire = this.niveauCourant.majCouleurs();
-
+            boolean victoire = this.niveau.majCouleurs();
             if(victoire) this.fenetreJeu.victoire();
         }
     }

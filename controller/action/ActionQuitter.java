@@ -11,12 +11,11 @@ import projetIG.Plombier;
 public class ActionQuitter extends AbstractAction {
     private final Plombier panelPlombier;
 
-    public ActionQuitter(Plombier panelPlombier) {
+    public ActionQuitter(Plombier panelPlombier, String cheminImg) {
         this.panelPlombier = panelPlombier;
-        
         this.putValue(Action.NAME, "Quitter");
         this.putValue(Action.SMALL_ICON, new ImageIcon(
-                "src/main/java/projetIG/view/image/icone/exit.png"));
+                cheminImg + "icone/exit.png"));
         this.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_W);
         this.putValue(Action.SHORT_DESCRIPTION, "Quitter le jeu (Ctrl + W)");
         this.putValue(Action.ACCELERATOR_KEY, 

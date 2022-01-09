@@ -9,23 +9,22 @@ import javax.swing.KeyStroke;
 import projetIG.controller.AnnulerManager;
 
 public class ActionAnnuler extends AbstractAction {
-    private final AnnulerManager annulerManager;
+    private final AnnulerManager manager;
 
-    public ActionAnnuler(AnnulerManager annulerManager) {
-        this.annulerManager = annulerManager;
-        
+    public ActionAnnuler(AnnulerManager manager, String cheminImg) {
+        this.manager = manager;
         this.putValue(Action.NAME, "Annuler");
         this.putValue(Action.SMALL_ICON, new ImageIcon(
-                "src/main/java/projetIG/view/image/icone/undo.png"));
+                cheminImg + "icone/undo.png"));
         this.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_Z);
-        this.putValue(Action.SHORT_DESCRIPTION, "Annuler la dernière action (Ctrl + Z)");
+        this.putValue(Action.SHORT_DESCRIPTION,
+                "Annuler la dernière action (Ctrl + Z)");
         this.putValue(Action.ACCELERATOR_KEY, 
                 KeyStroke.getKeyStroke(KeyEvent.VK_Z, KeyEvent.CTRL_DOWN_MASK));
     }
 
     @Override
     public void actionPerformed(ActionEvent e) {
-        ActionAnnuler.this.annulerManager.undo();
+        ActionAnnuler.this.manager.undo();
     }
-    
 }

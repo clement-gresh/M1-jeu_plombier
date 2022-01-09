@@ -12,14 +12,15 @@ import projetIG.Plombier;
 public class ActionRecommencer extends AbstractAction {
     private final Plombier panelPlumber;
 
-    public ActionRecommencer(Plombier panelPlumber) {
+    public ActionRecommencer(Plombier panelPlumber, String cheminImg) {
         this.panelPlumber = panelPlumber;
         
         this.putValue(Action.NAME, "Recommencer");
         this.putValue(Action.SMALL_ICON, new ImageIcon(
-                "src/main/java/projetIG/view/image/icone/new.png"));
+                cheminImg + "icone/new.png"));
         this.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_N);
-        this.putValue(Action.SHORT_DESCRIPTION, "Recommencer le niveau (Ctrl + N)");
+        this.putValue(Action.SHORT_DESCRIPTION,
+                "Recommencer le niveau (Ctrl + N)");
         this.putValue(Action.ACCELERATOR_KEY, 
                 KeyStroke.getKeyStroke(KeyEvent.VK_N, KeyEvent.CTRL_DOWN_MASK));
     }

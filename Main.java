@@ -10,7 +10,7 @@ public class Main {
         frame.setDefaultCloseOperation(DO_NOTHING_ON_CLOSE);
         Plombier plombier = new Plombier(frame,
                                 "src/main/java/projetIG/model/niveau/banque",
-                                "src/main/java/projetIG/view/image/pipes.gif");
+                                "src/main/java/projetIG/view/image/");
         frame.getContentPane().add(plombier);
         frame.pack();
         frame.setResizable(false);

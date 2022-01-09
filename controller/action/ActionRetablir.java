@@ -11,14 +11,15 @@ import projetIG.controller.AnnulerManager;
 public class ActionRetablir extends AbstractAction {
     private final AnnulerManager annulerManager;
 
-    public ActionRetablir(AnnulerManager annulerManager) {
+    public ActionRetablir(AnnulerManager annulerManager, String cheminImg) {
         this.annulerManager = annulerManager;
         
         this.putValue(Action.NAME, "Rétablir");
         this.putValue(Action.SMALL_ICON, new ImageIcon(
-                "src/main/java/projetIG/view/image/icone/redo.png"));
+                cheminImg + "icone/redo.png"));
         this.putValue(Action.MNEMONIC_KEY, KeyEvent.VK_Y);
-        this.putValue(Action.SHORT_DESCRIPTION, "Rétablir la dernière action annulée (Ctrl + Y)");
+        this.putValue(Action.SHORT_DESCRIPTION,
+                "Rétablir la dernière action annulée (Ctrl + Y)");
         this.putValue(Action.ACCELERATOR_KEY, 
                 KeyStroke.getKeyStroke(KeyEvent.VK_Y, KeyEvent.CTRL_DOWN_MASK));
     }

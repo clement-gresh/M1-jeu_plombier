@@ -265,7 +265,8 @@ public class DragDropController extends MouseAdapter {
             this.annulerManager.addEdit(new RvPAnnulable(fenetreJeu, niveau,
                         tuyauDeplace, lDepart, cDepart, lArrivee, cArrivee));
         }
-        else if(this.depart == PLATEAU && this.arrivee == PLATEAU){
+        else if(this.depart == PLATEAU && this.arrivee == PLATEAU
+                && cDepart != cArrivee && lDepart != lArrivee){
             this.annulerManager.addEdit(new PvPAnnulable(fenetreJeu, niveau,
                         tuyauDeplace, lDepart, cDepart, lArrivee, cArrivee));
         }

@@ -11,8 +11,8 @@ import projetIG.Plombier;
 abstract public class AbstractAccueil extends JPanel {
     protected Plombier plombier;
     
-    protected AbstractAccueil(Plombier panelParent) {
-        this.plombier = panelParent;
+    protected AbstractAccueil(Plombier plombier) {
+        this.plombier = plombier;
         this.setPreferredSize(new Dimension(850, 700)); // largeur, hauteur
         this.setLayout(new BoxLayout(this, BoxLayout.Y_AXIS));
         this.setBorder( BorderFactory.createEmptyBorder(20, 20, 20, 20));

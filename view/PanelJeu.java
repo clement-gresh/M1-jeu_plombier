@@ -88,9 +88,9 @@ public class PanelJeu extends JPanel {
         this.addMouseListener(victoireController);
         
         // On recupere le gif contenant les images des tuyaux
-        try { this.pipes = ImageIO.read(new File(cheminImg + "pipes.gif")); }
-        catch (IOException exception) { System.err.println("Erreur importation"
-                                   + "pipes.gif : " + exception.getMessage());}
+        try { this.pipes = ImageIO.read(new File(cheminImg + "/pipes.gif")); }
+        catch (IOException exception) { System.err.println(
+                "Erreur importation pipes.gif : " + exception.getMessage());}
         // On determine la taille d'une case en pixel
         this.caseL = (int)  (pixelsL / this.casesTotalL);
         this.caseH = (int)  (pixelsH / this.casesTotalH);

@@ -110,8 +110,8 @@ public class Plombier extends JPanel {
     // Cree et affiche l'accueil permettant de choisir le niveau
     public void afficherPnlNiveaux(int numBanque){
         this.numBanque = numBanque;
-        PanelNiveaux panelAccueil2 = new PanelNiveaux(this, numBanque);
-        this.panelNiveaux = panelAccueil2;
+        PanelNiveaux listeNiveaux = new PanelNiveaux(this, numBanque);
+        this.panelNiveaux = listeNiveaux;
         this.afficher(this.panelNiveaux, ACCUEIL_DES, RECOMMENCER_DES);
     }
     

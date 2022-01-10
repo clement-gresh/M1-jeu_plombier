@@ -25,7 +25,7 @@ import static projetIG.model.enumeration.Couleur.BLANC;
 import static projetIG.model.enumeration.Couleur.NOIR;
 import projetIG.model.enumeration.Dir;
 import static projetIG.model.enumeration.Dir.E;
-import projetIG.model.enumeration.TypeTuyau;
+import projetIG.model.enumeration.Type;
 import projetIG.model.niveau.Niveau;
 import projetIG.model.niveau.TuyauP;
 import projetIG.model.niveau.TuyauR;
@@ -221,7 +221,7 @@ public class PanelJeu extends JPanel {
                 if(tuyau != null) {
                     BufferedImage img;
                     // On ajoute l'indicateur des tuyaux inamovibles
-                    if(tuyau.isFixe() && tuyau.getType() != TypeTuyau.SOURCE){
+                    if(tuyau.isFixe() && tuyau.getType() != Type.SOURCE){
                         img = this.pipes.getSubimage(FIXE * (120 + 20),
                                                  6 * (120 + 20), 120, 120);
                         // On affiche l'image sur le graphique
@@ -234,9 +234,8 @@ public class PanelJeu extends JPanel {
                                tuyau.getCouleur().get(0).ordinal() * (120 + 20),
                                120, 120);
 
-                    if(tuyau.getType() == TypeTuyau.OVER){
-                        BufferedImage img2 = this.pipes.getSubimage(
-                               TypeTuyau.LINE.ordinal() * (120 + 20),
+                    if(tuyau.getType() == Type.OVER){
+                        BufferedImage img2 = this.pipes.getSubimage(Type.LINE.ordinal() * (120 + 20),
                                tuyau.getCouleur().get(1).ordinal() * (120 + 20),
                                120, 120
                         );
@@ -259,7 +258,7 @@ public class PanelJeu extends JPanel {
                                     tuyau.getType().ordinal() * (120 + 20),
                                     couleur.ordinal() * (120 + 20), 120, 120);
 
-        if(tuyau.getType() == TypeTuyau.OVER){
+        if(tuyau.getType() == Type.OVER){
             BufferedImage partieVerticale = this.pipes.getSubimage(
                                     (tuyau.getType().ordinal() - 1) * (120 + 20),
                                     couleur.ordinal() * (120 + 20), 120, 120

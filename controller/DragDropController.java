@@ -13,9 +13,9 @@ import projetIG.model.enumeration.Couleur;
 import static projetIG.model.enumeration.Couleur.BLANC;
 import projetIG.model.enumeration.Dir;
 import static projetIG.model.enumeration.Dir.N;
-import projetIG.model.enumeration.TypeTuyau;
-import static projetIG.model.enumeration.TypeTuyau.SOURCE;
-import static projetIG.model.enumeration.TypeTuyau.TURN;
+import projetIG.model.enumeration.Type;
+import static projetIG.model.enumeration.Type.SOURCE;
+import static projetIG.model.enumeration.Type.TURN;
 import projetIG.model.niveau.Niveau;
 import projetIG.model.niveau.Tuyau;
 import projetIG.model.niveau.TuyauP;
@@ -74,19 +74,18 @@ public class DragDropController extends MouseAdapter {
             // On determine la colonne et la ligne où le clic a eu lieu
             this.cDepart = (int) Math.ceil(e.getX() / this.caseL ) ;
             this.lDepart = (int) Math.ceil(e.getY() / this.caseH ) ;
-            BufferedImage imgDD = new BufferedImage(this.caseL,
-                                this.caseL, BufferedImage.TYPE_INT_ARGB);
-            TypeTuyau type = SOURCE;
+            Type type = SOURCE;
             Dir rotation = N;
             
             // Si le clic a eu lieu dans la reserve
-            if(cDepart > this.casesTotalL - 3 && lDepart < 6) {
+            if(cDepart > this.casesTotalL - L_RESERVE - 1 &&
+                    lDepart < H_RESERVE) {
                 // On verifie que colonne ne depasse pas le nombre maximal
                 // (peut arriver a cause de l'imprecision sur le nombre de 
                 // pixels lie au cast en int). On lui assigne le max sinon.
                 if(this.cDepart > this.casesTotalL - 1)
                     this.cDepart = this.casesTotalL - 1;
-                this.cDepart = this.cDepart - (this.casesTotalL - 2);
+                this.cDepart = this.cDepart - (this.casesTotalL - L_RESERVE);
                 TuyauR tuyauR = this.reserve[lDepart][cDepart];
 
                 if(tuyauR.getNombre() > 0) {
@@ -115,31 +114,29 @@ public class DragDropController extends MouseAdapter {
             }
             // On recupere l'image du tuyau deplace
             if(this.deplacement){
-                imgDD = this.fenetreJeu.getPipes().getSubimage(
-                        type.ordinal() * (120 + 20),
-                        Couleur.BLANC.ordinal() * (120 + 20), 120, 120
+                BufferedImage imgDD = this.fenetreJeu.getPipes().getSubimage(
+                                type.ordinal() * (120 + 20),
+                                Couleur.BLANC.ordinal() * (120 + 20), 120, 120
                 );
                 // Pivote l'image si necessaire
                 if(this.tuyauDeplace.getRotation() != N){
                     imgDD = ImageUtils.pivoter(imgDD, rotation.ordinal());
                 }
                 // Ajoute la 2eme composante pour un OVER
-                else if(type.equals(TypeTuyau.OVER)){
+                else if(type.equals(Type.OVER)){
                     BufferedImage img2 = this.fenetreJeu.getPipes().getSubimage(
-                        (type.ordinal() - 1) * (120 + 20),
-                        BLANC.ordinal() * (120 + 20), 120, 120
+                                (type.ordinal() - 1) * (120 + 20),
+                                BLANC.ordinal() * (120 + 20), 120, 120
                     );
                     imgDD = ImageUtils.combiner(img2, imgDD);
                 }
+                // On ajoute l'image Drag&Drop au plateau de jeu
+                imgDD = ImageUtils.changerTaille(imgDD, this.caseL, this.caseH);
+                this.fenetreJeu.setImageDD(new ImageIcon(imgDD));
+                this.fenetreJeu.setXDD(e.getX() - (int) (0.5 * this.caseL));
+                this.fenetreJeu.setYDD(e.getY() - (int) (0.5 * this.caseH));
+                this.fenetreJeu.repaint();
             }
-            
-            // On ajoute l'image Drag&Drop au plateau de jeu
-            imgDD = ImageUtils.changerTaille(imgDD, this.caseL, this.caseH);
-            this.fenetreJeu.setImageDD(new ImageIcon(imgDD));
-            this.fenetreJeu.setXDD(e.getX() - (int) (0.5 * this.caseL));
-            this.fenetreJeu.setYDD(e.getY() - (int) (0.5 * this.caseH));
-            this.fenetreJeu.repaint();
-            
         }
     }
     
@@ -187,6 +184,7 @@ public class DragDropController extends MouseAdapter {
                 // On remet l'image Drag&Drop a vide dans la fenetre de jeu 
                 this.fenetreJeu.setImageDD(new ImageIcon());
                 this.deplacement = false;
+                this.tuyauDeplace = null;
                 this.fenetreJeu.repaint();
                 this.ajouterAnnulable();
                 this.depart = AUCUNE;
@@ -198,7 +196,7 @@ public class DragDropController extends MouseAdapter {
     // Renvoie le tuyauDeplace dans la reserve
     private void renvoyerR(int x, int y){
         boolean tuyauTrouve = false;
-        int l = 0;
+        int l;
         int c = 0;
         TuyauR tuyauR = new TuyauR(TURN, N);
         
@@ -208,8 +206,8 @@ public class DragDropController extends MouseAdapter {
                 tuyauR = this.reserve[l][c];
                 
                 if(tuyauR.getType() == this.tuyauDeplace.getType() 
-                        && tuyauR.getRotation()
-                        == this.tuyauDeplace.getRotation()){ 
+                    && tuyauR.getRotation() == this.tuyauDeplace.getRotation())
+                { 
                     tuyauTrouve = true;
                     break;
                 }
@@ -262,6 +260,7 @@ public class DragDropController extends MouseAdapter {
             this.annulerManager.addEdit(new RvPAnnulable(fenetreJeu, niveau,
                         tuyauDeplace, lDepart, cDepart, lArrivee, cArrivee));
         }
+        // Deplacement d'un tuyau du plateau a une case differente de celui-ci
         else if(this.depart == PLATEAU && this.arrivee == PLATEAU
                 && (cDepart != cArrivee || lDepart != lArrivee)){
             this.annulerManager.addEdit(new PvPAnnulable(fenetreJeu, niveau,

@@ -3,7 +3,7 @@ package projetIG.model.enumeration;
 import java.util.ArrayList;
 import java.util.Arrays;
 
-public enum TypeTuyau {
+public enum Type {
     SOURCE,
     LINE,
     OVER,
@@ -26,7 +26,6 @@ public enum TypeTuyau {
     public boolean aOuverture(Dir dir, Dir rotation){
         Dir dirModele = dir.rotation(rotation, SOUSTRAIRE);
         
-        // On détermine si le modèle de tuyau a une ouverture
         for(Dir[] directions : ouvertures[this.ordinal()]){
             for(Dir d : directions){
                 if(d == dirModele) return true;

@@ -33,8 +33,8 @@ public class ActionRecommencer extends AbstractAction {
                 + "La configuration en cours sera perdue.");
         
         if(clicBouton == JOptionPane.YES_OPTION) {
-            this.plombier.afficherNiveau(this.plombier.getNumBanque(), this.plombier.getNumNiveau());
+            this.plombier.afficherNiveau(this.plombier.getNumBanque(),
+                                         this.plombier.getNumNiveau());
         }
     }
-    
 }

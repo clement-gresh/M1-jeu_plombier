@@ -12,7 +12,7 @@ import java.awt.event.WindowEvent;
 import java.io.File;
 import javax.swing.JFrame;
 import javax.swing.JOptionPane;
-import static javax.swing.JOptionPane.WARNING_MESSAGE;
+import static javax.swing.JOptionPane.INFORMATION_MESSAGE;
 import static javax.swing.JOptionPane.YES_NO_OPTION;
 import javax.swing.JPanel;
 import javax.swing.SwingUtilities;
@@ -167,7 +167,7 @@ public class Plombier extends JPanel {
         Plombier.pressAlt();
         frame.setAlwaysOnTop(true);
         int clicBouton = JOptionPane.showConfirmDialog(frame, 
-                texte, titre, YES_NO_OPTION, WARNING_MESSAGE);
+                texte, titre, YES_NO_OPTION, INFORMATION_MESSAGE);
         frame.setAlwaysOnTop(false);
         Plombier.releaseAlt();
         return clicBouton;

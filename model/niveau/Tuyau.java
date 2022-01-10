@@ -3,15 +3,15 @@ package projetIG.model.niveau;
 import java.util.ArrayList;
 import projetIG.model.enumeration.Couleur;
 import projetIG.model.enumeration.Dir;
-import projetIG.model.enumeration.TypeTuyau;
+import projetIG.model.enumeration.Type;
 
 public class Tuyau {
-    protected TypeTuyau type;
+    protected Type type;
     protected Dir rotation;
     protected ArrayList<Couleur> couleur = new ArrayList<>();
     
     // CONSTRUCTEURS
-    public Tuyau(TypeTuyau type, Dir rotation) {
+    public Tuyau(Type type, Dir rotation) {
         this.type = type;
         this.rotation = rotation;
     }
@@ -22,7 +22,7 @@ public class Tuyau {
     }
     
     // GETTERS
-    public TypeTuyau getType() {
+    public Type getType() {
         return type;
     }
 

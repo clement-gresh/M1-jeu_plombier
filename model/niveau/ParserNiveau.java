@@ -9,13 +9,13 @@ import static projetIG.model.enumeration.Couleur.JAUNE;
 import static projetIG.model.enumeration.Couleur.ROUGE;
 import static projetIG.model.enumeration.Couleur.VERT;
 import projetIG.model.enumeration.Dir;
-import projetIG.model.enumeration.TypeTuyau;
-import static projetIG.model.enumeration.TypeTuyau.CROSS;
-import static projetIG.model.enumeration.TypeTuyau.FORK;
-import static projetIG.model.enumeration.TypeTuyau.LINE;
-import static projetIG.model.enumeration.TypeTuyau.OVER;
-import static projetIG.model.enumeration.TypeTuyau.SOURCE;
-import static projetIG.model.enumeration.TypeTuyau.TURN;
+import projetIG.model.enumeration.Type;
+import static projetIG.model.enumeration.Type.CROSS;
+import static projetIG.model.enumeration.Type.FORK;
+import static projetIG.model.enumeration.Type.LINE;
+import static projetIG.model.enumeration.Type.OVER;
+import static projetIG.model.enumeration.Type.SOURCE;
+import static projetIG.model.enumeration.Type.TURN;
 import static projetIG.model.enumeration.Dir.N;
 import static projetIG.model.enumeration.Dir.E;
 import static projetIG.model.enumeration.Dir.S;
@@ -31,18 +31,12 @@ public abstract class ParserNiveau {
     static public Niveau parser(String file){
         File fichierNiveau = new File(file);
         TuyauP[][] plateau;
-        TuyauR[][] reserve = {{new TuyauR(CROSS, N),
-                                     new TuyauR(OVER, N)},
-                                    {new TuyauR(LINE, N),
-                                     new TuyauR(LINE, E)},
-                                    {new TuyauR(TURN, E),
-                                     new TuyauR(TURN, S)},
-                                    {new TuyauR(TURN, N),
-                                     new TuyauR(TURN, O)},
-                                    {new TuyauR(FORK, N),
-                                     new TuyauR(FORK, E)},
-                                    {new TuyauR(FORK, O),
-                                     new TuyauR(FORK, S)}
+        TuyauR[][] reserve = {{new TuyauR(CROSS, N), new TuyauR(OVER, N)},
+                               {new TuyauR(LINE, N), new TuyauR(LINE, E)},
+                               {new TuyauR(TURN, E), new TuyauR(TURN, S)},
+                               {new TuyauR(TURN, N), new TuyauR(TURN, O)},
+                               {new TuyauR(FORK, N), new TuyauR(FORK, E)},
+                               {new TuyauR(FORK, O), new TuyauR(FORK, S)}
         };
         try (Scanner scanner = new Scanner(fichierNiveau)) {
             int hauteur = scanner.nextInt();
@@ -58,7 +52,7 @@ public abstract class ParserNiveau {
                     colonne = 0;
                 }
                 String caseP = scanner.next();
-                TypeTuyau type;
+                Type type;
                 boolean fixe = false;
                 Dir rotation;
                 
@@ -114,7 +108,7 @@ public abstract class ParserNiveau {
         }
     }
     
-    static public TypeTuyau type(String s){
+    static public Type type(String s){
          return switch (s){
                 case "R" -> SOURCE;
                 case "G" -> SOURCE;

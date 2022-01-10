@@ -18,8 +18,7 @@ public class VictoireController extends MouseAdapter {
     @Override
     public void mousePressed(MouseEvent event) {
         if(SwingUtilities.isLeftMouseButton(event)){
-            boolean victoire = this.niveau.majCouleurs();
-            if(victoire) this.fenetreJeu.victoire();
+            this.niveau.majCouleurs();
         }
     }
 

@@ -5,15 +5,14 @@ import java.util.ArrayList;
 import projetIG.model.enumeration.Couleur;
 import static projetIG.model.enumeration.Couleur.BLANC;
 import projetIG.model.enumeration.Dir;
-import projetIG.model.enumeration.TypeTuyau;
-import static projetIG.model.enumeration.TypeTuyau.OVER;
+import projetIG.model.enumeration.Type;
+import static projetIG.model.enumeration.Type.OVER;
 
 public class TuyauP extends Tuyau {
     private boolean fixe = false;
     private final ArrayList<Boolean> visite = new ArrayList<>();
     
-    public TuyauP(TypeTuyau type, Dir rotation, boolean fixe,
-            Couleur couleur) {
+    public TuyauP(Type type, Dir rotation, boolean fixe, Couleur couleur) {
         super(type, rotation);
         this.fixe = fixe;
         this.couleur.add(couleur);

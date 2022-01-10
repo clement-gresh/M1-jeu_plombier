@@ -27,5 +27,4 @@ public class ActionRetablir extends AbstractAction {
     public void actionPerformed(ActionEvent e) {
         ActionRetablir.this.manager.redo();
     }
-    
 }

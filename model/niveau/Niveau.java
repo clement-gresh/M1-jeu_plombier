@@ -8,10 +8,10 @@ import static projetIG.model.enumeration.Dir.E;
 import static projetIG.model.enumeration.Dir.N;
 import static projetIG.model.enumeration.Dir.O;
 import static projetIG.model.enumeration.Dir.S;
-import projetIG.model.enumeration.TypeTuyau;
-import static projetIG.model.enumeration.TypeTuyau.AJOUT;
-import static projetIG.model.enumeration.TypeTuyau.OVER;
-import static projetIG.model.enumeration.TypeTuyau.SOURCE;
+import projetIG.model.enumeration.Type;
+import static projetIG.model.enumeration.Type.AJOUT;
+import static projetIG.model.enumeration.Type.OVER;
+import static projetIG.model.enumeration.Type.SOURCE;
 
 public class Niveau {
     private final int hauteur;
@@ -21,8 +21,7 @@ public class Niveau {
     private boolean victoire = false;
 
     // Constructeur
-    public Niveau(int hauteur, int largeur, 
-                  TuyauP[][] plateau, TuyauR[][] reserve) {
+    public Niveau(int hauteur, int largeur, TuyauP[][] plateau, TuyauR[][] reserve) {
         this.hauteur = hauteur;
         this.largeur = largeur;
         this.plateau = plateau;
@@ -56,7 +55,7 @@ public class Niveau {
                         && !tuyau.getVisite().get(0)) {
                     tuyau.setVisite(0, true);
                     // On determine l'ouverture de la source a partir du modele
-                    Dir dirModel = TypeTuyau.ouvertures[SOURCE.ordinal()][0][0];
+                    Dir dirModel = Type.ouvertures[SOURCE.ordinal()][0][0];
                     Dir dirSource = dirModel.rotation(tuyau.getRotation(),
                                                       AJOUT);
                     // On passe a la case a laquelle la source est connectee
@@ -144,8 +143,8 @@ public class Niveau {
                     }
                     // On applique le meme traitement a toutes les autres cases
                     // auxquelles le tuyau est connecte
-                    for(Dir dirSortie : tuyau.getType()
-                                  .dirSorties(dirEntree, tuyau.getRotation())){
+                    for(Dir dirSortie : tuyau.getType().dirSorties(
+                                              dirEntree, tuyau.getRotation())){
                         connexionCaseSuivante(l, c, dirSortie, couleur);
                     }
                 }

@@ -5,6 +5,7 @@ import javax.swing.JFrame;
 import static javax.swing.WindowConstants.DO_NOTHING_ON_CLOSE;
 
 public class Main {
+    public static final int NBR_BANQUES = 2;
 
     public static void main(String[] args) {
         //Chemin dependant du compilateur / de l'IDE

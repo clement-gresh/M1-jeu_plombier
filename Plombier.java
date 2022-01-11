@@ -65,7 +65,6 @@ public class Plombier extends JPanel {
         });
     }
     
-    
     // METHODES
     // Cree les menus et le undo/redo manager
     private void menus(){

@@ -1,11 +1,10 @@
 package projetIG.view;
 
 import javax.swing.JButton;
+import static projetIG.Main.NBR_BANQUES;
 import projetIG.Plombier;
 
 public class PanelBanques extends AbstractAccueil {
-    protected final int NBR_BANQUES = 2;
-    
     public PanelBanques(Plombier plombier) {
         super(plombier);
         // Ajout d'un bouton par banque de niveaux

@@ -7,7 +7,6 @@ import java.awt.geom.AffineTransform;
 import java.awt.image.BufferedImage;
 
 public abstract class ImageUtils {
-    
     public static BufferedImage pivoter(BufferedImage img, int rotation) {
         int largeur = img.getWidth();
         int hauteur = img.getHeight();

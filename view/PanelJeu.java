@@ -83,7 +83,7 @@ public class PanelJeu extends JPanel {
         dragDrop = new DragDropController(this);
         this.addMouseListener(dragDrop);
         this.addMouseMotionListener(dragDrop);
-        //Ajout du controller Couleurs & Victoire sur la fenetre de jeu
+        //Ajout du controller Victoire sur la fenetre de jeu
         victoireController = new VictoireController(this, this.niveau);
         this.addMouseListener(victoireController);
         

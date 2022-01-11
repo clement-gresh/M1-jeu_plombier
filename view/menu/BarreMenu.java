@@ -9,7 +9,6 @@ import projetIG.controller.action.ActionRetablir;
 import projetIG.controller.action.ActionAccueil;
 
 public class BarreMenu extends JMenuBar {
-
     public BarreMenu(ActionAccueil actionAccueil, 
                ActionRecommencer actionRecommencer, ActionQuitter actionQuitter,
                ActionAnnuler actionAnnuler, ActionRetablir actionRetablir) {

@@ -52,7 +52,6 @@ public class DragDropController extends MouseAdapter {
     private int arrivee = AUCUNE;
     private int lArrivee;
     private int cArrivee;
-    
 
     public DragDropController(PanelJeu fenetreJeu) {
         this.fenetreJeu = fenetreJeu;
@@ -183,12 +182,12 @@ public class DragDropController extends MouseAdapter {
             
                 // On remet l'image Drag&Drop a vide dans la fenetre de jeu 
                 this.fenetreJeu.setImageDD(new ImageIcon());
+                this.ajouterAnnulable();
                 this.deplacement = false;
                 this.tuyauDeplace = null;
-                this.fenetreJeu.repaint();
-                this.ajouterAnnulable();
                 this.depart = AUCUNE;
                 this.arrivee = AUCUNE;
+                this.fenetreJeu.repaint();
             }
         }
     }

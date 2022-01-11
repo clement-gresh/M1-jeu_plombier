@@ -8,7 +8,6 @@ import projetIG.controller.action.ActionRetablir;
 import projetIG.controller.action.ActionAccueil;
 
 public class MenuPopup extends JPopupMenu {
-
     public MenuPopup(ActionAccueil actionAccueil,
             ActionRecommencer actionRecommencer, ActionQuitter actionQuitter,
             ActionAnnuler actionAnnuler, ActionRetablir actionRetablir) {

@@ -8,7 +8,7 @@ import projetIG.Plombier;
 import static projetIG.Plombier.AUCUN_NIVEAU;
 
 public class PanelNiveaux extends AbstractAccueil {
-    protected int numBanque;
+    private int numBanque;
     
     public PanelNiveaux(Plombier plombier, int numBanque) {
         super(plombier);

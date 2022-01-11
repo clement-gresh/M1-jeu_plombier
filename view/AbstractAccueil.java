@@ -26,5 +26,4 @@ abstract public class AbstractAccueil extends JPanel {
         this.add(bouton);
         return bouton;
     }
-    
 }

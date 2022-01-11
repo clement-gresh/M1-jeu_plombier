@@ -7,8 +7,8 @@ import projetIG.model.niveau.Niveau;
 import projetIG.view.PanelJeu;
 
 public class VictoireController extends MouseAdapter {
-    protected PanelJeu fenetreJeu;
-    protected Niveau niveau;
+    private final PanelJeu fenetreJeu;
+    private final Niveau niveau;
 
     public VictoireController(PanelJeu fenetreJeu, Niveau niveau) {
         this.fenetreJeu = fenetreJeu;

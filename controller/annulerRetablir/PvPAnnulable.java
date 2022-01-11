@@ -23,8 +23,8 @@ public class PvPAnnulable extends AbstractAnnulable {
 
     @Override
     public void undo() throws CannotUndoException {
-        super.enleverTuyau(lArrivee, cArrivee, PLATEAU);
         super.ajouterTuyau(lDepart, cDepart, PLATEAU);
+        super.enleverTuyau(lArrivee, cArrivee, PLATEAU);
         super.maj();
     }    
 }

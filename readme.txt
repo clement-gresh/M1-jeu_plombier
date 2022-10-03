@@ -1,5 +1,4 @@
 Clement Gresh
-clement.gresh@gmail.com
 Interface Graphique, M1 IMPAIRS, Universite Paris 7 Diderot
 2021-2022
 
